@@ -1,10 +1,13 @@
-#include "test.h"
+#include "pie.h"
 
+int main(int c, char** args) {
 
-int main() {
-	Test t;
+	Jam::Flavor flavor;
+	flavor.title = "My Test Game";
 
-	int i;
-	std::cin >> i;
+	Jam::Pie pie(flavor);
+
+	pie.bake();
+
 	return 0;
 }
