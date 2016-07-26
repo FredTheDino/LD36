@@ -21,7 +21,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
 	MESSAGE(${CMAKE_SOURCE_DIR})
 
-	FILE(GLOB LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/include/*.lib")
+	FILE(GLOB LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/SDL2/*.lib")
 
 	target_link_libraries(jampieengine ${LIBRARIES})
 
