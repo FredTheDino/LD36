@@ -6,7 +6,9 @@
 #include <SDL2/SDL.h>
 
 #include "graphicscore.h"
+#include "logiccore.h"
 #include "debug.h"
+#include "inputhandler.h"
 
 namespace Jam
 {
@@ -47,11 +49,13 @@ namespace Jam
 
 		//Core handles
 		GraphicsCore* _graphicsCore;
+		LogicCore* _logicCore;
 
 		//Initialization functions
 		void _initSDL();
 		void _initCores();
 
 		friend GraphicsCore;
+		friend LogicCore;
 	};
 }
