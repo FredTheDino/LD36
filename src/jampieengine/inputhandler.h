@@ -1,9 +1,21 @@
 #pragma once
 
+/////////////////////////////////////////////////////
+// NOTE FOR THE FUTURE!                            //
+// There is still alot left to do with this class. //
+// Controller support and io are the 2 main ones.  //
+// Have a nice one future person! :D               //
+/////////////////////////////////////////////////////
+
+//Dude, there's a mouse too...
+
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 #include <thread>
+
+#include <SDL2/SDL.h>
 
 namespace Jam {
 
@@ -23,7 +35,8 @@ namespace Jam {
 	struct InputData {
 
 		//Ease of use constructor
-		InputData::InputData(const std::string& name, bool isScancode, int dev, int mods, int code): 
+		InputData() {}
+		InputData(const std::string& name, bool isScancode, int dev, int mods, int code): 
 			name(name), isScancode(isScancode), dev(dev), mods(mods), code(code) {}
 
 		//Ease of use equallity check for linear search
@@ -46,7 +59,7 @@ namespace Jam {
 		//The key/button/axis-code
 		int code;
 		//The state of the key/button
-		KeyState status = KeyState::UP;
+		short status = KeyState::UP;
 		//The value of the axis normalized between -1 and 1
 		double axis = 0.0;
 	};
@@ -61,6 +74,14 @@ namespace Jam {
 		static bool ready();
 		//The update call that updates all the inputData
 		static void update();
+
+		//Add an event to the event queue, to make this compatible with different threads
+		//////////////////////////////////////////////////////////////////
+		// NOTE: it is deliberately not passed in as a pointer to make	//
+		// sure a new instance of the struct is saved in the object		//
+		//////////////////////////////////////////////////////////////////
+		static void pushEventToQueue(SDL_Event e);
+
 		//Register an input event for future use, returns true if success
 		//////////////////////////////////////////////////////////////////
 		// NOTE: it is deliberately not passed in as a pointer to make	//
@@ -69,10 +90,12 @@ namespace Jam {
 		static bool registerInput(InputData data);
 		//Check if the state of digital input matches with the given
 		static bool checkInputState(const std::string& name, KeyState keyState);
+
 		//Functions for passing events to the inputhandler
-		static bool keyEvent(bool wasPressed, InputData& data);
-		static bool buttonEvent(bool wasPressed, InputData& data);
-		static bool axisEvent(InputData& data);
+		static void keyEvent(bool wasPressed, InputData& data);
+		static void buttonEvent(bool wasPressed, InputData& data);
+		static void axisEvent(InputData& data);
+		static void controllerConnectionEvent(bool connect, int which);
 	private:
 		
 		//Simple method to find a _inputList entry by name
@@ -91,5 +114,13 @@ namespace Jam {
 		static bool _ioThreadExists;
 		//The list of all currently registerd inputs, only for use in this class
 		static std::unordered_map<std::string, InputData> _inputList;
+		
+		//The buffer for input events
+		static std::vector<SDL_Event> _eventQueue;
+
+		//The list of controllers that are currently active
+		static std::vector<SDL_GameController*> _controllers;
+		//Holds reffernces to controllers and replaced their device to allow for reusability
+		static std::vector<short> _controllerRemapper;
 	};
 }

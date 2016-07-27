@@ -24,7 +24,7 @@ void Pie::bake()
 
 void Pie::_initSDL()
 {
-	int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
+	int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
 	if (error < 0) {
 		Debug::err(SDL_GetError(), error);
