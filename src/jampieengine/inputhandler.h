@@ -15,7 +15,7 @@
 #include <vector>
 #include <thread>
 
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Jam {
 
@@ -35,6 +35,7 @@ namespace Jam {
 	struct InputData {
 
 		//Ease of use constructor
+		InputData() {}
 		InputData(const std::string& name, bool isScancode, int dev, int mods, int code): 
 			name(name), isScancode(isScancode), dev(dev), mods(mods), code(code) {}
 

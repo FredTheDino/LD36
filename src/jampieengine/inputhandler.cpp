@@ -54,30 +54,37 @@ void Jam::InputHandler::update() {
 	_eventQueue.clear();
 	
 	SDL_Event e;
+	InputData data;
 	for (size_t i = 0; i < workingQueue.size(); i++) {
 		e = workingQueue[i];
 		switch (e.type) {
 			//Input handleing (BEGIN)
 			case SDL_KEYDOWN:
 			{
-				if (e.key.repeat == 0)
-					keyEvent(true, InputData("", true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym));
+				if (e.key.repeat == 0) {
+					data = InputData("", true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym);
+					keyEvent(true, data);
+				}
 				break;
 			}
 			case SDL_KEYUP:
 			{
-				if (e.key.repeat == 0)
-					keyEvent(false, InputData("", true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym));
+				if (e.key.repeat == 0) {
+					data = InputData("", true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym);
+					keyEvent(false, data);
+				}
 				break;
 			}
 			case SDL_CONTROLLERBUTTONDOWN:
 			{
-				buttonEvent(true, InputData("", false, e.cbutton.which, 0, e.cbutton.button));
+				data = InputData("", false, e.cbutton.which, 0, e.cbutton.button);
+				buttonEvent(true, data);
 				break;
 			}
 			case SDL_CONTROLLERBUTTONUP:
 			{
-				buttonEvent(false, InputData("", false, e.cbutton.which, 0, e.cbutton.button));
+				data = InputData("", false, e.cbutton.which, 0, e.cbutton.button);
+				buttonEvent(false, data);
 				break;
 			}
 			case SDL_CONTROLLERAXISMOTION:
