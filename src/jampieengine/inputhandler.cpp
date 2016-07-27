@@ -35,6 +35,7 @@ bool InputHandler::ready() {
 }
 
 void Jam::InputHandler::update() {
+	std::cout << "Hello world!" << std::endl;
 	for (auto it = _inputList.begin(); it != _inputList.end(); ++it) {
 		it->second.status = (KeyState) (it->second.status & KeyState::DOWN);
 	}
