@@ -18,10 +18,6 @@ void LogicCore::_start()
 {
 	while (_pie.isCooking()) {
 		InputHandler::update();
-
-		if (InputHandler::checkInputState("test", KeyState::RELEASED)) {
-			std::cout << "WOOT!" << std::endl;
-		}
 	}
 }
 
