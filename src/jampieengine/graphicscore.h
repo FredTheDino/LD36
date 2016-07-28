@@ -6,12 +6,14 @@
 #include "graphicscoretype.h"
 #include "window.h"
 #include "pie.h"
+#include "renderengine.h"
 
 namespace Jam
 {
 	//Forward declarations
 	class Window;
 	class Pie;
+	class RenderEngine;
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
@@ -31,6 +33,9 @@ namespace Jam
 
 		//The window class pointer
 		Window* _window;
+
+		//The Render Engine
+		RenderEngine* _renderEngine;
 
 		//Invoked by main class upon launch
 		void _bake(Flavor& flavor);

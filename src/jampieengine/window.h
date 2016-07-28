@@ -16,6 +16,12 @@ namespace Jam
 		Window(GraphicsCore& graphicsCore, Flavor& flavor);
 		~Window();
 
+		std::string getTitle() { return std::string(SDL_GetWindowTitle(_handle)); };
+
+		void getSize(int* w, int* h) { SDL_GetWindowSize(_handle, w, h); };
+
+		SDL_Window* getHandle() { return _handle; };
+
 	private:
 		SDL_Window* _handle;
 
