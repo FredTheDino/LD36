@@ -5,8 +5,8 @@
 
 #include "graphicscoretype.h"
 #include "window.h"
+#include "renderengine.h" 
 #include "pie.h"
-#include "renderengine.h"
 
 namespace Jam
 {
