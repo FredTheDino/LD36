@@ -17,8 +17,11 @@ void GraphicsCore::_start()
 {
 	_window = new Window(*this, _pie._flavor);
 
+	_renderEngine = new RenderEngine(*_window, _pie._flavor.graphicsCoreType);
+
 	while (_pie.isCooking()) {
 
+		//Handle events
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
 			switch (e.type) {
@@ -63,7 +66,12 @@ void GraphicsCore::_start()
 				}
 			}
 		}
+
+		//Draw
+		_renderEngine->_draw();
 	}
+
+	delete _renderEngine;
 
 	delete _window;
 }

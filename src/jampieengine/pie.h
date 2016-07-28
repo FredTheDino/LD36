@@ -20,6 +20,7 @@ namespace Jam
 		std::string title = "My Pie";
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
+		bool w_border = true;
 		bool w_resizable = false;
 		GraphicsCoreType graphicsCoreType = GRAPHICS_TYPE_OPENGL;
 	};
@@ -55,6 +56,7 @@ namespace Jam
 		void _initSDL();
 		void _initCores();
 
+		//Friends!
 		friend GraphicsCore;
 		friend LogicCore;
 	};
