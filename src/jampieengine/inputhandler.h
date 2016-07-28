@@ -22,34 +22,39 @@ namespace Jam {
 	//The key states for digital input (multiple can be active
 	enum KeyState {
 		//If not helt down
-		UP = 0x0,
+		UP = 0x1,
 		//If held down
-		DOWN = 0x1,
+		DOWN = 0x2,
 		//If released this frame
-		RELEASED = 0x2,
+		RELEASED = 0x4,
 		//If pressed this frame
-		PRESSED = 0x4
+		PRESSED = 0x8
+	};
+
+	struct InputData {
+		//The state of the key/button
+		short status = KeyState::UP;
+		//The value of the axis normalized between -1 and 1
+		double axis = 0.0;
 	};
 
 	//A simple input data structure with a simple function for easy equallity checks
-	struct InputData {
+	struct InputBinding {
 
 		//Ease of use constructor
-		InputData() {}
-		InputData(const std::string& name, bool isScancode, int dev, int mods, int code): 
-			name(name), isScancode(isScancode), dev(dev), mods(mods), code(code) {}
+		InputBinding() {}
+		InputBinding(bool isScancode, int dev, int mods, int code): 
+			isScancode(isScancode), dev(dev), mods(mods), code(code) {}
 
 		//Ease of use equallity check for linear search
-		bool operator== (InputData& data) {
-			return 
+		bool operator== (const InputBinding& data) const {
+			return
 				data.isScancode == isScancode &&
 				data.dev == dev &&
 				data.mods == mods &&
 				data.code == code;
 		}
-		
-		//Name of the input
-		std::string name;
+
 		//If code is a scancode or a keycode
 		bool isScancode;
 		//Which device this is registerd to, -1 is keyboard the rest are controllers
@@ -58,10 +63,6 @@ namespace Jam {
 		int mods;
 		//The key/button/axis-code
 		int code;
-		//The state of the key/button
-		short status = KeyState::UP;
-		//The value of the axis normalized between -1 and 1
-		double axis = 0.0;
 	};
 
 	class InputHandler {
@@ -87,21 +88,21 @@ namespace Jam {
 		// NOTE: it is deliberately not passed in as a pointer to make	//
 		// sure a new instance of the struct is saved in the object		//
 		//////////////////////////////////////////////////////////////////
-		static bool registerInput(InputData data);
+		static bool registerInput(const std::string& name, InputBinding data);
 		//Check if the state of digital input matches with the given
 		static bool checkInputState(const std::string& name, KeyState keyState);
 
 		//Functions for passing events to the inputhandler
-		static void keyEvent(bool wasPressed, InputData& data);
-		static void buttonEvent(bool wasPressed, InputData& data);
-		static void axisEvent(InputData& data);
+		static void keyEvent(bool wasPressed, InputBinding& binding);
+		static void buttonEvent(bool wasPressed, InputBinding& binding);
+		static void axisEvent(double axis, InputBinding& binding);
 		static void controllerConnectionEvent(bool connect, int which);
 	private:
 		
 		//Simple method to find a _inputList entry by name
 		static InputData* _find(const std::string& name);
 		//Simple method to find a _inputList entry by data
-		static InputData* _find(InputData& data);
+		static InputData* _find(InputBinding& binding);
 
 		//A function for loading input data from disk
 		static void _load();
@@ -112,8 +113,10 @@ namespace Jam {
 		static std::thread* _ioThread;
 		//Weather or not the ioThread has been initalized
 		static bool _ioThreadExists;
+		//The mapper that maps an input to a name
+		static std::unordered_map<InputBinding, std::string> _inputMapper;
 		//The list of all currently registerd inputs, only for use in this class
-		static std::unordered_map<std::string, InputData> _inputList;
+		static std::unordered_map<std::string, InputData> _inputDataList;
 		
 		//The buffer for input events
 		static std::vector<SDL_Event> _eventQueue;
@@ -122,5 +125,27 @@ namespace Jam {
 		static std::vector<SDL_GameController*> _controllers;
 		//Holds reffernces to controllers and replaced their device to allow for reusability
 		static std::vector<short> _controllerRemapper;
+	};
+}
+
+//Custom hash function, to allow it to be inserted in a unorderd_map
+namespace std {
+	template<> struct hash<Jam::InputBinding> {
+		size_t operator()(const Jam::InputBinding & b) const {
+
+			size_t hash = 0;
+
+			if (b.isScancode)
+				hash = 1;
+
+			hash *= 37;
+			hash += b.dev;
+			hash *= 37;
+			hash += b.mods;
+			hash *= 37;
+			hash += b.code;
+
+			return hash;
+		}
 	};
 }
