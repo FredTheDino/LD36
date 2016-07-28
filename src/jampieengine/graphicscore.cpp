@@ -39,7 +39,7 @@ void GraphicsCore::_start()
 					break;
 				default:
 				{
-					std::cout << "Type: " << e.type << std::endl;
+					//std::cout << "Type: " << e.type << std::endl;
 					break;
 				}
 			}
