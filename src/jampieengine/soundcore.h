@@ -3,20 +3,16 @@
 #include <iostream>
 #include <thread>
 
-#include "inputhandler.h"
-
-namespace Jam
-{
+namespace Jam {
 	//Forward declarations
 	class Pie;
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class LogicCore
-	{
+	class SoundCore {
 	public:
-		LogicCore(Pie& pie, Flavor& flavor);
-		~LogicCore();
+		SoundCore(Pie& pie, Flavor& flavor);
+		~SoundCore();
 
 	private:
 

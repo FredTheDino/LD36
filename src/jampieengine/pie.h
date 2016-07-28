@@ -7,6 +7,7 @@
 
 #include "graphicscore.h"
 #include "logiccore.h"
+#include "soundcore.h"
 #include "debug.h"
 #include "inputhandler.h"
 
@@ -51,6 +52,7 @@ namespace Jam
 		//Core handles
 		GraphicsCore* _graphicsCore;
 		LogicCore* _logicCore;
+		SoundCore* _soundCore;
 
 		//Initialization functions
 		void _initSDL();

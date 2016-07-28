@@ -10,7 +10,7 @@ namespace Jam
 {
 	//Forward declaration
 	class GraphicsCore;
-
+	class Window;
 
 	class RenderEngine
 	{
