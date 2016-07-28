@@ -6,9 +6,13 @@ std::thread* InputHandler::_ioThread = nullptr;
 bool InputHandler::_ioThreadExists = false;
 std::unordered_map<InputBinding, std::string> InputHandler::_inputMapper;
 std::unordered_map<std::string, InputData> InputHandler::_inputDataList;
-std::vector<SDL_Event> InputHandler::_eventQueue;
+MousePos InputHandler::_mouse;
+bool InputHandler::_hideMouse = false;
+bool InputHandler::_centerMouse = false;
+bool InputHandler::_accessingMouse = false;
 std::vector<SDL_GameController*> InputHandler::_controllers;
 std::vector<short> InputHandler::_controllerRemapper;
+bool InputHandler::_accessingControllers = false;
 
 void InputHandler::init() {
 	_ioThread = new std::thread(&InputHandler::_load);
@@ -51,9 +55,9 @@ void Jam::InputHandler::update() {
 		it->second.status = (KeyState) (it->second.status & (KeyState::DOWN | KeyState::UP));
 	}
 
-	std::vector<SDL_Event> workingQueue = _eventQueue;
-	_eventQueue.clear();
-	
+	std::vector<SDL_Event> workingQueue;
+	EventQueue::copyEventQueue(&workingQueue);
+
 	SDL_Event e;
 	InputBinding data;
 	for (size_t i = 0; i < workingQueue.size(); i++) {
@@ -64,7 +68,7 @@ void Jam::InputHandler::update() {
 			{
 				if (e.key.repeat == 0) {
 					data = InputBinding(true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym);
-					keyEvent(true, data);
+					digitalEvent(true, data);
 				}
 				break;
 			}
@@ -72,40 +76,53 @@ void Jam::InputHandler::update() {
 			{
 				if (e.key.repeat == 0) {
 					data = InputBinding(true, -1, e.key.keysym.mod & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT), e.key.keysym.sym);
-					keyEvent(false, data);
+					digitalEvent(false, data);
 				}
 				break;
 			}
 			case SDL_CONTROLLERBUTTONDOWN:
 			{
 				data = InputBinding(false, e.cbutton.which, 0, e.cbutton.button);
-				buttonEvent(true, data);
+				digitalEvent(true, data);
 				break;
 			}
 			case SDL_CONTROLLERBUTTONUP:
 			{
 				data = InputBinding(false, e.cbutton.which, 0, e.cbutton.button);
-				buttonEvent(false, data);
+				digitalEvent(false, data);
+				break;
+			}
+			case SDL_MOUSEBUTTONDOWN:
+			{
+				data = InputBinding(true, e.button.button); 
+				digitalEvent(true, data);
+				break;
+			}
+			case SDL_MOUSEBUTTONUP:
+			{
+				data = InputBinding(true, e.button.button);
+				digitalEvent(false, data);
 				break;
 			}
 			case SDL_CONTROLLERAXISMOTION:
 			{
-				InputBinding input(false, e.caxis.which, 0, e.caxis.axis);
+				InputBinding input(e.caxis.which, e.caxis.axis);
 				double axis = (e.caxis.value) / 32768.0;
 				axisEvent(axis, input);
 				break;
 			}
-			case SDL_CONTROLLERDEVICEADDED:
+			case SDL_MOUSEMOTION:
 			{
-				std::cout << "Device added." << std::endl;
-				controllerConnectionEvent(true, e.cdevice.which);
-				break;
-			}
-			case SDL_CONTROLLERDEVICEREMOVED:
-			{
-				std::cout << "Device removed." << std::endl;
-				controllerConnectionEvent(false, e.cdevice.which);
-				break;
+				while (_accessingMouse) {}
+				_accessingMouse = true;
+				
+				_mouse.position.x = (Sint32) e.motion.x;
+				_mouse.position.y = (Sint32) e.motion.y;
+				
+				_mouse.delta.x = (Sint32) e.motion.xrel;
+				_mouse.delta.y = (Sint32) e.motion.yrel;
+				
+				_accessingMouse = false;
 			}
 			//Input handleing (END)
 
@@ -116,10 +133,6 @@ void Jam::InputHandler::update() {
 			}
 		}
 	}
-}
-
-void Jam::InputHandler::pushEventToQueue(SDL_Event e) {
-	_eventQueue.push_back(e);
 }
 
 bool Jam::InputHandler::registerInput(const std::string& name, InputBinding binding) {
@@ -136,8 +149,44 @@ bool Jam::InputHandler::checkInputState(const std::string& name, KeyState keySta
 	return (_find(name)->status & keyState) != 0;
 }
 
-void Jam::InputHandler::keyEvent(bool wasPressed, InputBinding & binding) {
-	
+double Jam::InputHandler::getAxisData(const std::string & name) {
+	return _find(name)->axis;
+}
+
+InputData Jam::InputHandler::getInputData(const std::string & name) {
+	return *_find(name);
+}
+
+glm::vec2 Jam::InputHandler::getMouseDelta() {
+	glm::vec2 out;
+	while (_accessingMouse) {}
+	_accessingMouse = true;
+	out = _mouse.delta;
+	_accessingMouse = false;
+
+	return out;
+}
+
+glm::vec2 Jam::InputHandler::getMousePos() {
+	glm::vec2 out;
+	while (_accessingMouse) {}
+	_accessingMouse = true;
+	out = _mouse.position;
+	_accessingMouse = false;
+
+	return out;
+}
+
+void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
+	if (binding.dev != -1) {
+		for (size_t i = 0; i < _controllerRemapper.size(); i++) {
+			if (_controllerRemapper[i] == binding.dev) {
+				binding.dev = (int) i;
+				break;
+			}
+		}
+	}
+
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); it++) {
 		if (binding == it->first) {
 			if (wasPressed) {
@@ -149,9 +198,7 @@ void Jam::InputHandler::keyEvent(bool wasPressed, InputBinding & binding) {
 	}
 }
 
-void Jam::InputHandler::buttonEvent(bool wasPressed, InputBinding & binding) {
-	std::cout << "TODO: InputHandler::buttonEvent" << std::endl;
-	
+void Jam::InputHandler::axisEvent(double value, InputBinding & binding) {
 	//Translate the controller to be something more manigable
 	for (size_t i = 0; i < _controllerRemapper.size(); i++) {
 		if (_controllerRemapper[i] == binding.dev) {
@@ -162,29 +209,22 @@ void Jam::InputHandler::buttonEvent(bool wasPressed, InputBinding & binding) {
 
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); it++) {
 		if (binding == it->first) {
-			if (wasPressed) {
-				_inputDataList[it->second].status = (KeyState) KeyState::DOWN | KeyState::PRESSED;
-			} else {
-				_inputDataList[it->second].status = (KeyState) KeyState::UP | KeyState::RELEASED;
-			}
+			_inputDataList[it->second].axis = value;
 		}
 	}
 }
 
-void Jam::InputHandler::axisEvent(double value, InputBinding & data) {
-	std::cout << "TODO: InputHandler::axisEvent" << std::endl;
-}
-
 void Jam::InputHandler::controllerConnectionEvent(bool connect, int which) {
+	_accessingControllers = true;
 	if (connect) {
 		_controllers.push_back(SDL_GameControllerOpen(which));
-		printf("Controller connected\n");
-		printf("SDL_Init failed: %s\n", SDL_GetError());
 
 		//Check for an opening
 		for (size_t i = 0; i < _controllerRemapper.size(); i++) {
 			if (_controllerRemapper[i] == -1) {
 				_controllerRemapper[i] = which;
+				
+				_accessingControllers = false;
 				return;
 			}
 		}
@@ -193,17 +233,16 @@ void Jam::InputHandler::controllerConnectionEvent(bool connect, int which) {
 		_controllerRemapper.push_back(which);
 
 	} else {
-
-		printf("Controller disconnected\n");
 		SDL_GameControllerClose(_controllers[which]);
 
 		for (size_t i = 0; i < _controllerRemapper.size(); i++) {
 			if (_controllerRemapper[i] == which) {
 				_controllerRemapper[i] = -1;
+
+				_accessingControllers = false;
 				return;
 			}
 		}
-
 	}
 }
 

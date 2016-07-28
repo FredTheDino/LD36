@@ -2,12 +2,12 @@
 
 /////////////////////////////////////////////////////
 // NOTE FOR THE FUTURE!                            //
-// There is still alot left to do with this class. //
-// Controller support and io are the 2 main ones.  //
+// IO still needs to be done. Just FYI             //
 // Have a nice one future person! :D               //
 /////////////////////////////////////////////////////
 
-//Dude, there's a mouse too...
+#include "eventqueue.h"
+#include "inputdatatypes.h"
 
 #include <string>
 #include <iostream>
@@ -16,54 +16,9 @@
 #include <thread>
 
 #include <SDL2/SDL.h>
+#include "glm\glm.hpp"
 
 namespace Jam {
-
-	//The key states for digital input (multiple can be active
-	enum KeyState {
-		//If not helt down
-		UP = 0x1,
-		//If held down
-		DOWN = 0x2,
-		//If released this frame
-		RELEASED = 0x4,
-		//If pressed this frame
-		PRESSED = 0x8
-	};
-
-	struct InputData {
-		//The state of the key/button
-		short status = KeyState::UP;
-		//The value of the axis normalized between -1 and 1
-		double axis = 0.0;
-	};
-
-	//A simple input data structure with a simple function for easy equallity checks
-	struct InputBinding {
-
-		//Ease of use constructor
-		InputBinding() {}
-		InputBinding(bool isScancode, int dev, int mods, int code): 
-			isScancode(isScancode), dev(dev), mods(mods), code(code) {}
-
-		//Ease of use equallity check for linear search
-		bool operator== (const InputBinding& data) const {
-			return
-				data.isScancode == isScancode &&
-				data.dev == dev &&
-				data.mods == mods &&
-				data.code == code;
-		}
-
-		//If code is a scancode or a keycode
-		bool isScancode;
-		//Which device this is registerd to, -1 is keyboard the rest are controllers
-		int dev;
-		//Any modifiers (alt, shift, etc...) for this input event, requiers a keyboard
-		int mods;
-		//The key/button/axis-code
-		int code;
-	};
 
 	class InputHandler {
 	public:
@@ -76,13 +31,6 @@ namespace Jam {
 		//The update call that updates all the inputData
 		static void update();
 
-		//Add an event to the event queue, to make this compatible with different threads
-		//////////////////////////////////////////////////////////////////
-		// NOTE: it is deliberately not passed in as a pointer to make	//
-		// sure a new instance of the struct is saved in the object		//
-		//////////////////////////////////////////////////////////////////
-		static void pushEventToQueue(SDL_Event e);
-
 		//Register an input event for future use, returns true if success
 		//////////////////////////////////////////////////////////////////
 		// NOTE: it is deliberately not passed in as a pointer to make	//
@@ -91,14 +39,22 @@ namespace Jam {
 		static bool registerInput(const std::string& name, InputBinding data);
 		//Check if the state of digital input matches with the given
 		static bool checkInputState(const std::string& name, KeyState keyState);
-
+		//Returns the value of the axis of that input data
+		static double getAxisData(const std::string& name);
+		//Fetches the input data object
+		static InputData getInputData(const std::string& name);
+		//Returns the delta movement of the mouse
+		static glm::vec2 getMouseDelta();
+		//Returns the position of the mouse
+		static glm::vec2 getMousePos();
+		
 		//Functions for passing events to the inputhandler
-		static void keyEvent(bool wasPressed, InputBinding& binding);
-		static void buttonEvent(bool wasPressed, InputBinding& binding);
+		static void digitalEvent(bool wasPressed, InputBinding& binding);
 		static void axisEvent(double axis, InputBinding& binding);
 		static void controllerConnectionEvent(bool connect, int which);
+
 	private:
-		
+
 		//Simple method to find a _inputList entry by name
 		static InputData* _find(const std::string& name);
 		//Simple method to find a _inputList entry by data
@@ -118,34 +74,20 @@ namespace Jam {
 		//The list of all currently registerd inputs, only for use in this class
 		static std::unordered_map<std::string, InputData> _inputDataList;
 		
-		//The buffer for input events
-		static std::vector<SDL_Event> _eventQueue;
+		//An object to hold the mouse position
+		static MousePos _mouse;
+		//Hides the mouse
+		static bool _hideMouse;
+		//Centers the mouse
+		static bool _centerMouse;
+		//Something is reading/writing to _mouse
+		static bool _accessingMouse;
 
 		//The list of controllers that are currently active
 		static std::vector<SDL_GameController*> _controllers;
 		//Holds reffernces to controllers and replaced their device to allow for reusability
 		static std::vector<short> _controllerRemapper;
-	};
-}
-
-//Custom hash function, to allow it to be inserted in a unorderd_map
-namespace std {
-	template<> struct hash<Jam::InputBinding> {
-		size_t operator()(const Jam::InputBinding & b) const {
-
-			size_t hash = 0;
-
-			if (b.isScancode)
-				hash = 1;
-
-			hash *= 37;
-			hash += b.dev;
-			hash *= 37;
-			hash += b.mods;
-			hash *= 37;
-			hash += b.code;
-
-			return hash;
-		}
+		//If you're accessing the controllers form another thread
+		static bool _accessingControllers;
 	};
 }

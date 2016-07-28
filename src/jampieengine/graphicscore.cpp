@@ -27,15 +27,34 @@ void GraphicsCore::_start()
 					_pie.eat();
 					break;
 				}
-				//Input handleing (BEGIN)
+				
+				case SDL_CONTROLLERDEVICEADDED:
+				{
+#ifdef _DEBUG
+					std::cout << "Device added." << std::endl;
+#endif
+					InputHandler::controllerConnectionEvent(true, e.cdevice.which);
+					break;
+				}
+				case SDL_CONTROLLERDEVICEREMOVED:
+				{
+#ifdef _DEBUG
+					std::cout << "Device removed." << std::endl;
+#endif
+					InputHandler::controllerConnectionEvent(false, e.cdevice.which);
+					break;
+				}
+
+				//Input handleing
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 				case SDL_CONTROLLERBUTTONDOWN:
 				case SDL_CONTROLLERBUTTONUP:
+				case SDL_MOUSEBUTTONDOWN:
+				case SDL_MOUSEBUTTONUP:
 				case SDL_CONTROLLERAXISMOTION:
-				case SDL_CONTROLLERDEVICEADDED:
-				case SDL_CONTROLLERDEVICEREMOVED:
-					InputHandler::pushEventToQueue(e);
+				case SDL_MOUSEMOTION:
+					EventQueue::pushEventToQueue(e);
 					break;
 				default:
 				{
