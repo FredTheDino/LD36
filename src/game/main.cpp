@@ -1,6 +1,12 @@
 #include "pie.h"
 
+#include "loader.h"
+
 int main(int c, char** args) {
+
+	Jam::Loader::prefix = "../../res/";
+
+	std::cout << Jam::Loader::loadText("test.txt") << std::endl;
 
 	Jam::Flavor flavor;
 	flavor.title = "My Test Game";
@@ -10,7 +16,6 @@ int main(int c, char** args) {
 	Jam::Pie pie(flavor);
 
 	pie.bake();
-
 
 	return 0;
 }
