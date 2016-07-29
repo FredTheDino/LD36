@@ -34,6 +34,9 @@ namespace Jam {
 		ALCdevice* _device;
 		ALCcontext* _context;
 
+		ALuint _source;
+		ALuint _buffer;
+
 		friend Pie;
 	};
 }
