@@ -33,7 +33,7 @@ void Pie::_initCores()
 {
 	_graphicsCore = new GraphicsCore(*this, _flavor);
 	_logicCore = new LogicCore(*this, _flavor);
-	_soundCore = new SoundCore(*this, _flavor);
+	_soundCore = new AudioCore(*this, _flavor);
 }
 
 Pie::~Pie()

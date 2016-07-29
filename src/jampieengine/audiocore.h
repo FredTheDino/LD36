@@ -3,16 +3,19 @@
 #include <iostream>
 #include <thread>
 
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+
 namespace Jam {
 	//Forward declarations
 	class Pie;
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class SoundCore {
+	class AudioCore {
 	public:
-		SoundCore(Pie& pie, Flavor& flavor);
-		~SoundCore();
+		AudioCore(Pie& pie, Flavor& flavor);
+		~AudioCore();
 
 	private:
 
@@ -27,6 +30,9 @@ namespace Jam {
 
 		//Called by thread on start
 		void _start();
+
+		ALCdevice* _device;
+		ALCcontext* _context;
 
 		friend Pie;
 	};
