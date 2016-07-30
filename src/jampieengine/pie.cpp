@@ -13,6 +13,7 @@ void Pie::bake()
 {
 	_cooking = true;
 
+
 	_graphicsCore->_bake(_flavor);
 	_logicCore->_bake(_flavor);
 	_soundCore->_bake(_flavor);
