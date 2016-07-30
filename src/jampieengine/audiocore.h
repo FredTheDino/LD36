@@ -33,6 +33,7 @@ namespace Jam {
 
 		ALCdevice* _device;
 		ALCcontext* _context;
+		ALCdevice* _inDevice;
 
 		ALuint _source;
 		ALuint _buffer;
