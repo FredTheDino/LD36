@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SDL2/SDL.h"
-#include "GLEW/glew.h"
+#include "GL/glew.h"
 
 #include "graphicscore.h"
 #include "window.h"
@@ -10,7 +10,7 @@ namespace Jam
 {
 	//Forward declaration
 	class GraphicsCore;
-
+	class Window;
 
 	class RenderEngine
 	{

@@ -1,17 +1,37 @@
 #!/bin/bash
 
-echo "              Cmake"
-echo ""
+run() {
+	echo "              Cmake"
+	echo ""
 
-cmake ../src
+	cmake ../src
 
-echo ""
-echo "               Make"
-echo ""
+	echo ""
 
-make
+	if [ $? -eq 0 ]; then
+		echo "          Cmake succeded"
+	else
+		echo "         Cmake command failed"
+		return
+	fi
 
-echo ""
-echo "             Program"
+	echo ""
+	echo "               Make"
+	echo ""
 
-./game/game
+	make
+
+	if [ $? -eq 0 ]; then
+		echo "         Make succeded"
+	else
+		echo "         Make command failed"
+		return
+	fi
+
+	echo ""
+	echo "             Program"
+
+	./game/game
+}
+
+run

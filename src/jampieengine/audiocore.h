@@ -3,25 +3,19 @@
 #include <iostream>
 #include <thread>
 
-#include "graphicscoretype.h"
-#include "window.h"
-#include "renderengine.h" 
-#include "pie.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
-namespace Jam
-{
+namespace Jam {
 	//Forward declarations
-	class Window;
 	class Pie;
-	class RenderEngine;
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class GraphicsCore
-	{
+	class AudioCore {
 	public:
-		GraphicsCore(Pie& pie, Flavor& flavor);
-		~GraphicsCore();
+		AudioCore(Pie& pie, Flavor& flavor);
+		~AudioCore();
 
 	private:
 
@@ -31,17 +25,18 @@ namespace Jam
 		//Thread used to process rendering
 		std::thread* _thread;
 
-		//The window class pointer
-		Window* _window;
-
-		//The Render Engine
-		RenderEngine* _renderEngine;
-
 		//Invoked by main class upon launch
 		void _bake(Flavor& flavor);
 
 		//Called by thread on start
 		void _start();
+
+		ALCdevice* _device;
+		ALCcontext* _context;
+		ALCdevice* _inDevice;
+
+		ALuint _source;
+		ALuint _buffer;
 
 		friend Pie;
 	};

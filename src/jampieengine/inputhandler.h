@@ -16,7 +16,7 @@
 #include <thread>
 
 #include <SDL2/SDL.h>
-#include "glm\glm.hpp"
+#include "glm/glm.hpp"
 
 namespace Jam {
 
