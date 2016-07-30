@@ -21,6 +21,7 @@ void RenderEngine::_createContext()
 	switch (_graphicsType) {
 	case GRAPHICS_TYPE_OPENGL:
 		_glContext = SDL_GL_CreateContext(_window.getHandle());
+		SDL_GL_SetSwapInterval(0);
 		break;
 	}
 }
