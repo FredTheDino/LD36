@@ -3,8 +3,8 @@
 #include <iostream>
 #include <thread>
 
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 namespace Jam {
 	//Forward declarations

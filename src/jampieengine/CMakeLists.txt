@@ -21,9 +21,9 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	FILE(GLOB SDL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/SDL2/*.lib")
 
 	if(${WINDOWS_TARGET} STREQUAL "x64")
-		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/OpenAL/Win64/*.lib")
+		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win64/*.lib")
 	else()
-		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/OpenAL/Win32/*.lib")
+		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win32/*.lib")
 	endif()
 
 	target_link_libraries(jampieengine ${SDL_LIBRARIES} ${OpenAL_LIBRARIES})
@@ -34,13 +34,13 @@ else()
 	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 	if (${SDL2_FOUND})
 		INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-		TARGET_LINK_LIBRARIES(jampieengine ${SDL2_LIBRARIES})		
+		TARGET_LINK_LIBRARIES(jampieengine ${SDL2_LIBRARIES})
 	endif()
-	
+
 	PKG_SEARCH_MODULE(GLEW REQUIRED glew)
 	if (${GLEW_FOUND})
 		INCLUDE_DIRECTORIES(${GLEW_INCLUDE_DIRS})
-		TARGET_LINK_LIBRARIES(jampieengine ${GLEW_LIBRARIES})	
+		TARGET_LINK_LIBRARIES(jampieengine ${GLEW_LIBRARIES})
 	endif()
 
 	Find_Package(OpenAL REQUIRED)

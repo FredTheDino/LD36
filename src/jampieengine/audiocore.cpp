@@ -7,7 +7,6 @@ using namespace Jam;
 
 AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 	: _pie(pie) {
-
 	_inDevice = alcCaptureOpenDevice(NULL, 22050, AL_FORMAT_MONO16, 5 * 22050);
 	if (!_inDevice)
 		printf("AL Error: no audio input device\n");
@@ -26,6 +25,7 @@ AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 
 	alGenSources(1, &_source);
 
+	/*
 	//Generate a sinus wave
 	float freq = 222.0;
 	int time = 4;
@@ -43,7 +43,7 @@ AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 	alBufferData(_buffer, AL_FORMAT_MONO16, &buffer[0], bufferSize, sampleRate);
 	alSourcei(_source, AL_BUFFER, _buffer);
 	alSourcePlay(_source);
-
+	*/
 }
 
 void AudioCore::_bake(Flavor& flavor) {
@@ -59,6 +59,8 @@ void AudioCore::_start() {
 AudioCore::~AudioCore() {
 	_thread->join();
 
+	alDeleteSources(1, &_source);
+	alDeleteBuffers(1, &_buffer);
 	alcCloseDevice(_device);
 	alcDestroyContext(_context);
 	delete _thread;
