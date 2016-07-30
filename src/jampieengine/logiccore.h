@@ -8,7 +8,6 @@
 namespace Jam
 {
 	//Forward declarations
-	class Window;
 	class Pie;
 	struct Flavor;
 
@@ -26,9 +25,6 @@ namespace Jam
 
 		//Thread used to process rendering
 		std::thread* _thread;
-
-		//The window class pointer
-		Window* _window;
 
 		//Invoked by main class upon launch
 		void _bake(Flavor& flavor);

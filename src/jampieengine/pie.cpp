@@ -13,13 +13,12 @@ void Pie::bake()
 {
 	_cooking = true;
 
+
 	_graphicsCore->_bake(_flavor);
 	_logicCore->_bake(_flavor);
+	_soundCore->_bake(_flavor);
 
-	while (_cooking) {
-
-	}
-
+	while (_cooking) {}
 }
 
 void Pie::_initSDL()
@@ -35,11 +34,13 @@ void Pie::_initCores()
 {
 	_graphicsCore = new GraphicsCore(*this, _flavor);
 	_logicCore = new LogicCore(*this, _flavor);
+	_soundCore = new AudioCore(*this, _flavor);
 }
 
 Pie::~Pie()
 {
 	delete _graphicsCore;
 	delete _logicCore;
+	delete _soundCore;
 	SDL_Quit();
 }
