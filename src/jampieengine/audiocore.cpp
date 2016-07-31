@@ -1,49 +1,21 @@
 #include "audiocore.h"
 #include "pie.h"
+#include "audiohandler.h"
 
 #include <vector>
+#include <chrono>
+
+#include "sound.h"
+#include "spatialsound.h"
 
 using namespace Jam;
 
 AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 	: _pie(pie) {
-	_inDevice = alcCaptureOpenDevice(NULL, 22050, AL_FORMAT_MONO16, 5 * 22050);
-	if (!_inDevice)
-		printf("AL Error: no audio input device\n");
+	AudioHandler::init(_library);
 
-	_device = alcOpenDevice(NULL);
-	if (!_device) 
-		printf("AL Error: no audio output device\n");
-		
-	_context = alcCreateContext(_device, NULL);
-	if (!alcMakeContextCurrent(_context)) 
-		printf("AL Error: cannot create context\n");
-
-	printf("[OpenAL] Version: %s\n", alGetString(AL_VERSION));
-	printf("[OpenAL] Vendor: %s\n", alGetString(AL_VENDOR));
-	printf("[OpenAL] Renderer: %s\n", alGetString(AL_RENDERER));
-
-	alGenSources(1, &_source);
-
-	/*
-	//Generate a sinus wave
-	float freq = 222.0;
-	int time = 4;
-	unsigned int sampleRate = 22050;
-	size_t bufferSize = time * sampleRate;
-
-	std::vector<short> buffer;
-	buffer.resize(bufferSize);
-
-	for (size_t i = 0; i < bufferSize; i++) {
-		buffer[i] = 100 * sin((i * 2.0 * 3.14 * freq) / sampleRate);
-	}
-
-	alGenBuffers(1, &_buffer);
-	alBufferData(_buffer, AL_FORMAT_MONO16, &buffer[0], bufferSize, sampleRate);
-	alSourcei(_source, AL_BUFFER, _buffer);
-	alSourcePlay(_source);
-	*/
+	AudioHandler::preload("fred", "jungle.wav");
+	AudioHandler::preload("test", "audio.wav");
 }
 
 void AudioCore::_bake(Flavor& flavor) {
@@ -51,17 +23,37 @@ void AudioCore::_bake(Flavor& flavor) {
 }
 
 void AudioCore::_start() {
-	while (_pie.isCooking()) {
 
+	bool isReady = false;
+
+	SpatialSound ssound;
+	Sound sound;
+
+	while (_pie.isCooking()) {
+		_library.update();
+		AudioHandler::update();
+
+		if (_library.ready()) {
+			if (!isReady) {
+				sound.setBuffer("fred");
+				sound.setGain(0.02);
+				sound.setPitch(1);
+				sound.setLooping(true);
+				//sound.play();
+
+				ssound.play("test");
+				ssound.setLooping(true);
+				ssound.setGain(0.2);
+				ssound.setPosition(-10, -2, -2);
+				ssound.setVelocity(10, 2, 2);
+			}
+
+			isReady = true;
+		}
 	}
 }
 
 AudioCore::~AudioCore() {
 	_thread->join();
-
-	alDeleteSources(1, &_source);
-	alDeleteBuffers(1, &_buffer);
-	alcCloseDevice(_device);
-	alcDestroyContext(_context);
 	delete _thread;
 }

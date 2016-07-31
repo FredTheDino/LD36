@@ -20,13 +20,15 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
 	FILE(GLOB SDL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/SDL2/*.lib")
 
+	FILE(GLOB GLEW_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/GL/*.lib")
+
 	if(${WINDOWS_TARGET} STREQUAL "x64")
 		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win64/*.lib")
 	else()
 		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win32/*.lib")
 	endif()
 
-	target_link_libraries(jampieengine ${SDL_LIBRARIES} ${OpenAL_LIBRARIES})
+	target_link_libraries(jampieengine ${SDL_LIBRARIES} ${OpenAL_LIBRARIES} ${GLEW_LIBRARIES})
 
 else()
 	INCLUDE(FindPkgConfig)
