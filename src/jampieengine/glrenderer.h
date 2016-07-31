@@ -9,8 +9,6 @@ namespace Jam
 	public:
 
 	private:
-		
-		void _initMesh();
 
 		friend Renderer;
 	};

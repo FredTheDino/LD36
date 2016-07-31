@@ -13,6 +13,8 @@ namespace Jam
 
 		const GraphicsCoreType GRAPHICS_TYPE;
 
+		void draw();
+
 	private:
 
 		GLRenderer* _glRenderer;
