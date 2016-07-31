@@ -4,6 +4,28 @@
 
 namespace Jam {
 
+	namespace Helper {
+		unsigned int getInt(std::vector<char>& buffer, size_t index) {
+			unsigned int temp = 0;
+
+			temp |= (((unsigned char) buffer[index++]) << 0x0);
+			temp |= (((unsigned char) buffer[index++]) << 0x8);
+			temp |= (((unsigned char) buffer[index++]) << 0x10);
+			temp |= (((unsigned char) buffer[index]) << 0x18);
+
+			return temp;
+		}
+
+		unsigned short getShort(std::vector<char>& buffer, size_t index) {
+			unsigned short temp = 0;
+
+			temp |= (((char) buffer[index++]) << 0x0);
+			temp |= (((char) buffer[index]) << 0x8);
+
+			return temp;
+		}
+	}
+
 	AudioLibrary::AudioLibrary() {
 		_preloadingQueue.reserve(20);
 		_unloadingQueue.reserve(20);
@@ -25,8 +47,8 @@ namespace Jam {
 		while (_accessingPreloadingQueue) {}
 		_accessingPreloadingQueue = true;
 		{
-			_preloadingQueue.push_back(path);
-			_load(path);
+			_ready = false;
+			_preloadingQueue.insert(std::make_pair(nickname, path));
 		}
 		_accessingPreloadingQueue = false;
 	}
@@ -44,44 +66,94 @@ namespace Jam {
 		_accessingLibrary = false;
 	}
 
-	bool AudioLibrary::ready() {
-		return false;
+	ALuint AudioLibrary::operator[](const std::string & nickname) {
+		ALuint buffer = 0;
+
+		while (_accessingLibrary) {};
+		_accessingLibrary = true;
+		{
+			auto it = _library.find(nickname);
+			if (it != _library.end())
+				buffer = it->second;
+		}
+		_accessingLibrary = false;
+
+		return buffer;
 	}
 
-	void AudioLibrary::update() {}
+	bool AudioLibrary::ready() {
+		return _ready;
+	}
 
-	void AudioLibrary::_load(std::string path) {
+	void AudioLibrary::update() {
+		//Check if we are loading
+		if (_ioThread) {
+			//If we are, is it done?
+			if (_ioThread->joinable()) {
+				//If it is, join
+				_ioThread->join();
+				delete _ioThread;
+				_ioThread = nullptr;
+			} else {
+				//Else there's nothing to do
+				return;
+			}
+		}
 
-		ALuint bufferID = 0;
-		alGenBuffers(1, &bufferID);
+		while (_accessingPreloadingQueue) {};
+		//We can load something
+		_accessingPreloadingQueue = true;
+		//Is there something to load
+		if (0 != _preloadingQueue.size()) {
+			auto it = _preloadingQueue.begin();
+			_ioThread = new std::thread(&AudioLibrary::_load, this, it->first, it->second);
+			_preloadingQueue.erase(it->first);
+		} else {
+			//Then we're ready to rock!
+			_ready = true;
+		}
+		_accessingPreloadingQueue = false;
+	}
 
+	
+
+	void AudioLibrary::_load(std::string nickname, std::string path) {
+
+		//Load the file
 		std::vector<char> buffer = Loader::loadCharBuffer(path);
 
-		//Read in header
-		//Make sure it's a wave file
-		if (!(buffer[8] == 'W' && buffer[9] == 'A' && buffer[10] == 'V' && buffer[11] == 'E')) {
-			std::cout << path << " is not a .wave file." << std::endl;
+		//Make sure it's a wave file and find the fmt chunk
+		size_t currentAddress = 0;
+		size_t maxHeaderSize = 512;
+		while (currentAddress < maxHeaderSize) {
+			if (buffer[currentAddress++] != 'f') continue;
+			if (buffer[currentAddress++] != 'm') continue;
+			if (buffer[currentAddress++] != 't') continue;
+			if (buffer[currentAddress++] != ' ') continue;
+			break;
+		}
+
+		//Check if it was found
+		if (maxHeaderSize <= currentAddress) {
+			std::cout << path << "is not of type wav" << std::endl;
 			return;
 		}
 
 		//Make sure it isn't compressed
-		if (1 != ((buffer[20] << 0x0) | (buffer[21] << 0x8))) {
+		short compression = Helper::getShort(buffer, currentAddress + 4);
+		if (1 != compression) {
 			std::cout << path << " is compressed." << std::endl;
 			return;
 		}
 
 		//Get the number of channels
-		unsigned short numChannels = buffer[22] << 0x0 | buffer[23] << 0x8;
+		unsigned short numChannels = Helper::getShort(buffer, currentAddress + 6);//  buffer[22] << 0x0 | buffer[23] << 0x8;
 		
 		//Get the sample rate
-		unsigned int sampleRate =
-			(( (unsigned char) buffer[24]) << 0x0) | 
-			(( (unsigned char) buffer[25]) << 0x8) |
-			(( (unsigned char) buffer[26]) << 0x10) |
-			(( (unsigned char) buffer[27]) << 0x18);
+		unsigned int sampleRate = Helper::getInt(buffer, currentAddress + 8);
 		
 		//The bits for each sample 68 -84
-		unsigned short bitsPerSample = buffer[34] << 0x0 | buffer[35] << 0x8;
+		unsigned short bitsPerSample = Helper::getShort(buffer, currentAddress + 18); //buffer[34] << 0x0 | buffer[35] << 0x8;
 
 		//Find out which format it is
 		ALenum format;
@@ -99,10 +171,39 @@ namespace Jam {
 			}
 		}
 
-		printf("numChanels: %i\nsampleRate: %i\nbitsPerSample: %i\n", numChannels, sampleRate, bitsPerSample);
+		//Find the data chunk
+		while (currentAddress < maxHeaderSize) {
+			if (buffer[currentAddress++] != 'd') continue;
+			if (buffer[currentAddress++] != 'a') continue;
+			if (buffer[currentAddress++] != 't') continue;
+			if (buffer[currentAddress++] != 'a') continue;
+			break;
+		}
 
-		//Load it to the buffer
-		alBufferData(bufferID, format, &buffer[44], buffer.size() - 44, sampleRate);
-		std::cout << bufferID << std::endl;
+		//Check if it was found
+		if (maxHeaderSize <= currentAddress) {
+			std::cout << "Can't find the wav data for file" << path << std::endl;
+			return;
+		}
+
+		//Get the size of the data
+		unsigned int size = Helper::getInt(buffer, currentAddress);
+
+		//Move it forward so we're on the actual data
+		currentAddress += 4;
+
+		//Hacky way to make sure all the data that is specified exists
+		buffer[currentAddress + size - 1];
+
+		//Generate the buffer so we don't have to clean up if the sound doesn't load
+		ALuint bufferID = 0;
+		alGenBuffers(1, &bufferID);
+
+		//Load the data to the buffer
+		alBufferData(bufferID, format, &buffer[currentAddress], size, sampleRate);
+		
+		_accessingLibrary = true;
+		_library.insert(std::make_pair(nickname, bufferID));
+		_accessingLibrary = false;
 	}
 }

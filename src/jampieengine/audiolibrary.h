@@ -22,6 +22,8 @@ namespace Jam {
 		//Unloads an audio file from RAM
 		void unload(std::string nickname);
 
+		//Returns a buffer that is preloaded, other wise 0
+		ALuint operator[] (const std::string& nickname);
 		//If the library currently isn't loading anything
 		bool ready();
 
@@ -29,16 +31,17 @@ namespace Jam {
 		void update();
 
 	private:
-
-		void _load(std::string);
+		
+		//A function to load and processs input
+		void _load(std::string, std::string);
 
 		//A thread that manages reading and writing
-		std::thread* _ioThread;
+		std::thread* _ioThread = nullptr;
 		//If the thread is ready to play audio
 		bool _ready = true;
 
 		//A list of sound files to be preloaded
-		std::vector<std::string> _preloadingQueue;
+		std::unordered_map<std::string, std::string> _preloadingQueue;
 		//If something is accessing the preloaderqueue
 		bool _accessingPreloadingQueue = false;
 
