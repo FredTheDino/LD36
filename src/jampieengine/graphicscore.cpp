@@ -1,4 +1,5 @@
 #include "graphicscore.h"
+#include "inputeventqueue.h"
 
 using namespace Jam;
 
@@ -57,7 +58,7 @@ void GraphicsCore::_start()
 				case SDL_MOUSEBUTTONUP:
 				case SDL_CONTROLLERAXISMOTION:
 				case SDL_MOUSEMOTION:
-					EventQueue::pushEventToQueue(e);
+					InputEventQueue::pushEventToQueue(e);
 					break;
 				default:
 				{

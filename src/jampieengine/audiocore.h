@@ -6,6 +6,8 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
+#include "audiolibrary.h"
+
 namespace Jam {
 	//Forward declarations
 	class Pie;
@@ -31,9 +33,12 @@ namespace Jam {
 		//Called by thread on start
 		void _start();
 
+		//The input device to use
 		ALCdevice* _device;
+		//The AL context
 		ALCcontext* _context;
-		ALCdevice* _inDevice;
+
+		AudioLibrary _library;
 
 		ALuint _source;
 		ALuint _buffer;

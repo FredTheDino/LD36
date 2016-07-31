@@ -6,7 +6,7 @@
 // Have a nice one future person! :D               //
 /////////////////////////////////////////////////////
 
-#include "eventqueue.h"
+#include "inputeventqueue.h"
 #include "inputdatatypes.h"
 
 #include <string>

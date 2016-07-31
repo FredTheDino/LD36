@@ -7,9 +7,6 @@ using namespace Jam;
 
 AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 	: _pie(pie) {
-	_inDevice = alcCaptureOpenDevice(NULL, 22050, AL_FORMAT_MONO16, 5 * 22050);
-	if (!_inDevice)
-		printf("AL Error: no audio input device\n");
 
 	_device = alcOpenDevice(NULL);
 	if (!_device) 
@@ -24,6 +21,12 @@ AudioCore::AudioCore(Pie& pie, Flavor& flavor)
 	printf("[OpenAL] Renderer: %s\n", alGetString(AL_RENDERER));
 
 	alGenSources(1, &_source);
+
+	_library.preload("Fred", "jungle.wav");
+
+	alSourcei(_source, AL_BUFFER, 2);
+	alSourcef(_source, AL_GAIN, 0.01);
+	alSourcePlay(_source);
 
 	/*
 	//Generate a sinus wave
