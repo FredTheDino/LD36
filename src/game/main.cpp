@@ -7,8 +7,8 @@ int main(int c, char** args) {
 
 	printf("WOOOT\n");
 
-	Jam::Loader::prefix = "../res/";
-	//Jam::Loader::prefix = "../../res/";
+	//Jam::Loader::prefix = "../res/";
+	Jam::Loader::prefix = "../../res/";
 
 	std::cout << Jam::Loader::loadText("test.txt") << std::endl;
 	

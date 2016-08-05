@@ -56,7 +56,7 @@ void Jam::InputHandler::update() {
 	}
 
 	std::vector<SDL_Event> workingQueue;
-	EventQueue::copyEventQueue(&workingQueue);
+	InputEventQueue::copyEventQueue(&workingQueue);
 
 	SDL_Event e;
 	InputBinding data;

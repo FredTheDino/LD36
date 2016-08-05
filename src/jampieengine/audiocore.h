@@ -6,6 +6,9 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
+#include "audiolibrary.h"
+#include "audiohandler.h"
+
 namespace Jam {
 	//Forward declarations
 	class Pie;
@@ -31,12 +34,10 @@ namespace Jam {
 		//Called by thread on start
 		void _start();
 
-		ALCdevice* _device;
-		ALCcontext* _context;
-		ALCdevice* _inDevice;
-
-		ALuint _source;
-		ALuint _buffer;
+		//A library to hold all the buffers
+		AudioLibrary _library;
+		//The actual computation engine coupled with the audio
+		AudioHandler _engine;
 
 		friend Pie;
 	};
