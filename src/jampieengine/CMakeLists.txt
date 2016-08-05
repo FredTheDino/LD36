@@ -14,19 +14,21 @@ if(${OPENGL_FOUND})
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	INCLUDE_DIRECTORIES(jampieengine ".WindowsBS/")
+    INCLUDE_DIRECTORIES(jampieengine ".WindowsBS/")
 
-	MESSAGE(${CMAKE_SOURCE_DIR})
+    MESSAGE(${CMAKE_SOURCE_DIR})
 
-	FILE(GLOB SDL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/SDL2/*.lib")
+    FILE(GLOB SDL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/SDL2/*.lib")
 
-	if(${WINDOWS_TARGET} STREQUAL "x64")
-		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win64/*.lib")
-	else()
-		FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win32/*.lib")
-	endif()
+    FILE(GLOB GLEW_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/GL/*.lib")
 
-	target_link_libraries(jampieengine ${SDL_LIBRARIES} ${OpenAL_LIBRARIES})
+    if(${WINDOWS_TARGET} STREQUAL "x64")
+        FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win64/*.lib")
+    else()
+        FILE(GLOB OpenAL_LIBRARIES "${CMAKE_SOURCE_DIR}/jampieengine/.WindowsBS/AL/Win32/*.lib")
+    endif()
+
+    target_link_libraries(jampieengine ${SDL_LIBRARIES} ${OpenAL_LIBRARIES} ${GLEW_LIBRARIES})
 
 else()
 	INCLUDE(FindPkgConfig)

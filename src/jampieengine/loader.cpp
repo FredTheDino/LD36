@@ -7,9 +7,12 @@ std::string Loader::prefix("");
 
 std::string Loader::loadText(std::string path)
 {
+	//Create full path
+	std::string fullPath = prefix + path;
+
 	//Open file
 	std::ifstream file(
-		prefix.append(path), 
+		fullPath, 
 		std::ifstream::binary);
 
 	//Make sure the file exists

@@ -8,6 +8,6 @@ namespace Jam
 	namespace Debug
 	{
 		//Error crash function
-		void err(const char* msg, int err);
+		void err(std::string msg, int err);
 	}
 }
