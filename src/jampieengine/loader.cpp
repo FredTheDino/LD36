@@ -53,8 +53,8 @@ std::vector<char> Jam::Loader::loadCharBuffer(std::string path) {
 std::ifstream* Loader::openFile(const std::string& path) {
 	//Open file
 	std::ifstream* file = new std::ifstream(
-	prefix + path,
-	std::ifstream::binary);
+		prefix + path,
+		std::ifstream::binary);
 
 	//Make sure the file exists
 	if (!file->is_open()) {
