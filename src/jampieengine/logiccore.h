@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 
+#include "core.h"
 #include "inputhandler.h"
 
 namespace Jam
@@ -12,16 +13,13 @@ namespace Jam
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class LogicCore
+	class LogicCore : Core
 	{
 	public:
 		LogicCore(Pie& pie, Flavor& flavor);
 		~LogicCore();
 
 	private:
-
-		//Main class reference
-		Pie& _pie;
 
 		//Thread used to process rendering
 		std::thread* _thread;

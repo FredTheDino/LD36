@@ -44,6 +44,9 @@ namespace Jam {
 		//A helper function to for the set audio event
 		static void _set(AudioEvent& e);
 
+		//A helper function to set AL values linked to the listener
+		static void _listener(AudioEvent& e);
+
 		//A list of AL sources
 		static std::vector<ALuint> _sources;
 		//If something is accessing the _sources array

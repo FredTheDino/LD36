@@ -76,6 +76,10 @@ namespace Jam {
 				case AudioEventData::Type::SET:
 					_set(e);
 					break;
+
+				case AudioEventData::Type::LISTENER:
+					_listener(e);
+					break;
 				default:
 					break;
 			}
@@ -130,7 +134,6 @@ namespace Jam {
 
 	void AudioHandler::_set(AudioEvent& e) {
 		
-		//Get the actual source id
 		switch (e.target) {
 			case AL_PITCH:
 			case AL_GAIN:
@@ -160,6 +163,22 @@ namespace Jam {
 			}
 			case AL_BUFFER:
 				alSourcei(e.source, e.target, (*_library)[e.nickname]);
+				break;
+			default:
+				break;
+		}
+	}
+
+	void AudioHandler::_listener(AudioEvent & e) {
+
+		switch (e.target) {
+			case AL_GAIN:
+				alListenerf(e.target, e.fData[0]);
+				break;
+			case AL_VELOCITY:
+			case AL_DIRECTION:
+			case AL_POSITION:
+				alListenerfv(e.target, e.fData);
 				break;
 			default:
 				break;
