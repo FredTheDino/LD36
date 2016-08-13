@@ -1,10 +1,12 @@
 #include "graphicscore.h"
+
 #include "inputeventqueue.h"
+#include "time.h"
 
 using namespace Jam;
 
 GraphicsCore::GraphicsCore(Pie& pie, Flavor& flavor)
-	: _pie(pie)
+	: Core(pie)
 {
 	
 }
@@ -16,6 +18,8 @@ void GraphicsCore::_bake(Flavor& flavor)
 
 void GraphicsCore::_start()
 {
+	Time::registerThread();
+
 	_window = new Window(*this, _pie._flavor);
 
 	_renderEngine = new RenderEngine(*_window, _pie._flavor.graphicsCoreType);
@@ -70,11 +74,14 @@ void GraphicsCore::_start()
 
 		//Draw
 		_renderEngine->_draw();
+		Time::wait();
 	}
 
 	delete _renderEngine;
 
 	delete _window;
+
+	Time::unregisterThread();
 }
 
 GraphicsCore::~GraphicsCore()

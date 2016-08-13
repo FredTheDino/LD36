@@ -18,7 +18,11 @@ void Pie::bake()
 	_logicCore->_bake(_flavor);
 	_soundCore->_bake(_flavor);
 
-	while (_cooking) {}
+	Time::registerThread();
+
+	while (_cooking) { Time::wait(); }
+
+	Time::unregisterThread();
 }
 
 void Pie::_initSDL()

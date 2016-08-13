@@ -61,5 +61,6 @@ namespace Jam
 		//Friends!
 		friend GraphicsCore;
 		friend LogicCore;
+		friend AudioCore;
 	};
 }

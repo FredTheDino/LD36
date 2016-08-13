@@ -7,5 +7,6 @@ install_manifest.txt
 CTestTestfile.cmake
 
 #To suit my personal prefference when it comes to structure
+.vscode/
 /build/*
 !/build/build*.*
