@@ -10,6 +10,7 @@ namespace Jam {
 	namespace AudioEventData {
 		//The type of the event
 		enum class Type {
+			LISTENER,
 			SET,
 			PLAY,
 			PAUSE,
@@ -47,9 +48,9 @@ namespace Jam {
 		//The target for set operations
 		ALenum target;
 		//Optional int data
-		int iData[3];
+		int iData[1];
 		//Optional float data
-		float fData[3];
+		float fData[6];
 		//A string for potential sounds files
 		std::string nickname;
 	}  AudioEvent;

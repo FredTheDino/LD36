@@ -20,9 +20,14 @@ void Pie::bake()
 
 	_gameStateManager = new GameStateManager(*this);
 
+	Time::registerThread();
+
 	while (_cooking) {
 		_gameStateManager->update();
+		Time::wait();
 	}
+
+	Time::unregisterThread();
 
 	delete _gameStateManager;
 }

@@ -6,6 +6,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
+#include "core.h"
 #include "audiolibrary.h"
 #include "audiohandler.h"
 
@@ -15,15 +16,12 @@ namespace Jam {
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class AudioCore {
+	class AudioCore : Core {
 	public:
 		AudioCore(Pie& pie, Flavor& flavor);
 		~AudioCore();
 
-	private:
-
-		//Main class reference
-		Pie& _pie;
+	protected:
 
 		//Thread used to process rendering
 		std::thread* _thread;
@@ -37,7 +35,7 @@ namespace Jam {
 		//A library to hold all the buffers
 		AudioLibrary _library;
 		//The actual computation engine coupled with the audio
-		AudioHandler _engine;
+		AudioHandler _handler;
 
 		friend Pie;
 	};

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 
+#include "core.h"
 #include "graphicscoretype.h"
 #include "window.h"
 #include "renderengine.h" 
@@ -17,16 +18,13 @@ namespace Jam
 	struct Flavor;
 
 	//GraphicsCore class for handling all graphics
-	class GraphicsCore
+	class GraphicsCore : Core
 	{
 	public:
 		GraphicsCore(Pie& pie, Flavor& flavor);
 		~GraphicsCore();
 
 	private:
-
-		//Main class reference
-		Pie& _pie;
 
 		//Thread used to process rendering
 		std::thread* _thread;
