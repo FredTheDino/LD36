@@ -1,7 +1,7 @@
 #include "graphicscore.h"
 
 #include "inputeventqueue.h"
-#include "time.h"
+#include "jamtime.h"
 
 using namespace Jam;
 
@@ -86,6 +86,5 @@ void GraphicsCore::_start()
 
 GraphicsCore::~GraphicsCore()
 {
-	_thread->join();
 	delete _thread;
 }

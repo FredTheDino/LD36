@@ -31,25 +31,30 @@ void Time::registerThread() {
 }
 
 void Time::unregisterThread() {
-	std::thread::id id = std::this_thread::get_id();
-	size_t target = -1;
+	try {
+		std::thread::id id = std::this_thread::get_id();
+		size_t target = -1;
 
-	while (_accessingRegisterdThreads) {}
-	_accessingRegisterdThreads = true;
-	while (_accessingReadyThreads) {}
-	_accessingReadyThreads = true;
+		while (_accessingRegisterdThreads) {}
+		_accessingRegisterdThreads = true;
+		while (_accessingReadyThreads) {}
+		_accessingReadyThreads = true;
 
-	//Add a new element to the list
-	for (size_t i = 0; i < _registerdThreads.size(); i++) {
-		if (_registerdThreads[i] == id) {
-			target = i;
+		//Add a new element to the list
+		for (size_t i = 0; i < _registerdThreads.size(); i++) {
+			if (_registerdThreads[i] == id) {
+				target = i;
+			}
 		}
-	}
-	_registerdThreads.erase(_registerdThreads.begin() + target);
-	_readyThreads.erase(_readyThreads.begin() + target);
+		_registerdThreads.erase(_registerdThreads.begin() + target);
+		_readyThreads.erase(_readyThreads.begin() + target);
 
-	_accessingReadyThreads = false;
-	_accessingRegisterdThreads = false;
+		_accessingReadyThreads = false;
+		_accessingRegisterdThreads = false;
+
+	} catch (const std::exception&) {
+
+	}
 }
 
 void Time::update() {

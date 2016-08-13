@@ -13,14 +13,18 @@ void Pie::bake()
 {
 	_cooking = true;
 
+	Time::registerThread();
 
 	_graphicsCore->_bake(_flavor);
 	_logicCore->_bake(_flavor);
 	_soundCore->_bake(_flavor);
 
-	Time::registerThread();
-
 	while (_cooking) { Time::wait(); }
+	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+	_soundCore->join();
+	_logicCore->join();
+	_graphicsCore->join();
 
 	Time::unregisterThread();
 }

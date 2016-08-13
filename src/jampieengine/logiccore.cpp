@@ -36,12 +36,13 @@ void LogicCore::_start()
 		}
 		Time::wait();
 	}
+
 	Time::unregisterThread();
+	_thread->join();
 }
 
 LogicCore::~LogicCore()
 {
-	_thread->join();
 	delete _thread;
 	InputHandler::destroy();
 }

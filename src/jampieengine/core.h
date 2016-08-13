@@ -15,7 +15,12 @@ namespace Jam {
 		Core(Pie& pie);
 		~Core();
 
+		void join();
+
 	protected:
+
+		//Thread used to process rendering
+		std::thread* _thread;
 
 		//Main class reference
 		Pie& _pie;
