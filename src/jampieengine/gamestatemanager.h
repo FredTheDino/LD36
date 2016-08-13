@@ -1,11 +1,14 @@
 #pragma once
 
 #include "pie.h"
+#include "gamestate.h"
+#include "gamestatemanager.h"
 
 namespace Jam
 {
 	//Forward declarations
 	class Pie;
+	class GameState;
 
 	class GameStateManager
 	{
@@ -14,6 +17,9 @@ namespace Jam
 		~GameStateManager();
 
 		void update();
+
+		void enterState(std::string tag) { enterState(GameStateLibrary::getGameState(tag)); };
+		void enterState(GameState* gameState);
 
 	private:
 
