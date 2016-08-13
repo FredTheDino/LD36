@@ -114,7 +114,7 @@ void Time::setFPS(int fps) {
 }
 
 void Time::wait() {
-	/*
+
 	//A flag to say wether or not the threads can continue
 	static bool waitForThread = false;
 
@@ -143,7 +143,7 @@ void Time::wait() {
 		}
 	}
 	_accessingRegisterdThreads = false;
-	*/
+	//*/
 
 	while (_accessingNextFrame) {}
 	_accessingNextFrame = true;
@@ -151,19 +151,19 @@ void Time::wait() {
 	std::chrono::time_point<std::chrono::high_resolution_clock> now = CLOCK::now();
 	std::chrono::duration<long, std::nano> timeToSleep = (_nextFrame - now);
 	_accessingNextFrame = false;
+	
 	//Decrease it a bit, to make sure we don't over sleep
-	//timeToSleep -= std::chrono::nanoseconds(1000000);
+	timeToSleep -= std::chrono::nanoseconds(1000000);
 
-	now = CLOCK::now();
 	//Sleep if you have the time to spare
 	if (0.0 < timeToSleep.count()) {
 		//Sleep until an approximation of the next frame
 		std::this_thread::sleep_for(timeToSleep);
 	}
 
-	/*
+	//*
 	//A signal that stops all threads in their tracks
-	while (waitForThread) {}
+	while (waitForThread && CLOCK::now() < _nextFrame) {}
 
 	//Check out all threads
 	while (_accessingRegisterdThreads) {}
@@ -182,7 +182,7 @@ void Time::wait() {
 		}
 	}
 	_accessingRegisterdThreads = false;
-	*/
+	//*/
 }
 
 double Jam::Time::getDelta() {
