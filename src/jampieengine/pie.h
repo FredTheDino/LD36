@@ -10,11 +10,13 @@
 #include "audiocore.h"
 #include "debug.h"
 #include "inputhandler.h"
+#include "gamestatemanager.h"
 
 namespace Jam
 {
-	//Forward declaration of GraphicsCore
+	//Forward declarations
 	class GraphicsCore;
+	class GameStateManager;
 
 	//Struct used to retrieve startup information from user
 	struct Flavor {
@@ -48,6 +50,9 @@ namespace Jam
 
 		//User information saved
 		Flavor& _flavor;
+		
+		//GameStateManager
+		GameStateManager* _gameStateManager;
 
 		//Core handles
 		GraphicsCore* _graphicsCore;

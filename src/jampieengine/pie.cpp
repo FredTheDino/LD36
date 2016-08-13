@@ -18,7 +18,13 @@ void Pie::bake()
 	_logicCore->_bake(_flavor);
 	_soundCore->_bake(_flavor);
 
-	while (_cooking) {}
+	_gameStateManager = new GameStateManager(*this);
+
+	while (_cooking) {
+		_gameStateManager->update();
+	}
+
+	delete _gameStateManager;
 }
 
 void Pie::_initSDL()
