@@ -1,8 +1,22 @@
 #include"component.h"
 #include "entity.h"
 
-void Component::setParent(Entity& parent) {
-	_parent = &parent;
+void Jam::Component::setActive(bool active) {
+	_isActive = active;
 }
 
-Component::Component(ComponentTypes type): _type(type) {}
+void Jam::Component::toggleActive() {
+	_isActive = !_isActive;
+}
+
+bool Jam::Component::isActive() {
+	return _isActive;
+}
+
+Jam::Entity* Jam::Component::_getParent() {
+	return _parent;
+}
+
+void Jam::Component::_setParent(Jam::Entity& parent) {
+	_parent = &parent;
+}

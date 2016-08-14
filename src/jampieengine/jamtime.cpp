@@ -1,6 +1,7 @@
 #include "jamtime.h"
 
 #include <thread>
+#include <iostream>
 
 using namespace Jam;
 
@@ -31,15 +32,15 @@ void Time::registerThread() {
 }
 
 void Time::unregisterThread() {
+	std::thread::id id = std::this_thread::get_id();
+	size_t target = -1;
+
+	while (_accessingRegisterdThreads) {}
+	_accessingRegisterdThreads = true;
+	while (_accessingReadyThreads) {}
+	_accessingReadyThreads = true;
+
 	try {
-		std::thread::id id = std::this_thread::get_id();
-		size_t target = -1;
-
-		while (_accessingRegisterdThreads) {}
-		_accessingRegisterdThreads = true;
-		while (_accessingReadyThreads) {}
-		_accessingReadyThreads = true;
-
 		//Add a new element to the list
 		for (size_t i = 0; i < _registerdThreads.size(); i++) {
 			if (_registerdThreads[i] == id) {
@@ -49,12 +50,14 @@ void Time::unregisterThread() {
 		_registerdThreads.erase(_registerdThreads.begin() + target);
 		_readyThreads.erase(_readyThreads.begin() + target);
 
-		_accessingReadyThreads = false;
-		_accessingRegisterdThreads = false;
+	} catch (const std::exception& e) {
 
-	} catch (const std::exception&) {
+		std::cout << e.what() << std::endl;
 
 	}
+
+	_accessingReadyThreads = false;
+	_accessingRegisterdThreads = false;
 }
 
 void Time::update() {

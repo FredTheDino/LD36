@@ -84,7 +84,4 @@ void GraphicsCore::_start()
 	Time::unregisterThread();
 }
 
-GraphicsCore::~GraphicsCore()
-{
-	delete _thread;
-}
+GraphicsCore::~GraphicsCore() {}

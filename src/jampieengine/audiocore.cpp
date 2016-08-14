@@ -62,7 +62,4 @@ void AudioCore::_start() {
 	Time::unregisterThread();
 }
 
-AudioCore::~AudioCore() {
-	_thread->join();
-	delete _thread;
-}
+AudioCore::~AudioCore() {}
