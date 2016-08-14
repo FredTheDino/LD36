@@ -26,9 +26,6 @@ namespace Jam
 
 	private:
 
-		//Thread used to process rendering
-		std::thread* _thread;
-
 		//The window class pointer
 		Window* _window;
 

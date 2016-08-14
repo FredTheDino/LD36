@@ -21,9 +21,6 @@ namespace Jam
 
 	private:
 
-		//Thread used to process rendering
-		std::thread* _thread;
-
 		//Invoked by main class upon launch
 		void _bake(Flavor& flavor);
 
