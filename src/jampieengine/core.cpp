@@ -7,4 +7,10 @@ Core::Core(Pie& pie): _pie(pie) {
 };
 
 Core::~Core() {
+}
+
+void Jam::Core::join() {
+	if (_thread->joinable()) {
+		_thread->join();
+	}
 };
