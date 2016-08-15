@@ -8,6 +8,7 @@ namespace Jam {
 	//Forward declarations
 	class Pie;
 	struct Flavor;
+	class JamTime;
 
 	//GraphicsCore class for handling all graphics
 	class Core {

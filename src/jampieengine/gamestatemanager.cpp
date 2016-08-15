@@ -13,6 +13,19 @@ void GameStateManager::update()
 
 }
 
+void GameStateManager::enterState(std::string tag)
+{
+	enterState(GameStateLibrary::getGameState(tag));
+}
+
+void GameStateManager::enterState(GameState* gameState)
+{
+	if (_currentGameState != nullptr)
+		_currentGameState->exit();
+
+	_currentGameState = gameState;
+}
+
 GameStateManager::~GameStateManager()
 {
 

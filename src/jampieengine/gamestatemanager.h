@@ -2,13 +2,14 @@
 
 #include "pie.h"
 #include "gamestate.h"
-#include "gamestatemanager.h"
+#include "gamestatelibrary.h"
 
 namespace Jam
 {
 	//Forward declarations
 	class Pie;
 	class GameState;
+	class GameStateLibrary;
 
 	class GameStateManager
 	{
@@ -18,12 +19,14 @@ namespace Jam
 
 		void update();
 
-		void enterState(std::string tag) { enterState(GameStateLibrary::getGameState(tag)); };
+		void enterState(std::string tag);
 		void enterState(GameState* gameState);
 
 	private:
 
 		Pie& _pie;
+
+		GameState* _currentGameState;
 
 	};
 }

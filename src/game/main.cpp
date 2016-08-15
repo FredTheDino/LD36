@@ -10,7 +10,7 @@ int main(int c, char** args) {
 	Jam::InputHandler::registerInput("fpsDOWN", Jam::InputBinding(true, -1, 0, SDLK_1));
 	Jam::InputHandler::registerInput("fpsUP", Jam::InputBinding(true, -1, 0, SDLK_2));
 
-	Jam::Time::setFPS(60);
+	Jam::Time::setFPS(0);
 
 	//Jam::Loader::prefix = "../res/";
 	Jam::Loader::prefix = "../../res/";

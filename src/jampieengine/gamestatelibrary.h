@@ -6,6 +6,8 @@
 
 namespace Jam
 {
+	class GameState;
+
 	class GameStateLibrary
 	{
 	public:
