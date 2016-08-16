@@ -6,19 +6,21 @@
 #include <SDL2/SDL.h>
 
 #include "graphicscore.h"
-#include "logiccore.h"
 #include "audiocore.h"
 #include "debug.h"
 #include "inputhandler.h"
+#include "gamestatemanager.h"
 
 namespace Jam
 {
-	//Forward declaration of GraphicsCore
+	//Forward declarations
 	class GraphicsCore;
+	class GameStateManager;
 
 	//Struct used to retrieve startup information from user
 	struct Flavor {
 		std::string title = "My Pie";
+		std::string enterState = "main";
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
 		bool w_border = true;
@@ -48,10 +50,12 @@ namespace Jam
 
 		//User information saved
 		Flavor& _flavor;
+		
+		//GameStateManager
+		GameStateManager* _gameStateManager;
 
 		//Core handles
 		GraphicsCore* _graphicsCore;
-		LogicCore* _logicCore;
 		AudioCore* _soundCore;
 
 		//Initialization functions
@@ -60,7 +64,6 @@ namespace Jam
 
 		//Friends!
 		friend GraphicsCore;
-		friend LogicCore;
 		friend AudioCore;
 	};
 }

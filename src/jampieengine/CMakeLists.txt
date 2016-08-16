@@ -3,7 +3,7 @@ FILE(GLOB SOURCE_FILES "*.cpp" "*.h" "*.c")
 ADD_LIBRARY(jampieengine ${SOURCE_FILES})
 
 INCLUDE_DIRECTORIES(jampieengine "/include")
-INCLUDE_DIRECTORIES(jampieengine "/glm" "/glm/gtc" "/glm/gtc" "/glm/detail")
+INCLUDE_DIRECTORIES(jampieengine "/glm" "/glm/gtc" "/glm/gtc" "/glm/detail" "../impl/entity.cpp")
 
 
 #OpenGL

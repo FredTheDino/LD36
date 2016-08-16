@@ -122,7 +122,7 @@ void Time::setFPS(int fps) {
 }
 
 void Time::wait() {
-
+	
 	//A flag to say wether or not the threads can continue
 	static bool waitForThread = false;
 
@@ -151,7 +151,7 @@ void Time::wait() {
 		}
 	}
 	_accessingRegisterdThreads = false;
-	//*/
+	//
 
 	while (_accessingNextFrame) {}
 	_accessingNextFrame = true;
@@ -171,7 +171,7 @@ void Time::wait() {
 
 	//*
 	//A signal that stops all threads in their tracks
-	while (waitForThread && CLOCK::now() < _nextFrame) {}
+	while (waitForThread && (CLOCK::now() < _nextFrame && _desiredDelta.count() != 0)) {}
 
 	//Check out all threads
 	while (_accessingRegisterdThreads) {}
@@ -190,7 +190,7 @@ void Time::wait() {
 		}
 	}
 	_accessingRegisterdThreads = false;
-	//*/
+	
 }
 
 double Jam::Time::getDelta() {

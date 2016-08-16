@@ -61,7 +61,9 @@ RenderEngine::RenderEngine(Window& window, GraphicsCoreType graphicsType)
 	std::cout << "TODO: Remove default renderers from renderengine.cpp constructor" << std::endl;
 	/* Renderers Start */
 
-	_renderers.insert(std::make_pair(3, new Renderer(this, "quad")));
+	for (unsigned int i = 0; i < 1; i++) {
+		_renderers.insert(std::make_pair(i, new Renderer(this, "quad")));
+	}
 
 	/* Renderers End */
 }
