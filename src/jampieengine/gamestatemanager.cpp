@@ -2,15 +2,18 @@
 
 using namespace Jam;
 
-GameStateManager::GameStateManager(Pie& pie)
+GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 	: _pie(pie)
 {
-
+	enterState(gameState);
 }
 
-void GameStateManager::update()
+void GameStateManager::update(double delta)
 {
-
+	if (_currentGameState != nullptr) {
+		_currentGameState->update(delta);
+		_currentGameState->_updateRoot(delta);
+	}
 }
 
 void GameStateManager::enterState(std::string tag)
@@ -24,6 +27,9 @@ void GameStateManager::enterState(GameState* gameState)
 		_currentGameState->exit();
 
 	_currentGameState = gameState;
+
+	_currentGameState->_setGameStateManager(this);
+	_currentGameState->init();
 }
 
 GameStateManager::~GameStateManager()

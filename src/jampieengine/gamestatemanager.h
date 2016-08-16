@@ -14,10 +14,10 @@ namespace Jam
 	class GameStateManager
 	{
 	public:
-		GameStateManager(Pie& pie);
+		GameStateManager(Pie& pie, GameState* gameState);
 		~GameStateManager();
 
-		void update();
+		void update(double delta);
 
 		void enterState(std::string tag);
 		void enterState(GameState* gameState);
@@ -26,7 +26,7 @@ namespace Jam
 
 		Pie& _pie;
 
-		GameState* _currentGameState;
+		GameState* _currentGameState = nullptr;
 
 	};
 }

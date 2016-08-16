@@ -171,7 +171,7 @@ void Time::wait() {
 
 	//*
 	//A signal that stops all threads in their tracks
-	while (waitForThread && CLOCK::now() < _nextFrame) {}
+	while (waitForThread && (CLOCK::now() < _nextFrame && _desiredDelta.count() != 0)) {}
 
 	//Check out all threads
 	while (_accessingRegisterdThreads) {}

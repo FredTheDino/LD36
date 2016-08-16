@@ -6,7 +6,6 @@
 #include <SDL2/SDL.h>
 
 #include "graphicscore.h"
-#include "logiccore.h"
 #include "audiocore.h"
 #include "debug.h"
 #include "inputhandler.h"
@@ -21,6 +20,7 @@ namespace Jam
 	//Struct used to retrieve startup information from user
 	struct Flavor {
 		std::string title = "My Pie";
+		std::string enterState = "main";
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
 		bool w_border = true;
@@ -56,7 +56,6 @@ namespace Jam
 
 		//Core handles
 		GraphicsCore* _graphicsCore;
-		LogicCore* _logicCore;
 		AudioCore* _soundCore;
 
 		//Initialization functions
@@ -65,7 +64,6 @@ namespace Jam
 
 		//Friends!
 		friend GraphicsCore;
-		friend LogicCore;
 		friend AudioCore;
 	};
 }
