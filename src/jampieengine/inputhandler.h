@@ -8,6 +8,7 @@
 
 #include "inputeventqueue.h"
 #include "inputdatatypes.h"
+#include "pie.h"
 
 #include <string>
 #include <iostream>
@@ -22,8 +23,9 @@ namespace Jam {
 
 	class InputHandler {
 	public:
+
 		//The initalization function, should be called from Pie::Pie()
-		static void init();
+		static void init(Flavor &flavor);
 		//The deinitalization funciton, does some cleanup and should be called as Pie::Bake() ends
 		static void destroy();
 		//Check if the loading is compleated and this component is ready to proceede in execution
@@ -48,6 +50,17 @@ namespace Jam {
 		//Returns the position of the mouse
 		static glm::vec2 getMousePos();
 		
+		//Helper functions
+		//Check if key is down
+		static bool keyDown(const std::string& name);
+		//Check if key is up
+		static bool keyUp(const std::string& name);
+		//Check if key is pressed
+		static bool keyPressed(const std::string& name);
+		//Check if key is released
+		static bool keyReleased(const std::string& name);
+
+
 		//Functions for passing events to the inputhandler
 		static void digitalEvent(bool wasPressed, InputBinding& binding);
 		static void axisEvent(double axis, InputBinding& binding);
@@ -65,6 +78,8 @@ namespace Jam {
 		//A funciton for saving input datat to disk
 		static void _save();
 		
+		static Flavor* _flavor;
+
 		//A thread to run _load() and _save() to prevent clogging of main thread
 		static std::thread* _ioThread;
 		//Weather or not the ioThread has been initalized

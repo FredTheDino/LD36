@@ -19,6 +19,7 @@ namespace Jam
 	//Struct used to retrieve startup information from user
 	struct Flavor {
 		std::string title = "My Pie";
+		std::string inputmap = "input.map";
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
 		bool w_border = true;

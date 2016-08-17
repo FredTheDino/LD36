@@ -2,11 +2,13 @@
 
 #include <SDL2/SDL.h>
 #include "loader.h"
+#include "Box2D/Box2D.h"
 
 int main(int c, char** args) {
 
 	Jam::InputHandler::registerInput("fpsDOWN", Jam::InputBinding(true, -1, 0, SDLK_1));
 	Jam::InputHandler::registerInput("fpsUP", Jam::InputBinding(true, -1, 0, SDLK_2));
+	Jam::InputHandler::registerInput("fpsUP", Jam::InputBinding());
 
 	Jam::Time::setFPS(60);
 

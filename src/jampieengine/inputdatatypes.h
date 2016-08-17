@@ -33,20 +33,28 @@ namespace Jam {
 
 		//Ease of use constructor
 		InputBinding() {}
-		InputBinding(bool isMouseButton, int key):
-			isMouseButton(isMouseButton), isScancode(false), dev(-1), mods(0), code(key) {}
 
-		InputBinding(bool isScancode, int dev, int mods, int code):
-			isMouseButton(false), isScancode(isScancode), dev(-1), mods(mods), code(code) {}
+		InputBinding(int mouseButton):
+			isMouseButton(true), isKeycode(false), dev(-1), mods(0), code(mouseButton) {}
+
+		InputBinding(bool isKeycode, int code):
+			isMouseButton(false), isKeycode(isKeycode), dev(-1), mods(0), code(code) {}
+
+		InputBinding(bool isKeycode, int dev, int mods, int code):
+			isMouseButton(false), isKeycode(isKeycode), dev(-1), mods(mods), code(code) {}
 
 		InputBinding(int dev, int axis):
-			isMouseButton(false), isScancode(false), dev(dev), mods(axis), code(0) {}
+			isMouseButton(false), isKeycode(false), dev(dev), mods(axis), code(0) {}
+
+		InputBinding(const std::string& line) {
+			std::string data[] = ;
+		}
 
 		//Ease of use equallity check for linear search
 		bool operator== (const InputBinding& data) const {
 			return
 				data.isMouseButton == isMouseButton &&
-				data.isScancode == isScancode &&
+				data.isKeycode == isKeycode &&
 				data.dev == dev &&
 				data.mods == mods &&
 				data.code == code;
@@ -55,7 +63,7 @@ namespace Jam {
 		//If the binding given is a mouse button
 		bool isMouseButton;
 		//If code is a scancode or a keycode
-		bool isScancode;
+		bool isKeycode;
 		//Which device this is registerd to, -1 is keyboard the rest are controllers
 		int dev;
 		//Any modifiers (alt, shift, etc...) for this input event, requiers a keyboard
@@ -74,7 +82,7 @@ namespace std {
 
 			if (b.isMouseButton) hash += 1;
 			hash *= 37;
-			if (b.isScancode) hash += 1;
+			if (b.isKeycode) hash += 1;
 			hash *= 37;
 			hash += b.dev;
 			hash *= 37;

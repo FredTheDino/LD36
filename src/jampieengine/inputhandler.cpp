@@ -1,7 +1,10 @@
 #include "inputhandler.h"
 
+#include "loader.h"
+
 using namespace Jam;
 
+Flavor* InputHandler::_flavor;
 std::thread* InputHandler::_ioThread = nullptr;
 bool InputHandler::_ioThreadExists = false;
 std::unordered_map<InputBinding, std::string> InputHandler::_inputMapper;
@@ -14,9 +17,10 @@ std::vector<SDL_GameController*> InputHandler::_controllers;
 std::vector<short> InputHandler::_controllerRemapper;
 bool InputHandler::_accessingControllers = false;
 
-void InputHandler::init() {
+void InputHandler::init(Flavor &flavor) {
 	_ioThread = new std::thread(&InputHandler::_load);
 	_ioThreadExists = true;
+	_flavor = &flavor;
 }
 
 void Jam::InputHandler::destroy() {
@@ -177,6 +181,22 @@ glm::vec2 Jam::InputHandler::getMousePos() {
 	return out;
 }
 
+bool Jam::InputHandler::keyDown(const std::string & name) {
+	return checkInputState(name, KeyState::DOWN);
+}
+
+bool Jam::InputHandler::keyUp(const std::string & name) {
+	return checkInputState(name, KeyState::UP);
+}
+
+bool Jam::InputHandler::keyPressed(const std::string & name) {
+	return checkInputState(name, KeyState::PRESSED);
+}
+
+bool Jam::InputHandler::keyReleased(const std::string & name) {
+	return checkInputState(name, KeyState::RELEASED);
+}
+
 void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
 	if (binding.dev != -1) {
 		for (size_t i = 0; i < _controllerRemapper.size(); i++) {
@@ -261,6 +281,12 @@ InputData * Jam::InputHandler::_find(InputBinding& binding) {
 
 void Jam::InputHandler::_load() {
 	std::cout << "TODO: InputHandler::_load" << std::endl;
+
+	std::ifstream* file = Loader::openFile(_flavor->inputmap);
+	while ()
+	
+
+	delete file;
 }
 
 void Jam::InputHandler::_save() {
