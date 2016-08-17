@@ -1,7 +1,6 @@
 #include "graphicscore.h"
 
 #include "inputeventqueue.h"
-#include "jamtime.h"
 
 using namespace Jam;
 
@@ -25,6 +24,7 @@ void GraphicsCore::_start()
 	_renderEngine = new RenderEngine(*_window, _pie._flavor.graphicsCoreType);
 
 	while (_pie.isCooking()) {
+		Time::update();
 
 		//Handle events
 		SDL_Event e;

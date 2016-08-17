@@ -47,7 +47,7 @@ namespace Jam {
 			isMouseButton(false), isKeycode(false), dev(dev), mods(axis), code(0) {}
 
 		InputBinding(const std::string& line) {
-			std::string data[] = ;
+			//std::string data[] = ;
 		}
 
 		//Ease of use equallity check for linear search

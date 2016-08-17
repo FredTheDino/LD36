@@ -13,20 +13,31 @@ void Pie::bake()
 {
 	_cooking = true;
 
-	Time::registerThread();
-
 	_graphicsCore->_bake(_flavor);
-	_logicCore->_bake(_flavor);
 	_soundCore->_bake(_flavor);
 
-	while (_cooking) { Time::wait(); }
+	_gameStateManager = new GameStateManager(*this, GameStateLibrary::getGameState(_flavor.enterState));
+
+	InputHandler::init(_flavor);
+
+	Time::registerThread();
+
+	while (_cooking) {
+		InputHandler::update();
+		_gameStateManager->update(Time::getDelta());
+		Time::wait();
+	}
+
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 	_soundCore->join();
-	_logicCore->join();
 	_graphicsCore->join();
 
 	Time::unregisterThread();
+
+	InputHandler::destroy();
+
+	delete _gameStateManager;
 }
 
 void Pie::_initSDL()
@@ -41,14 +52,12 @@ void Pie::_initSDL()
 void Pie::_initCores()
 {
 	_graphicsCore = new GraphicsCore(*this, _flavor);
-	_logicCore = new LogicCore(*this, _flavor);
 	_soundCore = new AudioCore(*this, _flavor);
 }
 
 Pie::~Pie()
 {
 	delete _graphicsCore;
-	delete _logicCore;
 	delete _soundCore;
 	SDL_Quit();
 }

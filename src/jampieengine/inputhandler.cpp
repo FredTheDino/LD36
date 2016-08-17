@@ -283,7 +283,7 @@ void Jam::InputHandler::_load() {
 	std::cout << "TODO: InputHandler::_load" << std::endl;
 
 	std::ifstream* file = Loader::openFile(_flavor->inputmap);
-	while ()
+	//while ()
 	
 
 	delete file;
