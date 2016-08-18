@@ -95,6 +95,10 @@ namespace Jam {
 		_library->unload(nickname);
 	}
 
+	bool AudioHandler::ready() {
+		return _library->ready();
+	}
+
 	ALuint AudioHandler::_generateSource() {
 		ALuint source;
 		alGenSources(1, &source);

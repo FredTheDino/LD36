@@ -24,14 +24,8 @@ namespace Jam {
 	class InputHandler {
 	public:
 
-		//The initalization function, should be called from Pie::Pie()
-		static void init(Flavor &flavor);
-		//The deinitalization funciton, does some cleanup and should be called as Pie::Bake() ends
-		static void destroy();
 		//Check if the loading is compleated and this component is ready to proceede in execution
 		static bool ready();
-		//The update call that updates all the inputData
-		static void update();
 
 		//Register an input event for future use, returns true if success
 		//////////////////////////////////////////////////////////////////
@@ -68,6 +62,13 @@ namespace Jam {
 
 	private:
 
+		//The initalization function, should be called from Pie::Pie()
+		static void _init(Flavor& flavor);
+		//The deinitalization funciton, does some cleanup and should be called as Pie::Bake() ends
+		static void _destroy();
+		//The update call that updates all the inputData
+		static void _update();
+
 		//Simple method to find a _inputList entry by name
 		static InputData* _find(const std::string& name);
 		//Simple method to find a _inputList entry by data
@@ -86,6 +87,8 @@ namespace Jam {
 		static bool _ioThreadExists;
 		//The mapper that maps an input to a name
 		static std::unordered_map<InputBinding, std::string> _inputMapper;
+		//Prevent wierdness with multithreading
+		static bool _accessingInputMap;
 		//The list of all currently registerd inputs, only for use in this class
 		static std::unordered_map<std::string, InputData> _inputDataList;
 		
@@ -104,5 +107,7 @@ namespace Jam {
 		static std::vector<short> _controllerRemapper;
 		//If you're accessing the controllers form another thread
 		static bool _accessingControllers;
+
+		friend Pie;
 	};
 }

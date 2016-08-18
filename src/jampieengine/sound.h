@@ -2,8 +2,10 @@
 
 #include <string>
 #include <AL/al.h>
+#include <vector>
 
 #include "audioevent.h"
+#include "soundfade.h"
 
 namespace Jam {
 
@@ -15,6 +17,12 @@ namespace Jam {
 
 		//Destructor
 		~Sound();
+
+		//Helper function to fade the gain
+		void fadeGain(float target, float time);
+
+		//Helper function to fade the pitch
+		void fadePitch(float target, float time);
 
 		//Play a sound
 		void play();
@@ -48,7 +56,21 @@ namespace Jam {
 		//Set if the sound should loop or not
 		void setLooping(bool looping);
 
+		//Update all the fadeing stuff
+		void updateFade(double delta);
+
 	protected:
+
+		//A copy to the gian
+		float _gain = 1.0;
+		//A copy to the pitch
+		float _pitch = 1.0;
+		//A copy to the looping
+		bool _looping = false;
+		//A copy to playing
+		bool _playing = false;
+		//A copy of isStopped
+		bool _stopped = true;
 
 		//A helper function to simplify sending of simple events
 		void _sendEventOfType(AudioEventData::Type type);
@@ -56,5 +78,7 @@ namespace Jam {
 		//This sounds audio source
 		ALuint _source;
 
+		//Somethign to hold all the fade events
+		std::vector<FadeData> _fadeValues;
 	};
 }

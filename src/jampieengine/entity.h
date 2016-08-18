@@ -31,7 +31,7 @@ namespace Jam
 
 			//Create a local copy of it on the heap
 			component = new T(*component);
-			component->_setParent(*this);
+			component->_setParent(this);
 			component->_begin();
 
 			_components.push_back(component);

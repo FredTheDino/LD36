@@ -8,7 +8,7 @@ std::string Loader::prefix("");
 std::string Loader::loadText(std::string path)
 {
 	//Open file
-	std::ifstream* file = openFile(path);
+	std::fstream* file = openFile(path);
 
 	//Determine length of file
 	file->seekg(0, file->end);
@@ -30,7 +30,7 @@ std::string Loader::loadText(std::string path)
 
 std::vector<char> Jam::Loader::loadCharBuffer(std::string path) {
 	//Open file
-	std::ifstream* file = openFile(path);
+	std::fstream* file = openFile(path);
 
 	//Determine length of file
 	file->seekg(0, file->end);
@@ -50,11 +50,15 @@ std::vector<char> Jam::Loader::loadCharBuffer(std::string path) {
 	return buffer;
 }
 
-std::ifstream* Loader::openFile(const std::string& path) {
+int Jam::Loader::remove(std::string path) {
+	return std::remove((prefix + path).c_str());
+}
+
+std::fstream* Loader::openFile(const std::string& path, std::ios_base::openmode mode) {
 	//Open file
-	std::ifstream* file = new std::ifstream(
-		prefix + path,
-		std::ifstream::binary);
+	std::fstream* file = new std::fstream;
+
+	file->open(((prefix + path).c_str()), mode);
 
 	//Make sure the file exists
 	if (!file->is_open()) {

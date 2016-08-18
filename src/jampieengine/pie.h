@@ -57,7 +57,7 @@ namespace Jam
 
 		//Core handles
 		GraphicsCore* _graphicsCore;
-		AudioCore* _soundCore;
+		AudioCore* _audioCore;
 
 		//Initialization functions
 		void _initSDL();

@@ -7,16 +7,13 @@
 namespace Jam {
 
 	SpatialSound::SpatialSound() : Sound() {
-
+		_setPosition(_position);
+		_setVelocity(_velocity);
 	}
 
 	SpatialSound::~SpatialSound() {}
 
-	void SpatialSound::setPosition(float x, float y, float z) {
-		setPosition(glm::vec3(x, y, z));
-	}
-
-	void SpatialSound::setPosition(glm::vec3 position) {
+	void SpatialSound::_setPosition(glm::vec3 position) {
 		AudioEvent ae;
 		ae.source = _source;
 		ae.type = AudioEventData::Type::SET;
@@ -25,13 +22,10 @@ namespace Jam {
 		ae.fData[1] = position[1];
 		ae.fData[2] = position[2];
 		AudioEventQueue::pushDataToQueue(ae);
+		_position = position;
 	}
 
-	void SpatialSound::setVelocity(float x, float y, float z) {
-		setVelocity(glm::vec3(x, y, z));
-	}
-
-	void SpatialSound::setVelocity(glm::vec3 velocity) {
+	void SpatialSound::_setVelocity(glm::vec3 velocity) {
 		AudioEvent ae;
 		ae.source = _source;
 		ae.type = AudioEventData::Type::SET;
@@ -40,6 +34,7 @@ namespace Jam {
 		ae.fData[1] = velocity[1];
 		ae.fData[2] = velocity[2];
 		AudioEventQueue::pushDataToQueue(ae);
+		_velocity = velocity;
 	}
 
 	void SpatialSound::setMaxGain(float maxGain) {

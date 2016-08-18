@@ -2,6 +2,10 @@
 
 #include "glm/glm.hpp"
 
+#include <sstream>
+
+#define SEPERATOR ':'
+
 namespace Jam {
 
 	//The key states for digital input (multiple can be active
@@ -46,8 +50,61 @@ namespace Jam {
 		InputBinding(int dev, int axis):
 			isMouseButton(false), isKeycode(false), dev(dev), mods(axis), code(0) {}
 
-		InputBinding(const std::string& line) {
-			//std::string data[] = ;
+		InputBinding(std::string* name, const std::string& line) {
+			std::istringstream stream(line);
+			std::string data;
+			
+			//Name
+			std::getline(stream, data, SEPERATOR);
+			{
+				*name = data;
+			}
+
+			//IsMouseButton
+			std::getline(stream, data, SEPERATOR);
+			{
+				switch (data.c_str()[0]) {
+					case '1':
+						isMouseButton = true;
+						break;
+					case '0':
+					default:
+						isMouseButton = false;
+						break;
+				}
+			}
+
+			//IsKeycode
+			std::getline(stream, data, SEPERATOR);
+			{
+				switch (data.c_str()[0]) {
+					case '1':
+						isKeycode = true;
+						break;
+					case '0':
+					default:
+						isKeycode = false;
+						break;
+				}
+			}
+
+			//Device
+			std::getline(stream, data, SEPERATOR);
+			{
+				dev = atoi(data.c_str());
+			}
+
+			//Mods
+			std::getline(stream, data, SEPERATOR);
+			{
+				mods = atoi(data.c_str());
+			}
+
+			//Code
+			std::getline(stream, data, SEPERATOR);
+			{
+				code = atoi(data.c_str());
+			}
 		}
 
 		//Ease of use equallity check for linear search
@@ -58,6 +115,22 @@ namespace Jam {
 				data.dev == dev &&
 				data.mods == mods &&
 				data.code == code;
+		}
+
+		std::string toString() const{
+			std::string string;
+			string += SEPERATOR;
+			string += isMouseButton ? '0' : '1';
+			string += SEPERATOR;
+			string += isKeycode ? '0' : '1';
+			string += SEPERATOR;
+			string += std::to_string(dev);
+			string += SEPERATOR;
+			string += std::to_string(mods);
+			string += SEPERATOR;
+			string += std::to_string(code);
+			string += "\n";
+			return string;
 		}
 
 		//If the binding given is a mouse button
