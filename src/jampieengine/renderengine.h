@@ -57,7 +57,7 @@ namespace Jam
 		static std::vector<std::string> _shaderProgramLoadQueue;
 
 		//Objects to render each frame
-		std::map<int, Renderer*, std::less<int>> _renderers;
+		std::multimap<int, Renderer*, std::less<int>> _renderers;
 
 		//Processes load queue and loads everything
 		void _load();

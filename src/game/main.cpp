@@ -25,7 +25,7 @@ public:
 		if (Jam::InputHandler::checkInputState("t_decrement", Jam::KeyState::PRESSED))
 			i--;
 		
-		std::cout << i << std::endl;
+		//std::cout << i << std::endl;
 	}
 
 	void _end()
