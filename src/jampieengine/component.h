@@ -5,12 +5,6 @@
 namespace Jam {
 	class Entity;
 
-	enum ComponentTypes {
-		COMPONENT,
-		SOUND_LISTENER,
-		SOUND_SOURCE,
-	};
-
 	class Component {
 	public:
 		Component() {};
@@ -34,17 +28,21 @@ namespace Jam {
 		// before the parent is destroyed.
 		virtual void _end() = 0;
 
-		inline Entity* _getParent();
+	protected:
 
-		//Sets the entity this object is pointing at
-		void _setParent(Entity& parent);
+		//Get the parent entity
+		Entity* _getParent();
 
 	private:
+		//Sets the entity this object is pointing at
+		void _setParent(Entity* parent);
+
 		//If this object is active
 		bool _isActive = true;
 
-
 		//A pointer to the parent
 		Entity* _parent = nullptr;
+
+		friend Entity;
 	};
 }
