@@ -5,12 +5,6 @@
 namespace Jam {
 	class Entity;
 
-	enum ComponentTypes {
-		COMPONENT,
-		SOUND_LISTENER,
-		SOUND_SOURCE,
-	};
-
 	class Component {
 	public:
 		Component() {};

@@ -14,5 +14,8 @@ namespace Jam {
 		void _end() {};
 
 		void _update(double delta);
+	
+	private:
+		bool _stationary = false;
 	};
 }

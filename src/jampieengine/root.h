@@ -1,7 +1,13 @@
 #pragma once
 
-#include "gamestate.h"
+//This would make the linking brake if "node.h"
+// is included before gamestate.h.
+//#include "gamestate.h"
 #include "node.h"
+
+#include <string>
+#include <map>
+#include <unordered_map>
 
 namespace Jam
 {
@@ -11,20 +17,26 @@ namespace Jam
 	class Root
 	{
 	public:
-		Root(GameState& gameState);
+		Root();
 		~Root();
 
+		//Update all entities
 		void update(double delta);
 
-		void addNode(int priority, std::string tag, Node* node) { _nodes.insert(std::make_pair(tag, node)); _priorities.insert(std::make_pair(priority, tag)); };
+		//Add a node to the entity tree
+		void addNode(int priority, std::string tag, Node* node);
 
+		//Return a node from the node tree
 		Node* getNode(std::string tag) { return _nodes.at(tag); };
 
-	private:
-		GameState& _gameState;
+		//Delete a node
+		void deleteNode(std::string tag);
 
+	private:
+
+		//A list holding all nodes
 		std::unordered_map<std::string, Node*> _nodes;
-		
-		std::map<int, std::string, std::less<int>> _priorities;
+		//A list that holds the update order of the nodes
+		std::multimap<int, std::string> _priorityMap;
 	};
 }

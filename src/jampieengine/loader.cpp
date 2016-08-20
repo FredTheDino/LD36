@@ -30,7 +30,7 @@ std::string Loader::loadText(std::string path)
 
 std::vector<char> Jam::Loader::loadCharBuffer(std::string path) {
 	//Open file
-	std::fstream* file = openFile(path);
+	std::fstream* file = openFile(path, std::ios::binary | std::ios::in);
 
 	//Determine length of file
 	file->seekg(0, file->end);

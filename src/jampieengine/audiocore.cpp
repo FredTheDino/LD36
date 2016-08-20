@@ -32,30 +32,7 @@ void AudioCore::_start() {
 	AudioListener::setPosition(glm::vec3(-10, -2, -2));
 
 	while (_pie.isCooking()) {
-		_library.update();
-		if (_library.ready()) {
-			AudioHandler::update();
-			sound.play("fred");
-			/*
-			if (_library.ready()) {
-				if (!isReady) {
-					sound.setBuffer("fred");
-					sound.setGain(0.04f);
-					sound.setPitch(1);
-					sound.setLooping(true);
-					//sound.play();
-
-					ssound.play("test");
-					ssound.setLooping(true);
-					ssound.setGain(0.2f);
-					ssound.setPosition(-10, -2, -2);
-					ssound.setVelocity(10, 2, 2);
-				}
-
-				isReady = true;
-			}*/
-			\
-		}
+		AudioHandler::update();
 		Time::wait();
 	}
 

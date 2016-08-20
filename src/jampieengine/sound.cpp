@@ -28,7 +28,7 @@ namespace Jam {
 			}
 		}
 
-		_fadeValues.push_back(FadeData(FadeTarget::GAIN, target, time));
+		_fadeValues.push_back(FadeData(FadeTarget::GAIN, _gain, target, time));
 	}
 
 	void Sound::fadePitch(float target, float time) {
@@ -39,7 +39,7 @@ namespace Jam {
 			}
 		}
 
-		_fadeValues.push_back(FadeData(FadeTarget::PITCH, target, time));
+		_fadeValues.push_back(FadeData(FadeTarget::PITCH, _gain, target, time));
 	}
 
 
@@ -123,13 +123,12 @@ namespace Jam {
 
 		for (size_t i = 0; i < _fadeValues.size(); i++) {
 			data = &_fadeValues[i];
-			float slope = data->target / data->time;
 			data->t += (float) delta;
 
 			switch (data->fadeTarget) {
 				case FadeTarget::GAIN:
 					if (data->t < data->time) {
-						setGain((float) _gain + slope * delta);
+						setGain((float) _gain + data->slope * delta);
 					} else {
 						setGain(_gain);
 						toBeDeleted.push_back(i);
@@ -137,7 +136,7 @@ namespace Jam {
 					break;
 				case FadeTarget::PITCH:
 					if (data->t < data->time) {
-						setPitch((float) _pitch + slope * delta);
+						setPitch((float) _pitch + data->slope * delta);
 					} else {
 						setPitch(_pitch);
 						toBeDeleted.push_back(i);
@@ -149,9 +148,25 @@ namespace Jam {
 		}
 
 		//Run the for loop backwards to make sure all indexes are up to date
-		for (size_t i = toBeDeleted.size(); 0 < i; i++) {
+		for (int i = toBeDeleted.size() - 1; 0 < i; i++) {
 			_fadeValues.erase(_fadeValues.begin() + toBeDeleted[i]);
 		}
+	}
+
+	bool Sound::isPlaying() {
+		return _playing;
+	}
+
+	bool Sound::isPaused() {
+		return !(_stopped || _playing);
+	}
+
+	bool Sound::isLooping() {
+		return _looping;
+	}
+
+	bool Sound::isStopped() {
+		return _stopped;
 	}
 
 	void Sound::_sendEventOfType(AudioEventData::Type type) {

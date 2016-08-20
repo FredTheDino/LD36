@@ -59,6 +59,18 @@ namespace Jam {
 		//Update all the fadeing stuff
 		void updateFade(double delta);
 
+		//Returns if it is playing
+		bool isPlaying();
+
+		//Returns if it is paused
+		bool isPaused();
+
+		//Returns if it is looping
+		bool isLooping();
+
+		//Returns if it is stopped
+		bool isStopped();
+
 	protected:
 
 		//A copy to the gian
