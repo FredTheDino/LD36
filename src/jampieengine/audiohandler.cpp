@@ -41,6 +41,8 @@ namespace Jam {
 
 	void AudioHandler::update() {
 
+		_library->update();
+
 		AudioEvent e;
 		std::vector<AudioEvent> events;
 		AudioEventQueue::copyQueue(events);
@@ -84,7 +86,6 @@ namespace Jam {
 					break;
 			}
 		}
-
 	}
 
 	void AudioHandler::preload(const std::string& nickname, const std::string& path) {
@@ -93,6 +94,10 @@ namespace Jam {
 
 	void AudioHandler::unload(const std::string& nickname) {
 		_library->unload(nickname);
+	}
+
+	bool AudioHandler::ready() {
+		return _library->ready();
 	}
 
 	ALuint AudioHandler::_generateSource() {

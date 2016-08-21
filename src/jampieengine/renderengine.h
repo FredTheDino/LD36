@@ -38,6 +38,9 @@ namespace Jam
 		//Sets _shouldLoad to true in order to process load queue on render thread
 		static void load() { _accessingLoadQueues = true; _shouldLoad = true; };
 
+		//Adds something to draw
+		void addRenderer(int priority, Renderer* renderer) { _renderers.insert(std::make_pair(priority, renderer)); };
+
 		const GraphicsCoreType GRAPHICS_TYPE;
 
 	private:

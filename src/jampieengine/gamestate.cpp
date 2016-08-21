@@ -4,7 +4,7 @@ using namespace Jam;
 
 GameState::GameState()
 {
-
+	
 }
 
 void GameState::_updateRoot(double delta)

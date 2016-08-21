@@ -8,6 +8,7 @@
 #include "glrenderer.h"
 #include "glmesh.h"
 #include "gllibrary.h"
+#include "component.h"
 
 namespace Jam
 {
@@ -15,7 +16,7 @@ namespace Jam
 	class RenderEngine;
 	class GLRenderer;
 
-	class Renderer
+	class Renderer : public Component
 	{
 	public:
 		Renderer(RenderEngine* renderEngine, std::string mesh = "quad");
@@ -26,6 +27,10 @@ namespace Jam
 		void draw();
 
 		void setMesh(std::string tag);
+
+		void _begin();
+		void _update(double delta) {};
+		void _end() {};
 
 	private:
 

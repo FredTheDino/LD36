@@ -29,6 +29,7 @@ void GameStateManager::enterState(GameState* gameState)
 	_currentGameState = gameState;
 
 	_currentGameState->_setGameStateManager(this);
+	_currentGameState->_setRenderEngine(_pie.getGraphicsCore()->getRenderEngine());
 	_currentGameState->init();
 }
 

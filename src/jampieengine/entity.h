@@ -31,7 +31,7 @@ namespace Jam
 
 			//Create a local copy of it on the heap
 			component = new T(*component);
-			component->_setParent(*this);
+			component->_setParent(this);
 			component->_begin();
 
 			_components.push_back(component);
@@ -42,7 +42,6 @@ namespace Jam
 		template <class T>
 		T* get()
 		{
-
 			T* component = nullptr;
 
 			for (size_t i = 0; i < _components.size(); i++) {
@@ -59,7 +58,6 @@ namespace Jam
 		template <class T>
 		bool remove()
 		{
-
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {
 					_components[i]->_end();
@@ -76,7 +74,6 @@ namespace Jam
 		template <class T>
 		bool isActive()
 		{
-
 			bool active = false;
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {

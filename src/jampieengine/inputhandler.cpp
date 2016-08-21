@@ -1,10 +1,14 @@
 #include "inputhandler.h"
 
+#include "loader.h"
+
 using namespace Jam;
 
+Flavor* InputHandler::_flavor = nullptr;
 std::thread* InputHandler::_ioThread = nullptr;
 bool InputHandler::_ioThreadExists = false;
 std::unordered_map<InputBinding, std::string> InputHandler::_inputMapper;
+bool InputHandler::_accessingInputMap = false;
 std::unordered_map<std::string, InputData> InputHandler::_inputDataList;
 MousePos InputHandler::_mouse;
 bool InputHandler::_hideMouse = false;
@@ -14,12 +18,13 @@ std::vector<SDL_GameController*> InputHandler::_controllers;
 std::vector<short> InputHandler::_controllerRemapper;
 bool InputHandler::_accessingControllers = false;
 
-void InputHandler::init() {
-	_ioThread = new std::thread(&InputHandler::_load);
+void InputHandler::_init(Flavor& flavor) {
 	_ioThreadExists = true;
+	_flavor = &flavor;
+	_ioThread = new std::thread(&InputHandler::_load);
 }
 
-void Jam::InputHandler::destroy() {
+void Jam::InputHandler::_destroy() {
 	while (true) {
 		if (ready()) {
 			break;
@@ -50,7 +55,7 @@ bool InputHandler::ready() {
 	}
 }
 
-void Jam::InputHandler::update() {
+void Jam::InputHandler::_update() {
 	for (auto it = _inputDataList.begin(); it != _inputDataList.end(); ++it) {
 		it->second.status = (KeyState) (it->second.status & (KeyState::DOWN | KeyState::UP));
 	}
@@ -116,11 +121,11 @@ void Jam::InputHandler::update() {
 				while (_accessingMouse) {}
 				_accessingMouse = true;
 				
-				_mouse.position.x = (Sint32) e.motion.x;
-				_mouse.position.y = (Sint32) e.motion.y;
+				_mouse.position.x = (float) e.motion.x;
+				_mouse.position.y = (float) e.motion.y;
 				
-				_mouse.delta.x = (Sint32) e.motion.xrel;
-				_mouse.delta.y = (Sint32) e.motion.yrel;
+				_mouse.delta.x = (float) e.motion.xrel;
+				_mouse.delta.y = (float) e.motion.yrel;
 				
 				_accessingMouse = false;
 			}
@@ -140,8 +145,10 @@ bool Jam::InputHandler::registerInput(const std::string& name, InputBinding bind
 		InputData data;
 		_inputDataList.insert(std::make_pair(name, data));
 	}
-
+	while (_accessingInputMap) {}
+	_accessingInputMap = true;
 	_inputMapper.insert(std::make_pair(binding, name));
+	_accessingInputMap = false;
 	return true;
 }
 
@@ -177,6 +184,22 @@ glm::vec2 Jam::InputHandler::getMousePos() {
 	return out;
 }
 
+bool Jam::InputHandler::keyDown(const std::string & name) {
+	return checkInputState(name, KeyState::DOWN);
+}
+
+bool Jam::InputHandler::keyUp(const std::string & name) {
+	return checkInputState(name, KeyState::UP);
+}
+
+bool Jam::InputHandler::keyPressed(const std::string & name) {
+	return checkInputState(name, KeyState::PRESSED);
+}
+
+bool Jam::InputHandler::keyReleased(const std::string & name) {
+	return checkInputState(name, KeyState::RELEASED);
+}
+
 void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
 	if (binding.dev != -1) {
 		for (size_t i = 0; i < _controllerRemapper.size(); i++) {
@@ -187,6 +210,8 @@ void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
 		}
 	}
 
+	while (_accessingInputMap) {}
+	_accessingInputMap = true;
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); it++) {
 		if (binding == it->first) {
 			if (wasPressed) {
@@ -196,6 +221,7 @@ void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
 			}
 		}
 	}
+	_accessingInputMap = false;
 }
 
 void Jam::InputHandler::axisEvent(double value, InputBinding & binding) {
@@ -207,11 +233,14 @@ void Jam::InputHandler::axisEvent(double value, InputBinding & binding) {
 		}
 	}
 
+	while (_accessingInputMap) {}
+	_accessingInputMap = true;
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); it++) {
 		if (binding == it->first) {
 			_inputDataList[it->second].axis = value;
 		}
 	}
+	_accessingInputMap = false;
 }
 
 void Jam::InputHandler::controllerConnectionEvent(bool connect, int which) {
@@ -251,18 +280,70 @@ InputData* Jam::InputHandler::_find(const std::string& name) {
 }
 
 InputData * Jam::InputHandler::_find(InputBinding& binding) {
+	while (_accessingInputMap) {}
+	_accessingInputMap = true;
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); ++it) {
 		if (binding == it->first)
 			return &_inputDataList[it->second];
 	}
+	_accessingInputMap = false;
 
 	return nullptr;
 }
 
 void Jam::InputHandler::_load() {
-	std::cout << "TODO: InputHandler::_load" << std::endl;
+	
+	std::fstream* file = Loader::openFile(_flavor->inputmap);
+	std::string name;
+	std::string line;
+	
+	while (getline(*file, line))
+	{
+		// All lines begining with # are comments
+		if (line[0] == '#') continue;
+		InputBinding binding(&name, line);
+		registerInput(name, binding);
+	}
+	
+	file->close();
+	delete file;
 }
 
 void Jam::InputHandler::_save() {
-	std::cout << "TODO: Inputhandler::_save" << std::endl;
+	std::fstream* file = Loader::openFile(_flavor->inputmap);
+	std::string name;
+	std::string line;
+	std::vector<std::string> comments;
+
+	// All lines begining with # are comments, add them to a list and push back
+	while (getline(*file, line)) {
+		if (line[0] == '#') {
+			comments.push_back(line + "\n");
+		}
+	}
+
+	file->close();
+	delete file;
+
+	//Create a copy 
+	while (_accessingInputMap) {}
+	_accessingInputMap = true;
+	std::unordered_map<InputBinding, std::string> inputMapperCopy = _inputMapper;
+	_accessingInputMap = false;
+
+	file = Loader::openFile(_flavor->inputmap, std::ios_base::out | std::ios_base::trunc);
+
+	//Write comments
+	for (size_t i = 0; i < comments.size(); i++) {
+		file->write(comments[i].c_str(), comments[i].size());
+	}
+
+	//Write data
+	for (auto it = inputMapperCopy.begin(); it != inputMapperCopy.end(); it++) {
+		std::string out = it->second + it->first.toString();
+		file->write(out.c_str(), out.size());
+	}
+
+	file->close();
+	delete file;
 }

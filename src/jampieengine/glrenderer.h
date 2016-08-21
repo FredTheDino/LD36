@@ -11,11 +11,13 @@ namespace Jam
 	class GLRenderer
 	{
 	public:
-		GLRenderer(std::string mesh, std::string shaderProgram);
+		GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram);
 
 		void draw();
 
 	private:
+
+		Renderer& _renderer;
 
 		GLMesh* _mesh;
 

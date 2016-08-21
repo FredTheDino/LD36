@@ -23,6 +23,8 @@ void GraphicsCore::_start()
 
 	_renderEngine = new RenderEngine(*_window, _pie._flavor.graphicsCoreType);
 
+	_ready = true;
+
 	while (_pie.isCooking()) {
 		Time::update();
 

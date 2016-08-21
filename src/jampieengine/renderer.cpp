@@ -3,17 +3,25 @@
 using namespace Jam;
 
 Renderer::Renderer(RenderEngine* renderEngine, std::string mesh)
-	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE)
+	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE), _renderEngine(renderEngine)
 {
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
-		_glRenderer = new GLRenderer(mesh, GFXLibrary::getMesh(mesh).shaderProgram);
+		_glRenderer = new GLRenderer(*this, mesh, GFXLibrary::getMesh(mesh).shaderProgram);
 		break;
 	}
 }
 
+void Renderer::_begin()
+{
+	_renderEngine->addRenderer(0, this);
+}
+
 void Renderer::draw()
 {
+	if (!isActive())
+		return;
+
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
 		_glRenderer->draw();

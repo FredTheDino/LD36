@@ -24,7 +24,12 @@ namespace Jam
 		GraphicsCore(Pie& pie, Flavor& flavor);
 		~GraphicsCore();
 
+		RenderEngine* getRenderEngine() { return _renderEngine; };
+
 	private:
+
+		//Indicates to Pie if this core is properly set up
+		bool _ready = false;
 
 		//The window class pointer
 		Window* _window;

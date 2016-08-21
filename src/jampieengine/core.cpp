@@ -13,4 +13,5 @@ void Jam::Core::join() {
 	if (_thread->joinable()) {
 		_thread->join();
 	}
+	delete _thread;
 };

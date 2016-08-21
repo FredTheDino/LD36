@@ -2,7 +2,8 @@
 
 using namespace Jam;
 
-GLRenderer::GLRenderer(std::string mesh, std::string shaderProgram)
+GLRenderer::GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram)
+	: _renderer(renderer)
 {
 	_setMesh(GLLibrary::getMesh(mesh));
 	_setShaderProgram(GLLibrary::getShaderProgram(shaderProgram));
@@ -11,6 +12,7 @@ GLRenderer::GLRenderer(std::string mesh, std::string shaderProgram)
 void GLRenderer::draw()
 {
 	_shaderProgram->bind();
+	_shaderProgram->sendUniformMat4f("transform", _renderer.getParent()->transform.getMatrix());
 	_mesh->draw();
 }
 

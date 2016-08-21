@@ -16,12 +16,12 @@ bool Jam::Component::isActive()
 	return _isActive;
 }
 
-Jam::Entity* Jam::Component::_getParent()
+Jam::Entity* Jam::Component::getParent()
 {
 	return _parent;
 }
 
-void Jam::Component::_setParent(Jam::Entity& parent)
+void Jam::Component::_setParent(Jam::Entity* parent)
 {
-	_parent = &parent;
+	_parent = parent;
 }

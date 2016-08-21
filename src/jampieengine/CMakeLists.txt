@@ -1,6 +1,6 @@
-FILE(GLOB SOURCE_FILES "*.cpp" "*.h" "*.c")
+FILE(GLOB JAM_SOURCE_FILES "*.cpp" "*.h" "*.c")
 
-ADD_LIBRARY(jampieengine ${SOURCE_FILES})
+ADD_LIBRARY(jampieengine ${JAM_SOURCE_FILES})
 
 INCLUDE_DIRECTORIES(jampieengine "/include")
 INCLUDE_DIRECTORIES(jampieengine "/glm" "/glm/gtc" "/glm/gtc" "/glm/detail" "../impl/entity.cpp")
@@ -49,3 +49,7 @@ else()
 	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIRS})
 	TARGET_LINK_LIBRARIES(jampieengine ${OPENAL_LIBRARY})
 endif()
+
+include_directories(jampieengine ${CMAKE_SOURCE_DIR})
+
+target_link_libraries(jampieengine Box2D)

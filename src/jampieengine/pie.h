@@ -20,6 +20,7 @@ namespace Jam
 	//Struct used to retrieve startup information from user
 	struct Flavor {
 		std::string title = "My Pie";
+		std::string inputmap = "input.map";
 		std::string enterState = "main";
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
@@ -43,6 +44,8 @@ namespace Jam
 		//Called to stop engine
 		void eat() { _cooking = false; };
 
+		GraphicsCore* getGraphicsCore() { return _graphicsCore; };
+
 	private:
 
 		//True if the engine is running
@@ -56,7 +59,7 @@ namespace Jam
 
 		//Core handles
 		GraphicsCore* _graphicsCore;
-		AudioCore* _soundCore;
+		AudioCore* _audioCore;
 
 		//Initialization functions
 		void _initSDL();

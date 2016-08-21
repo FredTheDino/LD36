@@ -17,15 +17,19 @@ namespace Jam {
 		SpatialSound();
 		~SpatialSound();
 
-		void setPosition(float x, float y, float z);
-		void setPosition(glm::vec3 position);
-
-		void setVelocity(float x, float y, float z);
-		void setVelocity(glm::vec3 velocity);
-
 		void setMaxGain(float maxGain);
 		void setMinGain(float minGain);
 		void setMaxDistance(float maxDistance);
 		void setRolloffFactor(RolloffFactor rolloff);
+
+	protected:
+		void _setPosition(glm::vec3 position);
+
+		void _setVelocity(glm::vec3 velocity);
+
+		glm::vec3 _position;
+		glm::vec3 _velocity;
+
+
 	};
 }

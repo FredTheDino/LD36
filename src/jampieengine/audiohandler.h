@@ -1,7 +1,6 @@
 #pragma once
 
 #include "audioevent.h"
-
 #include "sound.h"
 
 #include <string>
@@ -32,6 +31,9 @@ namespace Jam {
 
 		//Unload a sound file
 		static void unload(const std::string& nickname);
+
+		//If it is done loading
+		static bool ready();
 
 	private:
 
