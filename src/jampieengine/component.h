@@ -1,8 +1,8 @@
 #pragma once
 
-#include "entity.h"
-
 namespace Jam {
+	
+	//Forward declaration
 	class Entity;
 
 	class Component {

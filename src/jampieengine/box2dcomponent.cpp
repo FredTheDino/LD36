@@ -1,4 +1,5 @@
 #include "box2dcomponent.h"
+#include "entity.h"
 
 using namespace Jam;
 
