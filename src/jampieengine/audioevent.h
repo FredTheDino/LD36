@@ -18,6 +18,7 @@ namespace Jam {
 			REWIND,
 			QUEUE, 
 			CLEAR_QUEUE,
+			DUMMY,
 		};
 		
 		//If it is a set event, what should then be set
