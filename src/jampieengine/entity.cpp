@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "renderer.h"
 
 using namespace Jam;
 
@@ -31,7 +32,27 @@ void Entity::toggleAll() {
 
 void Entity::update(double delta)
 {
+	if (has<Renderer>())
+		while (get<Renderer>()->shouldDraw());
+
 	for (size_t i = 0; i < _components.size(); i++) {
 		_components[i]->_update(delta);
+	}
+
+	if (has<Renderer>())
+		get<Renderer>()->setShouldDraw(true);
+}
+
+void Entity::_rootEnter()
+{
+	for (size_t i = 0; i < _components.size(); i++) {
+		_components[i]->_rootEnter();
+	}
+}
+
+void Entity::_rootExit()
+{
+	for (size_t i = 0; i < _components.size(); i++) {
+		_components[i]->_rootExit();
 	}
 }

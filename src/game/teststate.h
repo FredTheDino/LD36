@@ -18,78 +18,84 @@
 #include "box2dlistener.h"
 #include "box2dcomponent.h"
 #include "Box2D/Box2D.h"
+#include "inputhandler.h"
+#include "material.h"
 
 void col(b2Contact* contact) {
 	std::cout << "HIT!" << std::endl;
 }
 
-class TestState: Jam::GameState {
+class TestState: Jam::GameState
+{
 public:
 
-	void init() {
-		std::cout << "Test1: Adding roots..." << std::endl;
+	void init()
+	{
+		Jam::Root* root = new Jam::Root();
 
-		root = new Jam::Root();
+		loadStuff();
 
 		Jam::Entity* entity = new Jam::Entity();
-		entity->add(new Jam::Renderer(getRenderEngine(), "quad"));
+		entity->add(new TestComponent(getRenderEngine()->getCamera()));
 
-		Jam::Entity* body = new Jam::Entity();
-		Jam::Entity* floor = new Jam::Entity();
+		Jam::Material material;
+		material.texture = "metal";
 
-		_world = new b2World(b2Vec2(0, -9.82));
+		entity->add(new Jam::Renderer(getRenderEngine(), "quad", material));
 
-		_world->SetContactListener(&_listener);
+		root->addNode(0, "t_metal", (Jam::Node*) entity);
 
-		body->transform.position.x = 0;
-		body->transform.position.y = 10;
-
-		b2BodyDef bodyDef;
-		b2FixtureDef fixtureDef;
-		bodyDef.type = b2BodyType::b2_dynamicBody;
-
-		{
-			b2CircleShape* s = new b2CircleShape;
-			s->m_radius = 1;
-			fixtureDef.shape = s;
-		}
-		 
-		body->add(new Jam::Box2DComponent(_world, bodyDef, fixtureDef));
-		body->get<Jam::Box2DComponent>()->setBeginContactCallback(&col);
+		Jam::Entity* mario = new Jam::Entity();
+		mario->add(new TestComponent(getRenderEngine()->getCamera()));
 		
-		bodyDef.type = b2BodyType::b2_staticBody;
-		{
-			b2PolygonShape* s = new b2PolygonShape;
-			s->SetAsBox(10, 0.5);
-			fixtureDef.shape = s;
-		}
+		Jam::Material material_mario;
+		material_mario.texture = "mario";
 
-		floor->transform.position.x = 0;
-		floor->transform.position.y = 0;
+		mario->add(new Jam::Renderer(getRenderEngine(), "quad", material_mario));
 
-		floor->add(new Jam::Box2DComponent(_world, bodyDef, fixtureDef));
+		root->addNode(0, "t_mario", (Jam::Node*) mario);
 
-		entity->add(new AudioComponentTest());
-		entity->add(new TestComponent());
+		mario->transform.translateX(.5f);
 
-		root->addNode(1, "floor", (Jam::Node*) floor);
-		root->addNode(1, "bod", (Jam::Node*) body);
-		root->addNode(1, "TestEntity", (Jam::Node*) entity);
-		addRoot("TestRoot", root);
+		addRoot("t_root", root);
 
-		enterRoot("TestRoot");
+		enterRoot("t_root");
 	}
 
-	void update(double delta) {
-		if (Jam::InputHandler::checkInputState("t_reset", Jam::KeyState::PRESSED))
-			((Jam::Entity*) getCurrentRoot()->getNode("TestEntity"))->get<TestComponent>()->reset();
-		_world->Step(delta, 3, 8);
+	void loadStuff()
+	{
+		Jam::Texture metal;
+		metal.path = "texture/metal.png";
+		metal.minFilter = GL_LINEAR;
+		metal.magFilter = GL_LINEAR;
+
+		Jam::GFXLibrary::registerTexture("metal", metal);
+
+		Jam::RenderEngine::preloadTexture("metal");
+
+		Jam::Texture mario;
+		mario.path = "texture/mario.png";
+		mario.minFilter = GL_LINEAR;
+		mario.magFilter = GL_LINEAR;
+
+		Jam::GFXLibrary::registerTexture("mario", mario);
+
+		Jam::RenderEngine::preloadTexture("mario");
+
+		Jam::RenderEngine::load();
+
+		while (Jam::RenderEngine::remainingLoadEntries() > 0);
 	}
 
-	void exit() {
+	void update(double delta)
+	{
+		
+	}
+
+	void exit()
+	{
 		removeRoot("TestRoot");
 		delete root;
-		delete _world;
 	}
 
 private:

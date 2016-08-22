@@ -6,6 +6,7 @@ RenderEngine* GLLibrary::_renderEngine;
 
 std::unordered_map<std::string, GLMesh*> GLLibrary::_glMeshRegistry;
 std::unordered_map<std::string, GLShaderProgram*> GLLibrary::_glShaderProgramRegistry;
+std::unordered_map<std::string, GLTexture*> GLLibrary::_glTextureRegistry;
 
 void GLLibrary::_unloadAll()
 {
@@ -24,5 +25,13 @@ void GLLibrary::_unloadAll()
 	}
 
 	//Clear shader program map
-	_glMeshRegistry.clear();
+	_glShaderProgramRegistry.clear();
+
+	//Unload texture map
+	for (std::unordered_map<std::string, GLTexture*>::iterator it = _glTextureRegistry.begin(); it != _glTextureRegistry.end(); ++it) {
+		delete it->second;
+	}
+
+	//Clear texture map
+	_glTextureRegistry.clear();
 }

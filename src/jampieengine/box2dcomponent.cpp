@@ -13,7 +13,7 @@ Box2DComponent::~Box2DComponent() {
 	_world->DestroyBody(body);
 }
 
-void Box2DComponent::_begin() {
+void Box2DComponent::_init() {
 	//Set the transform to the bodies transform
 	Transform t = getParent()->transform;
 	_bodyDef->position.Set(t.position.x, t.position.y);

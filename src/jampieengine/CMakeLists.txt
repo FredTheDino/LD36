@@ -1,9 +1,10 @@
 FILE(GLOB JAM_SOURCE_FILES "*.cpp" "*.h" "*.c")
+FILE(GLOB LODEPNG_SOURCE_FILES "lodepng/*.cpp" "lodepng/*.h")
 
-ADD_LIBRARY(jampieengine ${JAM_SOURCE_FILES})
+ADD_LIBRARY(jampieengine ${JAM_SOURCE_FILES} ${LODEPNG_SOURCE_FILES})
 
 INCLUDE_DIRECTORIES(jampieengine "/include")
-INCLUDE_DIRECTORIES(jampieengine "/glm" "/glm/gtc" "/glm/gtc" "/glm/detail" "../impl/entity.cpp")
+INCLUDE_DIRECTORIES(jampieengine "/glm" "/glm/gtc" "/glm/gtc" "/glm/detail")
 
 
 #OpenGL

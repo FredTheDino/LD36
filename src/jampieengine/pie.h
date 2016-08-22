@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "inputhandler.h"
 #include "gamestatemanager.h"
+#include "camera.h"
 
 namespace Jam
 {
@@ -27,6 +28,7 @@ namespace Jam
 		bool w_border = true;
 		bool w_resizable = false;
 		GraphicsCoreType graphicsCoreType = GRAPHICS_TYPE_OPENGL;
+		Camera* camera = nullptr;
 	};
 
 	//Main class definition
@@ -45,6 +47,8 @@ namespace Jam
 		void eat() { _cooking = false; };
 
 		GraphicsCore* getGraphicsCore() { return _graphicsCore; };
+		AudioCore* getAudioCore() { return _audioCore; };
+		GameStateManager* getGameStateManager() { return _gameStateManager; };
 
 	private:
 
@@ -55,11 +59,11 @@ namespace Jam
 		Flavor& _flavor;
 		
 		//GameStateManager
-		GameStateManager* _gameStateManager;
+		GameStateManager* _gameStateManager = nullptr;
 
 		//Core handles
-		GraphicsCore* _graphicsCore;
-		AudioCore* _audioCore;
+		GraphicsCore* _graphicsCore = nullptr;
+		AudioCore* _audioCore = nullptr;
 
 		//Initialization functions
 		void _initSDL();

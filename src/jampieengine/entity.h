@@ -24,15 +24,14 @@ namespace Jam
 		bool add(T* component)
 		{
 			//Check if the added class is a component
-			//static_assert(std::is_base_of<Component, T>::value, "Can only add components to entity");
+			static_assert(std::is_base_of<Component, T>::value, "Can only add components to entity");
 
 			//Return if that type allready exists
 			if (get<T>()) { return false; }
 
 			//Create a local copy of it on the heap
-			component = new T(*component);
 			component->_setParent(this);
-			component->_begin();
+			component->_init();
 
 			_components.push_back(component);
 			return true;
@@ -52,6 +51,13 @@ namespace Jam
 			}
 
 			return component;
+		}
+
+		//Returns true if the specified component exists on this entity
+		template <class T>
+		bool has()
+		{
+			return get<T>() != nullptr;
 		}
 
 		//Returns true if deleteion succseded
@@ -117,6 +123,9 @@ namespace Jam
 
 		//The update function
 		void update(double delta);
+
+		void _rootEnter();
+		void _rootExit();
 
 	private:
 

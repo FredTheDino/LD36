@@ -6,6 +6,7 @@
 #include "glmesh.h"
 #include "glshaderprogram.h"
 #include "gfxlibrary.h"
+#include "gltexture.h"
 
 namespace Jam
 {
@@ -22,6 +23,9 @@ namespace Jam
 		//Return loaded shader program
 		static GLShaderProgram* getShaderProgram(std::string tag) { return _glShaderProgramRegistry.at(tag); };
 
+		//Return loaded texture
+		static GLTexture* getTexture(std::string tag) { return _glTextureRegistry.at(tag); };
+
 	private:
 
 		//Render engine
@@ -30,7 +34,7 @@ namespace Jam
 		//Loaded meshes
 		static std::unordered_map<std::string, GLMesh*> _glMeshRegistry;
 
-		//Instantiate GLMesh from generic mesh associated with tag (has to be called from graphicscore thread)
+		//Instantiates GLMesh from generic mesh associated with tag (has to be called from graphicscore thread)
 		static void _loadMesh(std::string tag) { _glMeshRegistry.insert(std::make_pair(tag, new GLMesh(GFXLibrary::getMesh(tag)))); };
 
 		//Unloads GLMesh with specified tag (has to be called from graphicscore thread)
@@ -39,11 +43,20 @@ namespace Jam
 		//Loaded shader programs
 		static std::unordered_map<std::string, GLShaderProgram*> _glShaderProgramRegistry;
 
-		//Instantiate GLShaderProgram from generic shader program associated with tag (has to be called from graphicscore thread)
+		//Instantiates GLShaderProgram from generic shader program associated with tag (has to be called from graphicscore thread)
 		static void _loadShaderProgram(std::string tag) { _glShaderProgramRegistry.insert(std::make_pair(tag, new GLShaderProgram(GFXLibrary::getShaderProgram(tag)))); };
 
 		//Unloads GLShaderProgram with specified tag (has to be called from graphicscore thread)
 		static void _unloadShaderProgram(std::string tag) { delete _glShaderProgramRegistry.at(tag); _glShaderProgramRegistry.erase(tag); };
+
+		//Loaded textures
+		static std::unordered_map<std::string, GLTexture*> _glTextureRegistry;
+
+		//Instantiates GLTexture from generic texture associated with tag (has to be called from graphicscore thread)
+		static void _loadTexture(std::string tag) { _glTextureRegistry.insert(std::make_pair(tag, new GLTexture(GFXLibrary::getTexture(tag)))); };
+
+		//Unloads GLTexture with specified tag (has to be called from graphicscore thread)
+		static void _unloadTexture(std::string tag) { delete _glTextureRegistry.at(tag); _glTextureRegistry.erase(tag); };
 
 		//Unloads everything from this library
 		static void _unloadAll();

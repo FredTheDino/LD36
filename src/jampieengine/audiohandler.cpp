@@ -40,7 +40,7 @@ namespace Jam {
 	}
 
 	void AudioHandler::update() {
-
+		/*
 		_library->update();
 
 		AudioEvent e;
@@ -85,7 +85,7 @@ namespace Jam {
 				default:
 					break;
 			}
-		}
+		}*/
 	}
 
 	void AudioHandler::preload(const std::string& nickname, const std::string& path) {

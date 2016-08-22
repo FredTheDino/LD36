@@ -3,15 +3,17 @@
 #include "gllibrary.h"
 #include "glshaderprogram.h"
 #include "glmesh.h"
+#include "material.h"
 
 namespace Jam
 {
 	class Renderer;
+	struct Material;
 
 	class GLRenderer
 	{
 	public:
-		GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram);
+		GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram, Material& material);
 
 		void draw();
 
@@ -22,6 +24,8 @@ namespace Jam
 		GLMesh* _mesh;
 
 		GLShaderProgram* _shaderProgram;
+
+		Material& _material;
 
 		void _setMesh(GLMesh* mesh);
 

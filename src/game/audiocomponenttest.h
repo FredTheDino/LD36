@@ -8,7 +8,7 @@
 
 class AudioComponentTest: public Jam::Component {
 public:
-	void _begin() {
+	void _init() {
 		Jam::AudioHandler::preload("fred", "jungle.wav");
 		Jam::AudioHandler::preload("test", "audio.wav");
 		Jam::SpatialSoundSource* s = new Jam::SpatialSoundSource();
@@ -28,10 +28,9 @@ public:
 				}
 			}
 		}
-		static double t = 0;
-		t += delta;
-		getParent()->transform.position.x = sin(t) * 20;
-		getParent()->transform.position.y = cos(t) * 20;
+		
+		getParent()->transform.rotateZ(delta);
+
 	}
 
 	void _end() {
