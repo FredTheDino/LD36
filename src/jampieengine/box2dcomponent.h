@@ -6,10 +6,20 @@
 #include <vector>
 
 namespace Jam {
+	enum class BodyType {
+		DYNAMICBODY,
+		KINEMATIC,
+		STATIC
+	};
+
 	class Box2DComponent: public Component {
 
 		class Box2DListener;
 	public:
+		Box2DComponent(b2World* world, BodyType type, bool isSensor, float width, float height, 
+					   float density = 1.0, float friction = 1.0, float restitution = 0.0);
+		Box2DComponent(b2World* world, BodyType type, bool isSensor, b2Shape* shape, 
+					   float density = 1.0, float friction = 1.0, float restitution = 0.0);
 		Box2DComponent(b2World* world, b2BodyDef bodydef, b2FixtureDef fixturedef);
 		~Box2DComponent();
 

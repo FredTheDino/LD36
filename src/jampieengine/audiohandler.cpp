@@ -53,13 +53,12 @@ namespace Jam {
 			while(AudioEventQueue::_accessingQueue) {}
 			AudioEventQueue::_accessingQueue = true;
 			
-			events = AudioEventQueue::_events;
+			events.resize(AudioEventQueue::_events.size());
+			for (size_t i = 0; i < events.size(); i++) {
+				events[i] = AudioEventQueue::_events[i];
+			}
 			AudioEventQueue::_events.clear();
-			
-			AudioEvent ae;
-			ae.type = AudioEventData::Type::DUMMY;
-			AudioEventQueue::_events.push_back(ae);
-			
+
 			AudioEventQueue::_accessingQueue = false;
 		}
 

@@ -19,7 +19,7 @@
 #include "Box2D/Box2D.h"
 
 void col(b2Contact* contact) {
-	std::cout << "HIT!" << std::endl;
+	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
 }
 
 class TestState: Jam::GameState {
@@ -41,19 +41,12 @@ public:
 
 		body->transform.position.x = 0;
 		body->transform.position.y = 10;
+		 
+		body->add(new Jam::Box2DComponent(_world, Jam::BodyType::DYNAMICBODY, false, 2.0f, 2.0f, 1.0, 1.0, 1.0));
+		body->get<Jam::Box2DComponent>()->setBeginContactCallback(&col);
 
 		b2BodyDef bodyDef;
 		b2FixtureDef fixtureDef;
-		bodyDef.type = b2BodyType::b2_dynamicBody;
-
-		{
-			b2CircleShape* s = new b2CircleShape;
-			s->m_radius = 1;
-			fixtureDef.shape = s;
-		}
-		 
-		body->add(new Jam::Box2DComponent(_world, bodyDef, fixtureDef));
-		body->get<Jam::Box2DComponent>()->setBeginContactCallback(&col);
 		
 		bodyDef.type = b2BodyType::b2_staticBody;
 		{
@@ -67,7 +60,7 @@ public:
 
 		floor->add(new Jam::Box2DComponent(_world, bodyDef, fixtureDef));
 
-		entity->add(new AudioComponentTest());
+		body->add(new AudioComponentTest());
 		entity->add(new TestComponent());
 
 		root->addNode(1, "floor", (Jam::Node*) floor);
