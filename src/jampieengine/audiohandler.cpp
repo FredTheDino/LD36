@@ -62,8 +62,6 @@ namespace Jam {
 			AudioEventQueue::_accessingQueue = false;
 		}
 
-		//std::cout << events.size() << std::endl;
-
 		for (size_t i = 0; i < events.size(); i++) {
 			e = events[i];
 			switch (e.type) {

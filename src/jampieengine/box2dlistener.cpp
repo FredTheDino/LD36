@@ -1,5 +1,3 @@
-#pragma once
-
 #include "box2dlistener.h"
 #include "Box2D/Box2D.h"
 #include "box2dcomponent.h"
