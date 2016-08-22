@@ -3,6 +3,9 @@
 #include "audioeventqueue.h"
 #include "audiolibrary.h"
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 namespace Jam {
 
 	ALCdevice* AudioHandler::_device = nullptr;
@@ -40,12 +43,18 @@ namespace Jam {
 	}
 
 	void AudioHandler::update() {
-
+		
 		_library->update();
 
 		AudioEvent e;
 		std::vector<AudioEvent> events;
-		AudioEventQueue::copyQueue(events);
+
+		while(AudioEventQueue::_accessingQueue) {}
+		AudioEventQueue::_accessingQueue = true;
+
+		events = AudioEventQueue::_events;
+
+		AudioEventQueue::_accessingQueue = false;
 		
 		for (size_t i = 0; i < events.size(); i++) {
 			e = events[i];
