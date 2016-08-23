@@ -14,7 +14,7 @@ namespace Jam
 	//Forward declarations
 	class GameState;
 
-	class Root
+	class Root : public Node
 	{
 	public:
 		Root();

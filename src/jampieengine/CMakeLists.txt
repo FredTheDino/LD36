@@ -33,6 +33,9 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 else()
 	INCLUDE(FindPkgConfig)
 
+	find_package (Threads)
+	target_link_libraries (jampieengine ${CMAKE_THREAD_LIBS_INIT})
+
 	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 	if (${SDL2_FOUND})
 		INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
