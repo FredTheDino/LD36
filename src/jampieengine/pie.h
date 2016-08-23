@@ -10,6 +10,8 @@
 #include "debug.h"
 #include "inputhandler.h"
 #include "gamestatemanager.h"
+#include "camera.h"
+#include "sst.h"
 
 namespace Jam
 {
@@ -22,11 +24,14 @@ namespace Jam
 		std::string title = "My Pie";
 		std::string inputmap = "input.map";
 		std::string enterState = "main";
+		bool transparancy = false;
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
 		bool w_border = true;
 		bool w_resizable = false;
 		GraphicsCoreType graphicsCoreType = GRAPHICS_TYPE_OPENGL;
+		Camera* camera = nullptr;
+		unsigned char sstEncryptionKey = 0x69;
 	};
 
 	//Main class definition
@@ -44,6 +49,10 @@ namespace Jam
 		//Called to stop engine
 		void eat() { _cooking = false; };
 
+		GraphicsCore* getGraphicsCore() { return _graphicsCore; };
+		AudioCore* getAudioCore() { return _audioCore; };
+		GameStateManager* getGameStateManager() { return _gameStateManager; };
+
 	private:
 
 		//True if the engine is running
@@ -53,11 +62,11 @@ namespace Jam
 		Flavor& _flavor;
 		
 		//GameStateManager
-		GameStateManager* _gameStateManager;
+		GameStateManager* _gameStateManager = nullptr;
 
 		//Core handles
-		GraphicsCore* _graphicsCore;
-		AudioCore* _audioCore;
+		GraphicsCore* _graphicsCore = nullptr;
+		AudioCore* _audioCore = nullptr;
 
 		//Initialization functions
 		void _initSDL();
@@ -65,6 +74,7 @@ namespace Jam
 
 		//Friends!
 		friend GraphicsCore;
+		friend RenderEngine;
 		friend AudioCore;
 	};
 }

@@ -91,7 +91,7 @@ void Time::update() {
 
 	if (1.0 < counter) {
 		counter = 0;
-		printf("FPS: %i\n", frames);
+		//printf("FPS: %i\n", frames);
 		frames = 0;
 	}
 

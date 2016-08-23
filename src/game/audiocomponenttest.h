@@ -8,16 +8,24 @@
 
 class AudioComponentTest: public Jam::Component {
 public:
-	void _begin() {
+
+	void _rootEnter() {};
+
+	void _init() {
 		Jam::AudioHandler::preload("fred", "jungle.wav");
 		Jam::AudioHandler::preload("test", "audio.wav");
 		Jam::SpatialSoundSource* s = new Jam::SpatialSoundSource();
-		_getParent()->add(s);
+		getParent()->add(s);
+
+		Jam::InputHandler::registerInput("e_left", Jam::InputBinding(true, SDLK_a));
+		Jam::InputHandler::registerInput("e_right", Jam::InputBinding(true, SDLK_d));
+		Jam::InputHandler::registerInput("e_up", Jam::InputBinding(true, SDLK_w));
+		Jam::InputHandler::registerInput("e_down", Jam::InputBinding(true, SDLK_s));
 	}
 
 	void _update(double delta) {
 		if (Jam::AudioHandler::ready() && Jam::InputHandler::keyPressed("t_play")) {
-			Jam::SpatialSoundSource* source = _getParent()->get<Jam::SpatialSoundSource>();
+			Jam::SpatialSoundSource* source = getParent()->get<Jam::SpatialSoundSource>();
 			if (source) {
 				if (!source->isPlaying()) {
 					source->setGain(1);
@@ -28,14 +36,25 @@ public:
 				}
 			}
 		}
-		static double t = 0;
-		t += delta;
-		_getParent()->transform.position.x = sin(t) * 20;
-		_getParent()->transform.position.y = cos(t) * 20;
+		/* CRASHES
+		if (Jam::InputHandler::keyDown("e_left"))
+			getParent()->transform.translateX(-delta);
+		if (Jam::InputHandler::keyDown("e_right"))
+			getParent()->transform.translateX(delta);
+		if (Jam::InputHandler::keyDown("e_up"))
+			getParent()->transform.translateY(delta);
+		if (Jam::InputHandler::keyDown("e_down"))
+			getParent()->transform.translateY(-delta);
+		*/
+		getParent()->transform.rotateZ(delta);
+
+		//getParent()->transform.translateX(sin(delta)); //CRASHES
 	}
 
 	void _end() {
 		Jam::AudioHandler::unload("fred");
 		Jam::AudioHandler::unload("test");
 	}
+
+	void _rootExit() {};
 };

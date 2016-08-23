@@ -4,12 +4,15 @@
 
 #include "gamestatemanager.h"
 #include "root.h"
+#include "renderengine.h"
+
 
 namespace Jam
 {
 	//Forward declarations
 	class GameStateManager;
 	class Root;
+	class RenderEngine;
 
 	class GameState
 	{
@@ -29,6 +32,8 @@ namespace Jam
 
 		Root* getCurrentRoot() { return _currentRoot; };
 
+		RenderEngine* getRenderEngine() { return _renderEngine; };
+
 	protected:
 		GameStateManager* _gameStateManager;
 
@@ -37,9 +42,12 @@ namespace Jam
 
 		Root* _currentRoot = nullptr;
 
+		RenderEngine* _renderEngine;
+
 		std::unordered_map<std::string, Root*> _roots;
 
 		void _setGameStateManager(GameStateManager* gameStateManager) { _gameStateManager = gameStateManager; };
+		void _setRenderEngine(RenderEngine* renderEngine) { _renderEngine = renderEngine; };
 		void _updateRoot(double delta);
 		
 		friend GameStateManager;

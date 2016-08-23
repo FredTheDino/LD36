@@ -13,6 +13,7 @@ namespace Jam
 {
 	//Forward declarations
 	class GameState;
+	class Node;
 
 	class Root : public Node
 	{
@@ -28,6 +29,9 @@ namespace Jam
 
 		//Return a node from the node tree
 		Node* getNode(std::string tag) { return _nodes.at(tag); };
+
+		void _rootEnter();
+		void _rootExit();
 
 		//Delete a node
 		void deleteNode(std::string tag);

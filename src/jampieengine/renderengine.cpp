@@ -5,11 +5,10 @@ using namespace Jam;
 //Static instantiation
 bool RenderEngine::_shouldLoad;
 bool RenderEngine::_accessingLoadQueues;
-std::vector<std::string> RenderEngine::_meshLoadQueue;
-std::vector<std::string> RenderEngine::_shaderProgramLoadQueue;
+std::vector<RenderEngine::LoadEntry> RenderEngine::_loadQueue;
 
-RenderEngine::RenderEngine(Window& window, GraphicsCoreType graphicsType)
-	: _window(window), GRAPHICS_TYPE(graphicsType)
+RenderEngine::RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsCoreType graphicsType, Camera* camera)
+	: _graphicsCore(graphicsCore), _window(window), GRAPHICS_TYPE(graphicsType), _camera(camera)
 {
 	_createContext();
 	
@@ -19,10 +18,10 @@ RenderEngine::RenderEngine(Window& window, GraphicsCoreType graphicsType)
 	Mesh mesh{};
 
 	std::vector<Vertex*> quad;
-	quad.push_back((Vertex*) new Vertex2D(-.5f, .5f));
-	quad.push_back((Vertex*) new Vertex2D(.5f, .5f));
-	quad.push_back((Vertex*) new Vertex2D(.5f, -.5f));
-	quad.push_back((Vertex*) new Vertex2D(-.5f, -.5f));
+	quad.push_back((Vertex*) new Vertex2D(-.5f, .5f, 0, 0));
+	quad.push_back((Vertex*) new Vertex2D(.5f, .5f, 1, 0));
+	quad.push_back((Vertex*) new Vertex2D(.5f, -.5f, 1, 1));
+	quad.push_back((Vertex*) new Vertex2D(-.5f, -.5f, 0, 1));
 
 	mesh.vertices = quad;
 
@@ -55,17 +54,50 @@ RenderEngine::RenderEngine(Window& window, GraphicsCoreType graphicsType)
 
 	/* Shader Program End */
 
+	std::cout << "TODO: Remove default texture from renderengine.cpp constructor" << std::endl;
+	/* Texture Start */
+
+	Texture texture;
+	texture.width = 1;
+	texture.height = 1;
+
+	std::vector<unsigned char> data(4);
+	data[0] = UCHAR_MAX;
+	data[1] = UCHAR_MAX;
+	data[2] = UCHAR_MAX;
+	data[3] = UCHAR_MAX;
+
+	texture.data = data;
+	
+	GFXLibrary::registerTexture("default", texture);
+
+	preloadTexture("default");
+
+	/* Texture End */
+
 	/* Load to GPU */
 	_load();
+}
 
-	std::cout << "TODO: Remove default renderers from renderengine.cpp constructor" << std::endl;
-	/* Renderers Start */
+unsigned int RenderEngine::addRenderer(int priority, Renderer* renderer)
+{
+	_rendererIDCounter++;
 
-	for (unsigned int i = 0; i < 1; i++) {
-		_renderers.insert(std::make_pair(i, new Renderer(this, "quad")));
+	_renderers.insert(std::make_pair(priority, std::make_pair(_rendererIDCounter, renderer)));
+
+	return _rendererIDCounter;
+}
+
+void RenderEngine::removeRenderer(unsigned int associationID)
+{
+	for (std::multimap<int, std::pair<unsigned int, Renderer*>>::iterator it = _renderers.begin(); it != _renderers.end();) {
+		std::multimap<int, std::pair<unsigned int, Renderer*>>::iterator it_erase = it++;
+
+		if (it_erase->second.first == associationID) {
+			_renderers.erase(it_erase);
+			break;
+		}
 	}
-
-	/* Renderers End */
 }
 
 void RenderEngine::_load()
@@ -73,16 +105,17 @@ void RenderEngine::_load()
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
 		
-		//Iterates mesh load queue
-		while (_meshLoadQueue.size() > 0) {
-			GLLibrary::_loadMesh(_meshLoadQueue.back());
-			_meshLoadQueue.pop_back();
-		}
+		//Iterates load queue
+		while (_loadQueue.size() > 0) {
+			LoadEntry le = _loadQueue.back();
 
-		//Iterates shader program load queue
-		while (_shaderProgramLoadQueue.size() > 0) {
-			GLLibrary::_loadShaderProgram(_shaderProgramLoadQueue.back());
-			_shaderProgramLoadQueue.pop_back();
+			switch (le.loadType) {
+			case LOAD_TYPE_MESH: GLLibrary::_loadMesh(le.tag); break;
+			case LOAD_TYPE_SHADER_PROGRAM: GLLibrary::_loadShaderProgram(le.tag); break;
+			case LOAD_TYPE_TEXTURE: GLLibrary::_loadTexture(le.tag); break;
+			}
+
+			_loadQueue.pop_back();
 		}
 
 		break;
@@ -100,8 +133,8 @@ void RenderEngine::_draw()
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (const std::pair<int, Renderer*> renderer : _renderers) {
-		renderer.second->draw();
+	for (const std::pair<int, std::pair<unsigned int, Renderer*>> renderer : _renderers) {
+		renderer.second.second->draw();
 	}
 
 	SDL_GL_SwapWindow(_window.getHandle());
@@ -117,6 +150,11 @@ void RenderEngine::_createContext()
 		glewInit();
 		GLLibrary::_renderEngine = this;
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glEnable(GL_TEXTURE_2D);
+		if (_graphicsCore._pie._flavor.transparancy) {
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 		break;
 	}
 }

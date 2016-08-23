@@ -27,7 +27,7 @@ namespace Jam {
 		void _end() {}
 
 		//Initalizes the Box2D components
-		void _begin();
+		void _init();
 
 		//The update loop
 		void _update(double delta);
@@ -48,7 +48,7 @@ namespace Jam {
 
 	private:
 		
-		//Remember the deffinitions until _begin, so we can get the entity
+		//Remember the deffinitions until _init, so we can get the entity
 		b2BodyDef* _bodyDef;
 		b2FixtureDef* _fixtureDef;
 

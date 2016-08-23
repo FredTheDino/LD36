@@ -13,20 +13,44 @@
 #include "audiolibrary.h"
 #include "soundsource.h"
 #include "audiolistener.h"
+#include "camera.h"
+#include "renderer.h"
 
-class TestComponent: public Jam::Component {
+class TestComponent : public Jam::Component {
 public:
-	void _begin() {
+	TestComponent(Jam::Camera* camera)
+		: _camera(camera)
+	{
 
 	}
 
-	void _update(double delta) {
+	void _rootEnter() {};
 
+	void _init() {
+		Jam::InputHandler::registerInput("c_left", Jam::InputBinding(true, SDLK_LEFT));
+		Jam::InputHandler::registerInput("c_right", Jam::InputBinding(true, SDLK_RIGHT));
+		Jam::InputHandler::registerInput("c_up", Jam::InputBinding(true, SDLK_UP));
+		Jam::InputHandler::registerInput("c_down", Jam::InputBinding(true, SDLK_DOWN));
+	}
+
+	void _update(double delta) {
+		if (Jam::InputHandler::keyDown("c_left"))
+			_camera->transform.translateX(-delta);
+		if (Jam::InputHandler::keyDown("c_right"))
+			_camera->transform.translateX(delta);
+		if (Jam::InputHandler::keyDown("c_up"))
+			_camera->transform.translateY(delta);
+		if (Jam::InputHandler::keyDown("c_down"))
+			_camera->transform.translateY(-delta);
+
+		getParent()->transform.rotateZ(delta);
 	}
 
 	void _end() {
 
 	}
+
+	void _rootExit() {};
 
 	void reset() {
 		i = 0;
@@ -34,4 +58,7 @@ public:
 
 private:
 	int i;
+
+	Jam::Camera* _camera;
+
 };

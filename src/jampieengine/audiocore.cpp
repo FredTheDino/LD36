@@ -31,6 +31,8 @@ void AudioCore::_start() {
 
 	AudioListener::setPosition(glm::vec3(-10, -2, -2));
 
+	_ready = true;
+
 	while (_pie.isCooking()) {
 		AudioHandler::update();
 		Time::wait();

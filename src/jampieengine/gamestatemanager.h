@@ -22,6 +22,8 @@ namespace Jam
 		void enterState(std::string tag);
 		void enterState(GameState* gameState);
 
+		Pie& getPie() { return _pie; };
+
 	private:
 
 		Pie& _pie;

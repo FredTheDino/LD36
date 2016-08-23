@@ -10,8 +10,10 @@ namespace Jam {
 		~SpatialSoundSource();
 
 		//Un implemented component functions
-		void _begin() {};
+		void _rootEnter() {};
+		void _init() {};
 		void _end() {};
+		void _rootExit() {};
 
 		void _update(double delta);
 	

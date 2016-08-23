@@ -23,7 +23,7 @@ int main(int c, char** args) {
 	Jam::InputHandler::registerInput("t_reset", Jam::InputBinding(true, -1, 0, SDLK_p));
 	*/
 	Jam::InputHandler::registerInput("t_play", Jam::InputBinding(true, -1, 0, SDLK_BACKSPACE));
-	Jam::Time::setFPS(60);
+	Jam::Time::setFPS(0);
 
 #ifdef WIN32
 	Jam::Loader::prefix = "../../res/";
@@ -37,6 +37,7 @@ int main(int c, char** args) {
 	
 	flavor.title = "My Test Game";
 	flavor.enterState = "TestState";
+	flavor.transparancy = true;
 
 	Jam::Pie pie(flavor);
 

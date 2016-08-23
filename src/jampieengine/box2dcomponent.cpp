@@ -77,9 +77,9 @@ Box2DComponent::~Box2DComponent() {
 	_world->DestroyBody(body);
 }
 
-void Box2DComponent::_begin() {
+void Box2DComponent::_init() {
 	//Set the transform to the bodies transform
-	Transform t = _getParent()->transform;
+	Transform t = getParent()->transform;
 	_bodyDef->position.Set(t.position.x, t.position.y);
 	_bodyDef->angle = t.rotation.z;
 	
@@ -105,7 +105,7 @@ void Box2DComponent::_update(double delta) {
 	transform.position.y = temp.p.y;
 	transform.rotation.z = temp.q.GetAngle();
 	//Set the transform
-	_getParent()->transform = transform;
+	getParent()->transform = transform;
 }
 
 void Jam::Box2DComponent::setBeginContactCallback(void(*begin)(b2Contact *)) {

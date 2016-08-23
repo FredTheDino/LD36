@@ -23,6 +23,9 @@ namespace Jam {
 
 	protected:
 
+		//Indicates to Pie if this core is properly set up
+		bool _ready = false;
+
 		//Invoked by main class upon launch
 		void _bake(Flavor& flavor);
 

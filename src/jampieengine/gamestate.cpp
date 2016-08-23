@@ -4,7 +4,7 @@ using namespace Jam;
 
 GameState::GameState()
 {
-
+	
 }
 
 void GameState::_updateRoot(double delta)
@@ -16,6 +16,8 @@ void GameState::_updateRoot(double delta)
 void GameState::enterRoot(std::string tag)
 {
 	_currentRoot = _roots.at(tag);
+
+	_currentRoot->_rootEnter();
 }
 
 GameState::~GameState()

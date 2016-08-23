@@ -1,8 +1,10 @@
 #include "glrenderer.h"
+#include "entity.h"
 
 using namespace Jam;
 
-GLRenderer::GLRenderer(std::string mesh, std::string shaderProgram)
+GLRenderer::GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram, Material& material)
+	: _renderer(renderer), _material(material)
 {
 	_setMesh(GLLibrary::getMesh(mesh));
 	_setShaderProgram(GLLibrary::getShaderProgram(shaderProgram));
@@ -10,7 +12,18 @@ GLRenderer::GLRenderer(std::string mesh, std::string shaderProgram)
 
 void GLRenderer::draw()
 {
+	//Bind shader program
 	_shaderProgram->bind();
+	
+	//Send matrices
+	_shaderProgram->sendUniformMat4f("projection", _renderer._renderEngine->getCamera()->getProjection());
+	_shaderProgram->sendUniformMat4f("view", _renderer._renderEngine->getCamera()->getView());
+	_shaderProgram->sendUniformMat4f("model", _renderer.getParent()->transform.getMatrix());
+
+	//Bind material
+	GLLibrary::getTexture(_material.texture)->bind();
+	_shaderProgram->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
+
 	_mesh->draw();
 }
 
