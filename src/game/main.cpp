@@ -25,8 +25,11 @@ int main(int c, char** args) {
 	Jam::InputHandler::registerInput("t_play", Jam::InputBinding(true, -1, 0, SDLK_BACKSPACE));
 	Jam::Time::setFPS(0);
 
-	//Jam::Loader::prefix = "../res/";
+#ifdef WIN32
 	Jam::Loader::prefix = "../../res/";
+#else
+	Jam::Loader::prefix = "../res/";
+#endif
 
 	std::cout << Jam::Loader::loadText("test.txt") << std::endl;
 	

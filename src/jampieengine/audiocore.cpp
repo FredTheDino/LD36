@@ -41,4 +41,6 @@ void AudioCore::_start() {
 	Time::unregisterThread();
 }
 
-AudioCore::~AudioCore() {}
+AudioCore::~AudioCore() {
+	AudioHandler::destroy();
+}

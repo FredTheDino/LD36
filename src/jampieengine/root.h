@@ -15,7 +15,7 @@ namespace Jam
 	class GameState;
 	class Node;
 
-	class Root : Node
+	class Root : public Node
 	{
 	public:
 		Root();

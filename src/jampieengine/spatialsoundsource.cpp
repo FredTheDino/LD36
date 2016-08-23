@@ -1,4 +1,5 @@
 #include "spatialsoundsource.h"
+#include "entity.h"
 
 Jam::SpatialSoundSource::SpatialSoundSource(): SpatialSound(), Component() {}
 

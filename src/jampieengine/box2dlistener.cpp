@@ -1,5 +1,3 @@
-#pragma once
-
 #include "box2dlistener.h"
 #include "Box2D/Box2D.h"
 #include "box2dcomponent.h"
@@ -32,16 +30,16 @@ namespace Jam {
 			void* userData = contact->GetFixtureA()->GetBody()->GetUserData();
 			if (userData) {
 				component = static_cast<Box2DComponent*>(userData);
-				if (component->_beginContactCallback) {
-					component->_beginContactCallback(contact);
+				if (component->_endContactCallback) {
+					component->_endContactCallback(contact);
 				}
 			}
 
 			userData = contact->GetFixtureB()->GetBody()->GetUserData();
 			if (userData) {
 				component = static_cast<Box2DComponent*>(userData);
-				if (component->_beginContactCallback) {
-					component->_beginContactCallback(contact);
+				if (component->_endContactCallback) {
+					component->_endContactCallback(contact);
 				}
 			}
 		}

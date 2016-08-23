@@ -23,7 +23,7 @@
 #include "sst.h"
 
 void col(b2Contact* contact) {
-	std::cout << "HIT!" << std::endl;
+	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
 }
 
 class TestState: Jam::GameState

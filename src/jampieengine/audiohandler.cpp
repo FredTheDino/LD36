@@ -1,7 +1,11 @@
 #include "audiohandler.h"
 
 #include "audioeventqueue.h"
+#include "audioevent.h"
 #include "audiolibrary.h"
+
+#include <AL/al.h>
+#include <AL/alc.h>
 
 namespace Jam {
 
@@ -40,13 +44,24 @@ namespace Jam {
 	}
 
 	void AudioHandler::update() {
-		
-		_library->update();
-
 		AudioEvent e;
 		std::vector<AudioEvent> events;
-		AudioEventQueue::copyQueue(events);
+
+		_library->update();
 		
+		{
+			while(AudioEventQueue::_accessingQueue) {}
+			AudioEventQueue::_accessingQueue = true;
+			
+			events.resize(AudioEventQueue::_events.size());
+			for (size_t i = 0; i < events.size(); i++) {
+				events[i] = AudioEventQueue::_events[i];
+			}
+			AudioEventQueue::_events.clear();
+
+			AudioEventQueue::_accessingQueue = false;
+		}
+
 		for (size_t i = 0; i < events.size(); i++) {
 			e = events[i];
 			switch (e.type) {

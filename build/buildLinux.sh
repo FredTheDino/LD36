@@ -4,7 +4,7 @@ run() {
 	echo "              Cmake"
 	echo ""
 
-	cmake ../src
+	cmake -DCMAKE_BUILD_TYPE=Debug ../src 
 
 	echo ""
 

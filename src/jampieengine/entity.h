@@ -6,7 +6,7 @@
 #include "transform.h"
 #include "node.h"
 
-#include <unordered_map>
+#include <vector>
 
 namespace Jam
 {
@@ -64,15 +64,16 @@ namespace Jam
 		template <class T>
 		bool remove()
 		{
+			//Since we exit after we find our element, 
+			// we don't care if the pointers are jumbled
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {
 					_components[i]->_end();
-					delete _components[i];
+					delete _components[i];			
 					_components.erase(_components.begin() + i);
 					return true;
 				}
 			}
-
 			return false;
 		}
 
@@ -80,14 +81,12 @@ namespace Jam
 		template <class T>
 		bool isActive()
 		{
-			bool active = false;
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {
-					active = _components[i]->_isActive;
+					return _components[i]->_isActive;
 				}
 			}
-
-			return active;
+			return false;
 		}
 
 		//Sets the component should be active
@@ -97,6 +96,7 @@ namespace Jam
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {
 					_components[i]->setActive(active);
+					return;
 				}
 			}
 		}
@@ -107,7 +107,8 @@ namespace Jam
 		{
 			for (size_t i = 0; i < _components.size(); i++) {
 				if (dynamic_cast<T*>(_components[i])) {
-					_components[i]->toggle();
+					_components[i]->toggleActive();
+					return;
 				}
 			}
 		}

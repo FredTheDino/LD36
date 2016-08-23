@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "audioevent.h"
+#include "audiohandler.h"
 
 namespace Jam {
 
@@ -20,6 +21,8 @@ namespace Jam {
 		static std::vector<AudioEvent> _events;
 		//If the event list is being accessed at the moment
 		static bool _accessingQueue;
+
+		friend AudioHandler;
 
 	};
 
