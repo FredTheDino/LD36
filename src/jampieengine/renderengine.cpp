@@ -7,8 +7,8 @@ bool RenderEngine::_shouldLoad;
 bool RenderEngine::_accessingLoadQueues;
 std::vector<RenderEngine::LoadEntry> RenderEngine::_loadQueue;
 
-RenderEngine::RenderEngine(Window& window, GraphicsCoreType graphicsType, Camera* camera)
-	: _window(window), GRAPHICS_TYPE(graphicsType), _camera(camera)
+RenderEngine::RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsCoreType graphicsType, Camera* camera)
+	: _graphicsCore(graphicsCore), _window(window), GRAPHICS_TYPE(graphicsType), _camera(camera)
 {
 	_createContext();
 	
@@ -151,6 +151,10 @@ void RenderEngine::_createContext()
 		GLLibrary::_renderEngine = this;
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_TEXTURE_2D);
+		if (_graphicsCore._pie._flavor.transparancy) {
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 		break;
 	}
 }

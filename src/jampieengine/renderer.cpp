@@ -2,15 +2,15 @@
 
 using namespace Jam;
 
-Renderer::Renderer(RenderEngine* renderEngine, std::string mesh, Material material)
-	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE), _renderEngine(renderEngine), _mesh(mesh), _material(material)
+Renderer::Renderer(RenderEngine* renderEngine, int priority, std::string mesh, Material material)
+	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE), _renderEngine(renderEngine), _priority(priority), _mesh(mesh), _material(material)
 {
 	
 }
 
 void Renderer::_rootEnter()
 {
-	_associationID = _renderEngine->addRenderer(0, this);
+	_associationID = _renderEngine->addRenderer(_priority, this);
 }
 
 void Renderer::_init()

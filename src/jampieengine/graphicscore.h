@@ -44,5 +44,6 @@ namespace Jam
 		void _start();
 
 		friend Pie;
+		friend RenderEngine;
 	};
 }

@@ -21,7 +21,7 @@ namespace Jam
 	class Renderer : public Component
 	{
 	public:
-		Renderer(RenderEngine* renderEngine, std::string mesh = "quad", Material material = {});
+		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", Material material = {});
 		~Renderer();
 
 		const GraphicsCoreType GRAPHICS_TYPE;
@@ -42,6 +42,8 @@ namespace Jam
 	private:
 
 		unsigned int _associationID;
+
+		int _priority;
 
 		bool _shouldDraw = false;
 

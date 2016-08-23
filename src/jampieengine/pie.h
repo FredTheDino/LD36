@@ -11,6 +11,7 @@
 #include "inputhandler.h"
 #include "gamestatemanager.h"
 #include "camera.h"
+#include "sst.h"
 
 namespace Jam
 {
@@ -23,12 +24,14 @@ namespace Jam
 		std::string title = "My Pie";
 		std::string inputmap = "input.map";
 		std::string enterState = "main";
+		bool transparancy = false;
 		unsigned int w_width = 800;
 		unsigned int w_height = 600;
 		bool w_border = true;
 		bool w_resizable = false;
 		GraphicsCoreType graphicsCoreType = GRAPHICS_TYPE_OPENGL;
 		Camera* camera = nullptr;
+		unsigned char sstEncryptionKey = 0x69;
 	};
 
 	//Main class definition
@@ -71,6 +74,7 @@ namespace Jam
 
 		//Friends!
 		friend GraphicsCore;
+		friend RenderEngine;
 		friend AudioCore;
 	};
 }

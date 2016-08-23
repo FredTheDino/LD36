@@ -27,20 +27,20 @@ public:
 	void _rootEnter() {};
 
 	void _init() {
-		Jam::InputHandler::registerInput("left", Jam::InputBinding(true, SDLK_LEFT));
-		Jam::InputHandler::registerInput("right", Jam::InputBinding(true, SDLK_RIGHT));
-		Jam::InputHandler::registerInput("up", Jam::InputBinding(true, SDLK_UP));
-		Jam::InputHandler::registerInput("down", Jam::InputBinding(true, SDLK_DOWN));
+		Jam::InputHandler::registerInput("c_left", Jam::InputBinding(true, SDLK_LEFT));
+		Jam::InputHandler::registerInput("c_right", Jam::InputBinding(true, SDLK_RIGHT));
+		Jam::InputHandler::registerInput("c_up", Jam::InputBinding(true, SDLK_UP));
+		Jam::InputHandler::registerInput("c_down", Jam::InputBinding(true, SDLK_DOWN));
 	}
 
 	void _update(double delta) {
-		if (Jam::InputHandler::keyDown("left"))
+		if (Jam::InputHandler::keyDown("c_left"))
 			_camera->transform.translateX(-delta);
-		if (Jam::InputHandler::keyDown("right"))
+		if (Jam::InputHandler::keyDown("c_right"))
 			_camera->transform.translateX(delta);
-		if (Jam::InputHandler::keyDown("up"))
+		if (Jam::InputHandler::keyDown("c_up"))
 			_camera->transform.translateY(delta);
-		if (Jam::InputHandler::keyDown("down"))
+		if (Jam::InputHandler::keyDown("c_down"))
 			_camera->transform.translateY(-delta);
 
 		getParent()->transform.rotateZ(delta);

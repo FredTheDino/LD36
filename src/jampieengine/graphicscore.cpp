@@ -21,7 +21,7 @@ void GraphicsCore::_start()
 
 	_window = new Window(*this, _pie._flavor);
 
-	_renderEngine = new RenderEngine(*_window, _pie._flavor.graphicsCoreType,
+	_renderEngine = new RenderEngine(*this, *_window, _pie._flavor.graphicsCoreType,
 		(_pie._flavor.camera == nullptr ? new Camera(Camera::orthographic(-_window->getAspectRatio(), _window->getAspectRatio(), -1, 1)) : _pie._flavor.camera));
 
 	_ready = true;

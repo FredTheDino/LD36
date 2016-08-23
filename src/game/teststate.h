@@ -20,6 +20,7 @@
 #include "Box2D/Box2D.h"
 #include "inputhandler.h"
 #include "material.h"
+#include "sst.h"
 
 void col(b2Contact* contact) {
 	std::cout << "HIT!" << std::endl;
@@ -31,6 +32,23 @@ public:
 
 	void init()
 	{
+		//Save
+
+		std::cout << "SAVES===========" << std::endl;
+
+		Jam::SST save;
+
+		save.add("str_test", "This is a string!");
+		save.add("int_test", 1337);
+		save.add("short_test", (short) 420);
+		save.add("char_test", (char) 69);
+
+		Jam::Loader::saveSST(save, "save/test.sst");
+
+		std::cout << "SAVES===========" << std::endl;
+
+		//Root
+
 		Jam::Root* root = new Jam::Root();
 
 		loadStuff();
@@ -41,7 +59,8 @@ public:
 		Jam::Material material;
 		material.texture = "metal";
 
-		entity->add(new Jam::Renderer(getRenderEngine(), "quad", material));
+		entity->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material));
+		entity->add(new AudioComponentTest());
 
 		root->addNode(0, "t_metal", (Jam::Node*) entity);
 
@@ -51,7 +70,7 @@ public:
 		Jam::Material material_mario;
 		material_mario.texture = "mario";
 
-		mario->add(new Jam::Renderer(getRenderEngine(), "quad", material_mario));
+		mario->add(new Jam::Renderer(getRenderEngine(), 1, "quad", material_mario));
 
 		root->addNode(0, "t_mario", (Jam::Node*) mario);
 

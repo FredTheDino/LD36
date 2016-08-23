@@ -27,7 +27,7 @@ namespace Jam
 	class RenderEngine
 	{
 	public:
-		RenderEngine(Window& window, GraphicsCoreType graphicsType, Camera* camera);
+		RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsCoreType graphicsType, Camera* camera);
 		~RenderEngine();
 
 		//Adds mesh associated with tag to load queue
@@ -75,6 +75,8 @@ namespace Jam
 		};
 
 		Camera* _camera;
+
+		GraphicsCore& _graphicsCore;
 
 		Window& _window;
 

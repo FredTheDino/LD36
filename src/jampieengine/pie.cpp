@@ -7,6 +7,8 @@ Pie::Pie(Flavor& flavor)
 {
 	_initSDL();
 	_initCores();
+
+	SST::setEncryptionKey(flavor.sstEncryptionKey);
 }
 
 void Pie::bake()
