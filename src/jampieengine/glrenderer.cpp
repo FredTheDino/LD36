@@ -1,4 +1,5 @@
 #include "glrenderer.h"
+#include "entity.h"
 
 using namespace Jam;
 
