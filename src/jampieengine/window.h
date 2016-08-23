@@ -20,6 +20,8 @@ namespace Jam
 
 		void getSize(int* w, int* h) { SDL_GetWindowSize(_handle, w, h); };
 
+		float getAspectRatio() { int w; int h; getSize(&w, &h); return ((float) w) / ((float) h); };
+
 		SDL_Window* getHandle() { return _handle; };
 
 	private:

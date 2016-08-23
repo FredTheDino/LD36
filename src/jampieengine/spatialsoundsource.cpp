@@ -9,7 +9,7 @@ void Jam::SpatialSoundSource::_update(double delta) {
 	updateFade(delta);
 	
 	//Get the transform, the delta positon / time is the velocity
-	Transform* t = &_getParent()->transform;
+	Transform* t = &getParent()->transform;
 	if (_position == t->position) {
 		if (_stationary) return;
 		_stationary = true;

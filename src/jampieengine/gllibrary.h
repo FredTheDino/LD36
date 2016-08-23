@@ -6,6 +6,7 @@
 #include "glmesh.h"
 #include "glshaderprogram.h"
 #include "gfxlibrary.h"
+#include "gltexture.h"
 
 namespace Jam
 {
@@ -21,6 +22,9 @@ namespace Jam
 
 		//Return loaded shader program
 		static GLShaderProgram* getShaderProgram(std::string tag) { return _glShaderProgramRegistry.at(tag); };
+
+		//Return loaded texture
+		static GLTexture* getTexture(std::string tag) { return _glTextureRegistry.at(tag); };
 
 	private:
 
@@ -51,6 +55,15 @@ namespace Jam
 
 		//Unloads GLShaderProgram with specified tag (has to be called from graphicscore thread)
 		static void _unloadShaderProgram(std::string tag) { delete _glShaderProgramRegistry.at(tag); _glShaderProgramRegistry.erase(tag); };
+
+		//Loaded textures
+		static std::unordered_map<std::string, GLTexture*> _glTextureRegistry;
+
+		//Instantiates GLTexture from generic texture associated with tag (has to be called from graphicscore thread)
+		static void _loadTexture(std::string tag) { _glTextureRegistry.insert(std::make_pair(tag, new GLTexture(GFXLibrary::getTexture(tag)))); };
+
+		//Unloads GLTexture with specified tag (has to be called from graphicscore thread)
+		static void _unloadTexture(std::string tag) { delete _glTextureRegistry.at(tag); _glTextureRegistry.erase(tag); };
 
 		//Unloads everything from this library
 		static void _unloadAll();

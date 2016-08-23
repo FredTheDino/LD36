@@ -5,8 +5,12 @@
 #include <vector>
 #include <fstream>
 
+#include "sst.h"
+
 namespace Jam
 {
+	class SST;
+
 	class Loader
 	{
 	public:
@@ -15,6 +19,10 @@ namespace Jam
 		static std::vector<char> loadCharBuffer(std::string path);
 		static int remove(std::string path);
 
-		static std::fstream* openFile(const std::string& path, std::ios_base::openmode mode = std::ios_base::in);
+		//SST
+		static SST loadSST(std::string path);
+		static void saveSST(SST& data, std::string path);
+
+		static std::fstream* openFile(const std::string& path, std::ios_base::openmode mode = std::ios_base::in, bool create = false);
 	};
 }

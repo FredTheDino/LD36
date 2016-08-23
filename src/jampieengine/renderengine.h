@@ -14,6 +14,7 @@
 #include "mesh.h"
 #include "glmesh.h"
 #include "loader.h"
+#include "camera.h"
 
 namespace Jam
 {
@@ -26,21 +27,56 @@ namespace Jam
 	class RenderEngine
 	{
 	public:
-		RenderEngine(Window& window, GraphicsCoreType graphicsType);
+		RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsCoreType graphicsType, Camera* camera);
 		~RenderEngine();
 
 		//Adds mesh associated with tag to load queue
-		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _meshLoadQueue.push_back(tag); };
+		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag }); };
 
 		//Adds shader program associated with tag to load queue
-		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _shaderProgramLoadQueue.push_back(tag); };
-		
+		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag }); };
+
+		//Adds texture associated with tag to load queue
+		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag }); };
+
 		//Sets _shouldLoad to true in order to process load queue on render thread
 		static void load() { _accessingLoadQueues = true; _shouldLoad = true; };
+
+		//Adds something to draw, returns an association ID
+		unsigned int addRenderer(int priority, Renderer* renderer);
+
+		//Removes the renderer with the specified association id
+		void removeRenderer(unsigned int associationID);
+
+		//Returns the camera currently used by this render engine
+		Camera* getCamera() { return _camera; };
+
+		//Sets the camera to be used by this render engine
+		void useCamera(Camera* camera) { _camera = camera; };
+
+		//Returns the number of remaining load entries
+		static unsigned int remainingLoadEntries() { return _loadQueue.size(); };
 
 		const GraphicsCoreType GRAPHICS_TYPE;
 
 	private:
+
+		unsigned int _rendererIDCounter = 0;
+
+		enum LoadType {
+			LOAD_TYPE_MESH,
+			LOAD_TYPE_SHADER_PROGRAM,
+			LOAD_TYPE_TEXTURE
+		};
+
+		struct LoadEntry {
+			LoadType loadType;
+			std::string tag;
+		};
+
+		Camera* _camera;
+
+		GraphicsCore& _graphicsCore;
 
 		Window& _window;
 
@@ -50,14 +86,11 @@ namespace Jam
 		static bool _shouldLoad;
 		static bool _accessingLoadQueues;
 
-		//Queue of meshes to load
-		static std::vector<std::string> _meshLoadQueue;
-
-		//Queue of shader programs to load
-		static std::vector<std::string> _shaderProgramLoadQueue;
+		//Queue of load entries
+		static std::vector<LoadEntry> _loadQueue;
 
 		//Objects to render each frame
-		std::map<int, Renderer*, std::less<int>> _renderers;
+		std::multimap<int, std::pair<unsigned int, Renderer*>, std::less<int>> _renderers;
 
 		//Processes load queue and loads everything
 		void _load();

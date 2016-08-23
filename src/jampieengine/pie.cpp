@@ -7,6 +7,8 @@ Pie::Pie(Flavor& flavor)
 {
 	_initSDL();
 	_initCores();
+
+	SST::setEncryptionKey(flavor.sstEncryptionKey);
 }
 
 void Pie::bake()
@@ -15,6 +17,8 @@ void Pie::bake()
 
 	_graphicsCore->_bake(_flavor);
 	_audioCore->_bake(_flavor);
+
+	while (!_graphicsCore->_ready || !_audioCore->_ready);
 
 	_gameStateManager = new GameStateManager(*this, GameStateLibrary::getGameState(_flavor.enterState));
 

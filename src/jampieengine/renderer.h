@@ -8,17 +8,20 @@
 #include "glrenderer.h"
 #include "glmesh.h"
 #include "gllibrary.h"
+#include "component.h"
+#include "material.h"
 
 namespace Jam
 {
 	//Forward declaration
 	class RenderEngine;
 	class GLRenderer;
+	class Component;
 
-	class Renderer
+	class Renderer : public Component
 	{
 	public:
-		Renderer(RenderEngine* renderEngine, std::string mesh = "quad");
+		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", Material material = {});
 		~Renderer();
 
 		const GraphicsCoreType GRAPHICS_TYPE;
@@ -27,12 +30,31 @@ namespace Jam
 
 		void setMesh(std::string tag);
 
+		void _rootEnter();
+		void _init();
+		void _update(double delta) {};
+		void _end() {};
+		void _rootExit();
+
+		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };
+		bool shouldDraw() { return _shouldDraw; };
+
 	private:
+
+		unsigned int _associationID;
+
+		int _priority;
+
+		bool _shouldDraw = false;
+
+		Material _material;
+
+		std::string _mesh;
 
 		RenderEngine* _renderEngine;
 
 		GLRenderer* _glRenderer;
 
-
+		friend GLRenderer;
 	};
 }

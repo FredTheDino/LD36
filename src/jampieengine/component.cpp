@@ -16,7 +16,7 @@ bool Jam::Component::isActive()
 	return _isActive;
 }
 
-Jam::Entity* Jam::Component::_getParent()
+Jam::Entity* Jam::Component::getParent()
 {
 	return _parent;
 }

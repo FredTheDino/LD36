@@ -33,6 +33,20 @@ void Jam::Root::deleteNode(std::string tag) {
 		_priorityMap.erase(it);
 }
 
+void Root::_rootEnter()
+{
+	for (auto it = _priorityMap.begin(); it != _priorityMap.end(); it++) {
+		_nodes[it->second]->_rootEnter();
+	}
+}
+
+void Root::_rootExit()
+{
+	for (auto it = _priorityMap.begin(); it != _priorityMap.end(); it++) {
+		_nodes[it->second]->_rootExit();
+	}
+}
+
 void Root::update(double delta)
 {
 	//Loop through EVERYTHING
