@@ -17,8 +17,14 @@ namespace Jam
 
 		void draw();
 
-	private:
+		GLMesh* getMesh() { return _mesh; };
 
+		GLShaderProgram* getShaderProgram() { return _shaderProgram; };
+
+		Material& getMaterial() { return _material; };
+
+	private:
+		
 		Renderer& _renderer;
 
 		GLMesh* _mesh;
@@ -30,7 +36,6 @@ namespace Jam
 		void _setMesh(GLMesh* mesh);
 
 		void _setShaderProgram(GLShaderProgram* shaderProgram);
-
 
 		friend Renderer;
 	};
