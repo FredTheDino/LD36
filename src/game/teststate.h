@@ -33,86 +33,22 @@ public:
 
 	void init()
 	{
-		//Save
-
-		std::cout << "SAVES===========" << std::endl;
-
-		Jam::SST save;
-
-		save.add("str_test", "This is a string!");
-		save.add("int_test", 1337);
-		save.add("short_test", (short) 420);
-		save.add("char_test", (char) 69);
-
-		Jam::Loader::saveSST(save, "save/test.sst");
-
-		Jam::SST load = Jam::Loader::loadSST("save/test.sst");
-
-		short v_short;
-		load.get("short_test", v_short);
-
-		std::string str;
-
-		load.get("str_test", str);
-
-		std::cout << "SAVES===========" << std::endl;
-
 		loadStuff();
-
-		//Root 1
-
-		Jam::Root* root = new Jam::Root();
-
-		Jam::Entity* entity = new Jam::Entity();
-
-		entity->add(new TestComponent(getRenderEngine()->getCamera()));
-
-		Jam::Material material;
-		material.texture = "metal";
-
-		entity->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material));
-		entity->add(new AudioComponentTest());
-
-		root->addNode(0, "t_metal", (Jam::Node*) entity);
-
-		Jam::Entity* mario = new Jam::Entity();
-		mario->add(new TestComponent(getRenderEngine()->getCamera()));
-		
-		Jam::Material material_mario;
-		material_mario.texture = "mario";
-
-		mario->add(new Jam::Renderer(getRenderEngine(), 1, "quad", material_mario));
-
-		root->addNode(0, "t_mario", (Jam::Node*) mario);
-
-		mario->move(0.5f);
-
-		addRoot("t_root", root);
-
-		Jam::Material material_up_test;
-		material_up_test.texture = "up_test";
 
 		Jam::Entity* gui = new Jam::Entity();
 
-		gui->add(new Jam::GUIElement(getRenderEngine(), 100, 0, 1, material_up_test));
-		
+		Jam::Material material;
+		material.texture = "up_test";
+
+		gui->add(new Jam::GUIElement(getRenderEngine(), 10, 0, 0, material));
+
+		Jam::Root* root = new Jam::Root();
+
 		root->addNode(0, "gui", (Jam::Node*) gui);
-		
-		//Root 2
 
-		Jam::Root* root2 = new Jam::Root();
+		addRoot("gui", root);
 
-		Jam::Entity* entity_up_test = new Jam::Entity();
-
-
-		entity_up_test->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material_up_test));
-
-		root2->addNode(0, "up_test", (Jam::Node*) entity_up_test);
-
-		addRoot("up_test", root2);
-
-		enterRoot("t_root");
-
+		enterRoot("gui");
 
 		//Keys
 		Jam::InputHandler::registerInput("switch_root", Jam::InputBinding(true, SDLK_p));
@@ -128,7 +64,7 @@ public:
 
 		Jam::GFXLibrary::registerShaderProgram("GUIShader", shaderProgram);
 
-		getRenderEngine()->preloadShaderProgram("GUIShader");
+		Jam::RenderEngine::preloadShaderProgram("GUIShader");
 
 		//Metal
 		

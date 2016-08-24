@@ -20,5 +20,6 @@ void main()
 
 	pos *= 0.5;
 
-	gl_Position = model * vec4(pos, 0, 1) + vec4(anchor, 0, 0);
+	//gl_Position = model * vec4(pos, 0, 1) + vec4(anchor, 0, 0);
+	gl_Position = vec4(in_pos, 0, 1);
 }
