@@ -7,10 +7,13 @@
 
 namespace Jam {
 
-	class GUI : public Renderer{
+	class GUIElement : public Renderer{
 	public:
-		GUI(RenderEngine* engine, int layer, Material material, float anchorX, float anchorY);
-		~GUI();
+		GUIElement(RenderEngine* engine, int layer, float anchorX, float anchorY, 
+			Material material);
+		~GUIElement();
+
+		virtual void init();
 
 		virtual void draw();
 
@@ -22,8 +25,6 @@ namespace Jam {
 	protected:
 
 		bool _isFader = false;
-
-	private:
 
 		glm::vec2 _anchor;
 

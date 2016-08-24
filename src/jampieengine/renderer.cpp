@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "entity.h"
 
 using namespace Jam;
 
@@ -36,7 +37,19 @@ void Renderer::draw()
 
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
-		_glRenderer->draw();
+		//Bind shader program
+		_glRenderer->_shaderProgram->bind();
+
+		//Send matrices
+		_glRenderer->_shaderProgram->sendUniformMat4f("projection", _renderEngine->getCamera()->getProjection());
+		_glRenderer->_shaderProgram->sendUniformMat4f("view", _renderEngine->getCamera()->getView());
+		_glRenderer->_shaderProgram->sendUniformMat4f("model", getParent()->getTransformationMatrix());
+
+		//Bind material
+		GLLibrary::getTexture(_material.texture)->bind();
+		_glRenderer->_shaderProgram->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
+
+		_glRenderer->_mesh->draw();
 		break;
 	}
 

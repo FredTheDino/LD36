@@ -48,7 +48,7 @@ public:
 		getParent()->rotate(delta);
 		static float t = 0;
 		t += delta;
-		getParent()->move(sin(t) * 0.01, cos(t) * 0.01); //CRASHES
+		getParent()->move(sin(t) * 0.01, cos(t) * 0.01);
 	}
 
 	void _end() {

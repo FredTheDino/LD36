@@ -21,8 +21,14 @@ namespace Jam
 
 		void setShaderProgram(GLShaderProgram* shaderProgram);
 	
-	private:
+		GLMesh* getMesh() { return _mesh; };
 
+		GLShaderProgram* getShaderProgram() { return _shaderProgram; };
+
+		Material& getMaterial() { return _material; };
+
+	private:
+		
 		Renderer& _renderer;
 
 		GLMesh* _mesh;

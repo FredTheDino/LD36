@@ -41,7 +41,7 @@ namespace Jam
 		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };
 		bool shouldDraw() { return _shouldDraw; };
 
-	private:
+	protected:
 
 		unsigned int _associationID;
 

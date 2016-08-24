@@ -12,6 +12,7 @@
 #include "soundsource.h"
 #include "audiocomponenttest.h"
 #include "renderer.h"
+#include "gui.h"
 
 #include "testcomponent.h"
 
@@ -45,15 +46,25 @@ public:
 
 		Jam::Loader::saveSST(save, "save/test.sst");
 
+		Jam::SST load = Jam::Loader::loadSST("save/test.sst");
+
+		short v_short;
+		load.get("short_test", v_short);
+
+		std::string str;
+
+		load.get("str_test", str);
+
 		std::cout << "SAVES===========" << std::endl;
-
-		//Root
-
-		Jam::Root* root = new Jam::Root();
 
 		loadStuff();
 
+		//Root 1
+
+		Jam::Root* root = new Jam::Root();
+
 		Jam::Entity* entity = new Jam::Entity();
+
 		entity->add(new TestComponent(getRenderEngine()->getCamera()));
 
 		Jam::Material material;
@@ -78,11 +89,49 @@ public:
 
 		addRoot("t_root", root);
 
+		Jam::Material material_up_test;
+		material_up_test.texture = "up_test";
+
+		Jam::Entity* gui = new Jam::Entity();
+
+		gui->add(new Jam::GUIElement(getRenderEngine(), 100, 0, 1, material_up_test));
+		
+		root->addNode(0, "gui", (Jam::Node*) gui);
+		
+		//Root 2
+
+		Jam::Root* root2 = new Jam::Root();
+
+		Jam::Entity* entity_up_test = new Jam::Entity();
+
+
+		entity_up_test->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material_up_test));
+
+		root2->addNode(0, "up_test", (Jam::Node*) entity_up_test);
+
+		addRoot("up_test", root2);
+
 		enterRoot("t_root");
+
+
+		//Keys
+		Jam::InputHandler::registerInput("switch_root", Jam::InputBinding(true, SDLK_p));
 	}
 
 	void loadStuff()
 	{
+		//YAY COpY PASTE
+		Jam::ShaderProgram shaderProgram;
+
+		shaderProgram.vertexShader = Jam::Loader::loadText("shader/GUIShader.vert");
+		shaderProgram.fragmentShader = Jam::Loader::loadText("shader/GUIShader.frag");
+
+		Jam::GFXLibrary::registerShaderProgram("GUIShader", shaderProgram);
+
+		getRenderEngine()->preloadShaderProgram("GUIShader");
+
+		//Metal
+		
 		Jam::Texture metal;
 		metal.path = "texture/metal.png";
 		metal.minFilter = GL_LINEAR;
@@ -91,6 +140,8 @@ public:
 		Jam::GFXLibrary::registerTexture("metal", metal);
 
 		Jam::RenderEngine::preloadTexture("metal");
+
+		//Mario
 
 		Jam::Texture mario;
 		mario.path = "texture/mario.png";
@@ -101,6 +152,17 @@ public:
 
 		Jam::RenderEngine::preloadTexture("mario");
 
+		//Up Test
+
+		Jam::Texture up_test;
+		up_test.path = "texture/up_test.png";
+		up_test.minFilter = GL_LINEAR;
+		up_test.magFilter = GL_LINEAR;
+
+		Jam::GFXLibrary::registerTexture("up_test", up_test);
+
+		Jam::RenderEngine::preloadTexture("up_test");
+
 		Jam::RenderEngine::load();
 
 		while (Jam::RenderEngine::remainingLoadEntries() > 0);
@@ -108,7 +170,9 @@ public:
 
 	void update(double delta)
 	{
-		
+		if (Jam::InputHandler::keyPressed("switch_root")) {
+			enterRoot("up_test");
+		}
 	}
 
 	void exit()

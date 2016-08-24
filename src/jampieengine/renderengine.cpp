@@ -51,7 +51,7 @@ RenderEngine::RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsC
 	GFXLibrary::registerShaderProgram("2D", shaderProgram);
 
 	preloadShaderProgram("2D");
-
+	
 	/* Shader Program End */
 
 	std::cout << "TODO: Remove default texture from renderengine.cpp constructor" << std::endl;
