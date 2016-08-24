@@ -45,6 +45,15 @@ public:
 
 		Jam::Loader::saveSST(save, "save/test.sst");
 
+		Jam::SST load = Jam::Loader::loadSST("save/test.sst");
+
+		short v_short;
+		load.get("short_test", v_short);
+
+		std::string str;
+
+		load.get("str_test", str);
+
 		std::cout << "SAVES===========" << std::endl;
 
 		//Root
