@@ -21,7 +21,7 @@ namespace Jam
 	class Renderer : public Component
 	{
 	public:
-		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", Material material = {});
+		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", Material material = {}, std::string shaderProgram = "");
 		~Renderer();
 
 		const GraphicsCoreType GRAPHICS_TYPE;
@@ -52,6 +52,8 @@ namespace Jam
 		Material _material;
 
 		std::string _mesh;
+
+		std::string _shaderProgram;
 
 		RenderEngine* _renderEngine;
 

@@ -2,12 +2,13 @@
 #include "entity.h"
 
 Jam::GUIElement::GUIElement(RenderEngine* engine, int layer, float anchorX, float anchorY, Material material):
-	Renderer(engine, layer, "gui_quad", material), _anchor(anchorX, anchorY) {
+	Renderer(engine, layer, "quad", material), _anchor(anchorX, anchorY) {
 }
 
 Jam::GUIElement::~GUIElement() {}
 
-void Jam::GUIElement::init() {
+void Jam::GUIElement::_init() {
+	Renderer::_init();
 	setShaderProgram("GUIShader");
 }
 

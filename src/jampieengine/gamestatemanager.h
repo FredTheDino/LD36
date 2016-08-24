@@ -26,9 +26,13 @@ namespace Jam
 
 	private:
 
+		void _enterState();
+		bool _shouldEnterNewState = false;
+
 		Pie& _pie;
 
-		GameState* _currentGameState = nullptr;
+		GameState* _currentState = nullptr;
+		GameState* _stateToEnter = nullptr;
 
 	};
 }

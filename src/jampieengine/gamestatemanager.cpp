@@ -10,9 +10,13 @@ GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 
 void GameStateManager::update(double delta)
 {
-	if (_currentGameState != nullptr) {
-		_currentGameState->update(delta);
-		_currentGameState->_updateRoot(delta);
+	if (_shouldEnterNewState)
+		_enterState();
+
+	if (_currentState != nullptr) {
+		GameState* state = _currentState;
+		state->update(delta);
+		state->_updateRoot(delta);
 	}
 }
 
@@ -23,14 +27,22 @@ void GameStateManager::enterState(std::string tag)
 
 void GameStateManager::enterState(GameState* gameState)
 {
-	if (_currentGameState != nullptr)
-		_currentGameState->exit();
+	_stateToEnter = gameState;
+	_shouldEnterNewState = true;
+}
 
-	_currentGameState = gameState;
+void GameStateManager::_enterState()
+{
+	if (_currentState != nullptr)
+		_currentState->exit();
 
-	_currentGameState->_setGameStateManager(this);
-	_currentGameState->_setRenderEngine(_pie.getGraphicsCore()->getRenderEngine());
-	_currentGameState->init();
+	_currentState = _stateToEnter;
+
+	_currentState->_setGameStateManager(this);
+	_currentState->_setRenderEngine(_pie.getGraphicsCore()->getRenderEngine());
+	_currentState->init();
+
+	_shouldEnterNewState = false;
 }
 
 GameStateManager::~GameStateManager()

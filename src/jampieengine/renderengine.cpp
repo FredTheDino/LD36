@@ -11,72 +11,8 @@ RenderEngine::RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsC
 	: _graphicsCore(graphicsCore), _window(window), GRAPHICS_TYPE(graphicsType), _camera(camera)
 {
 	_createContext();
-	
 
-	std::cout << "TODO: Remove default quad mesh from renderengine.cpp constructor" << std::endl;
-	/* Quad Start */
-	Mesh mesh{};
-
-	std::vector<Vertex*> quad;
-	quad.push_back((Vertex*) new Vertex2D(-.5f, .5f, 0, 0));
-	quad.push_back((Vertex*) new Vertex2D(.5f, .5f, 1, 0));
-	quad.push_back((Vertex*) new Vertex2D(.5f, -.5f, 1, 1));
-	quad.push_back((Vertex*) new Vertex2D(-.5f, -.5f, 0, 1));
-
-	mesh.vertices = quad;
-
-	unsigned int indices[6] = {0, 1, 3, 3, 1, 2};
-
-	mesh.indices = indices;
-	mesh.indexCount = 6;
-
-	mesh.shaderProgram = "2D";
-
-	//Register generic mesh
-	GFXLibrary::registerMesh("quad", mesh);
-
-	//Preload for GPU loading
-	preloadMesh("quad");
-	
-	/* Quad End */
-
-	std::cout << "TODO: Remove default shader program from renderengine.cpp constructor" << std::endl;
-	/* Shader Program Start */
-
-	ShaderProgram shaderProgram;
-
-	shaderProgram.vertexShader = Loader::loadText("shader/2D.vsh");
-	shaderProgram.fragmentShader = Loader::loadText("shader/2D.fsh");
-
-	GFXLibrary::registerShaderProgram("2D", shaderProgram);
-
-	preloadShaderProgram("2D");
-	
-	/* Shader Program End */
-
-	std::cout << "TODO: Remove default texture from renderengine.cpp constructor" << std::endl;
-	/* Texture Start */
-
-	Texture texture;
-	texture.width = 1;
-	texture.height = 1;
-
-	std::vector<unsigned char> data(4);
-	data[0] = UCHAR_MAX;
-	data[1] = UCHAR_MAX;
-	data[2] = UCHAR_MAX;
-	data[3] = UCHAR_MAX;
-
-	texture.data = data;
-	
-	GFXLibrary::registerTexture("default", texture);
-
-	preloadTexture("default");
-
-	/* Texture End */
-
-	/* Load to GPU */
-	_load();
+	_loadDefaultContent();
 }
 
 unsigned int RenderEngine::addRenderer(int priority, Renderer* renderer)
@@ -109,10 +45,11 @@ void RenderEngine::_load()
 		while (_loadQueue.size() > 0) {
 			LoadEntry le = _loadQueue.back();
 
+
 			switch (le.loadType) {
-			case LOAD_TYPE_MESH: GLLibrary::_loadMesh(le.tag); break;
-			case LOAD_TYPE_SHADER_PROGRAM: GLLibrary::_loadShaderProgram(le.tag); break;
-			case LOAD_TYPE_TEXTURE: GLLibrary::_loadTexture(le.tag); break;
+			case LOAD_TYPE_MESH: le.load ? GLLibrary::_loadMesh(le.tag) : GLLibrary::_unloadMesh(le.tag); break;
+			case LOAD_TYPE_SHADER_PROGRAM: le.load ? GLLibrary::_loadShaderProgram(le.tag) : GLLibrary::_unloadShaderProgram(le.tag); break;
+			case LOAD_TYPE_TEXTURE: le.load ? GLLibrary::_loadTexture(le.tag) : GLLibrary::_unloadTexture(le.tag); break;
 			}
 
 			_loadQueue.pop_back();
@@ -135,6 +72,11 @@ void RenderEngine::_draw()
 
 	for (const std::pair<int, std::pair<unsigned int, Renderer*>> renderer : _renderers) {
 		renderer.second.second->draw();
+
+		if (_cancelRendering) {
+			_cancelRendering = false;
+			break;
+		}
 	}
 
 	SDL_GL_SwapWindow(_window.getHandle());
@@ -167,6 +109,77 @@ void RenderEngine::_deleteContext()
 		SDL_GL_DeleteContext(_glContext);
 		break;
 	}
+}
+
+void RenderEngine::_loadDefaultContent()
+{
+	/* Quad mesh initialization */
+	Mesh mesh{};
+
+	//Quad vertices
+	std::vector<Vertex*> quad;
+	
+	quad.push_back((Vertex*) new Vertex2D(-.5f, .5f, 0, 0));
+	quad.push_back((Vertex*) new Vertex2D(.5f, .5f, 1, 0));
+	quad.push_back((Vertex*) new Vertex2D(.5f, -.5f, 1, 1));
+	quad.push_back((Vertex*) new Vertex2D(-.5f, -.5f, 0, 1));
+
+	mesh.vertices = quad;
+
+	//Quad indices
+
+	unsigned int indices[6] = { 0, 1, 3, 3, 1, 2 };
+
+	mesh.indices = indices;
+	mesh.indexCount = 6;
+
+	mesh.shaderProgram = "ortho";
+
+	//Register quad
+	GFXLibrary::registerMesh("quad", mesh);
+
+	//Preload mesh for GPU loading
+	preloadMesh("quad");
+
+	/* Ortho shader program initialization */
+	ShaderProgram shaderProgram;
+
+	//Loads shader program
+	shaderProgram.vertexShader = Loader::loadText("shader/2D.vsh");
+	shaderProgram.fragmentShader = Loader::loadText("shader/2D.fsh");
+
+
+	//Register shader program
+	GFXLibrary::registerShaderProgram("ortho", shaderProgram);
+
+
+	//Preload shader program for GPU loading
+	preloadShaderProgram("ortho");
+
+	/* Default texture initialization */
+	Texture texture;
+
+	//Texture size 1x1
+	texture.width = 1;
+	texture.height = 1;
+
+	//Completely white
+	std::vector<unsigned char> data(4);
+	data[0] = UCHAR_MAX;
+	data[1] = UCHAR_MAX;
+	data[2] = UCHAR_MAX;
+	data[3] = UCHAR_MAX;
+
+	texture.data = data;
+
+	//Register texture
+	GFXLibrary::registerTexture("default", texture);
+
+	//Preload texture for GPU loading
+	preloadTexture("default");
+
+	/* Load to GPU */
+	_load();
 }
 
 RenderEngine::~RenderEngine()

@@ -25,5 +25,7 @@ namespace Jam
 
 		void _generate(Texture& texture);
 
+		GLenum _evaluateTexParam(TextureParam texParam);
+
 	};
 }

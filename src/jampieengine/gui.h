@@ -13,7 +13,7 @@ namespace Jam {
 			Material material);
 		~GUIElement();
 
-		virtual void init();
+		virtual void _init();
 
 		virtual void draw();
 
