@@ -26,15 +26,17 @@ namespace Jam
 
 		const GraphicsCoreType GRAPHICS_TYPE;
 
-		void draw();
+		virtual void draw();
 
 		void setMesh(std::string tag);
+		void setShaderProgram(std::string tag);
 
 		void _rootEnter();
 		void _init();
 		void _update(double delta) {};
 		void _end() {};
 		void _rootExit();
+
 
 		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };
 		bool shouldDraw() { return _shouldDraw; };

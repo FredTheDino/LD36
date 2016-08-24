@@ -119,8 +119,37 @@ namespace Jam
 		//Toggles all componet
 		void toggleAll();
 
-		//The transform of this entity
-		Transform transform;
+		//Move the entity
+		void move(float x, float y = 0.0, float z = 0.0);
+		void move(glm::vec3 dpos);
+
+		//Sets the position
+		void setPosition(glm::vec3 newPos);
+
+		//Return the position
+		glm::vec3 getPosition();
+
+		//Scale	
+		void scale(float x, float y = 1.0, float z = 1.0);
+
+		//Set the scale
+		void setScale(glm::vec3 scale);
+
+		//Returns the scale 
+		glm::vec3 getScale();
+
+		//Rotate
+		void rotate(float z);
+		void rotate(float x, float y, float z = 0.0f);
+
+		//Set the rotation
+		void setRotation(glm::vec3 newRotation);
+
+		//Get the rotation
+		glm::vec3 getRotation();
+		
+		//Get the transformation matrix
+		glm::mat4 getTransformationMatrix();
 
 		//The update function
 		void update(double delta);
@@ -129,6 +158,8 @@ namespace Jam
 		void _rootExit();
 
 	private:
+		//The transform of this entity
+		Transform _transform;
 
 		//The vector holding all the components
 		std::vector<Component*> _components;

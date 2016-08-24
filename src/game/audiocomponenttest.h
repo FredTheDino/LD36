@@ -37,17 +37,18 @@ public:
 			}
 		}
 		if (Jam::InputHandler::keyDown("e_left"))
-			getParent()->transform.translateX(-delta);
+			getParent()->move(-delta);
 		if (Jam::InputHandler::keyDown("e_right"))
-			getParent()->transform.translateX(delta);
+			getParent()->move(delta);
 		if (Jam::InputHandler::keyDown("e_up"))
-			getParent()->transform.translateY(delta);
+			getParent()->move(0.0, delta);
 		if (Jam::InputHandler::keyDown("e_down"))
-			getParent()->transform.translateY(-delta);
+			getParent()->move(0.0, -delta);
 		
-		getParent()->transform.rotateZ(delta);
-
-		getParent()->transform.translateX(sin(delta)); //CRASHES
+		getParent()->rotate(delta);
+		static float t = 0;
+		t += delta;
+		getParent()->move(sin(t) * 0.01, cos(t) * 0.01); //CRASHES
 	}
 
 	void _end() {

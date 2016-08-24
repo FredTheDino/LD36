@@ -79,9 +79,10 @@ Box2DComponent::~Box2DComponent() {
 
 void Box2DComponent::_init() {
 	//Set the transform to the bodies transform
-	Transform t = getParent()->transform;
-	_bodyDef->position.Set(t.position.x, t.position.y);
-	_bodyDef->angle = t.rotation.z;
+	glm::vec3 pos = getParent()->getPosition();
+	glm::vec3 rot = getParent()->getRotation();
+	_bodyDef->position.Set(pos.x, pos.y);
+	_bodyDef->angle = rot.z;
 	
 	//Create the Box2D specific stuff
 	body = _world->CreateBody(_bodyDef);
@@ -96,16 +97,13 @@ void Box2DComponent::_init() {
 
 void Box2DComponent::_update(double delta) {
 
-	//Create a holder for the transform
-	Transform transform;
+	//refference
+	Entity* parent = getParent();
 	//Store the bodies transform somewhere close
 	b2Transform temp = body->GetTransform();
 	//Copy everything over
-	transform.position.x = temp.p.x;
-	transform.position.y = temp.p.y;
-	transform.rotation.z = temp.q.GetAngle();
-	//Set the transform
-	getParent()->transform = transform;
+	parent->setPosition(glm::vec3(temp.p.x, temp.p.y, 0.0));
+	parent->setRotation(glm::vec3(0.0, 0.0, temp.q.GetAngle()));
 }
 
 void Jam::Box2DComponent::setBeginContactCallback(void(*begin)(b2Contact *)) {

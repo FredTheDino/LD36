@@ -74,7 +74,7 @@ public:
 
 		root->addNode(0, "t_mario", (Jam::Node*) mario);
 
-		mario->transform.translateX(.5f);
+		mario->move(0.5f);
 
 		addRoot("t_root", root);
 

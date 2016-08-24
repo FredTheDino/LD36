@@ -43,7 +43,7 @@ public:
 		if (Jam::InputHandler::keyDown("c_down"))
 			_camera->transform.translateY(-delta);
 
-		getParent()->transform.rotateZ(delta);
+		getParent()->rotate(delta);
 	}
 
 	void _end() {
