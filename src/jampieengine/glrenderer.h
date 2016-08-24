@@ -17,18 +17,17 @@ namespace Jam
 
 		void draw();
 
-		void setMesh(GLMesh* mesh);
-
-		void setShaderProgram(GLShaderProgram* shaderProgram);
-	
 		GLMesh* getMesh() { return _mesh; };
 
 		GLShaderProgram* getShaderProgram() { return _shaderProgram; };
 
 		Material& getMaterial() { return _material; };
 
-	private:
-		
+	private:	
+		void _setMesh(GLMesh* mesh);
+
+		void _setShaderProgram(GLShaderProgram* shaderProgram);
+	
 		Renderer& _renderer;
 
 		GLMesh* _mesh;

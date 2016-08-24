@@ -61,7 +61,7 @@ void Renderer::draw()
 void Jam::Renderer::setShaderProgram(std::string tag) {
 	switch (GRAPHICS_TYPE) {
 		case GRAPHICS_TYPE_OPENGL:
-			_glRenderer->setShaderProgram(GLLibrary::getShaderProgram(tag));
+			_glRenderer->_setShaderProgram(GLLibrary::getShaderProgram(tag));
 	}
 }
 
@@ -69,7 +69,7 @@ void Renderer::setMesh(std::string tag)
 {
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
-		_glRenderer->setMesh(GLLibrary::getMesh(tag));
+		_glRenderer->_setMesh(GLLibrary::getMesh(tag));
 		break;
 	}
 }
