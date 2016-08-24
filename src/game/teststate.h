@@ -114,8 +114,8 @@ public:
 		
 		Jam::Texture metal;
 		metal.path = "texture/metal.png";
-		metal.minFilter = GL_LINEAR;
-		metal.magFilter = GL_LINEAR;
+		metal.minFilter = Jam::TEX_PARAM_LINEAR;
+		metal.magFilter = Jam::TEX_PARAM_LINEAR;
 
 		Jam::GFXLibrary::registerTexture("metal", metal);
 
@@ -125,8 +125,8 @@ public:
 
 		Jam::Texture mario;
 		mario.path = "texture/mario.png";
-		mario.minFilter = GL_LINEAR;
-		mario.magFilter = GL_LINEAR;
+		mario.minFilter = Jam::TEX_PARAM_LINEAR;
+		mario.magFilter = Jam::TEX_PARAM_LINEAR;
 
 		Jam::GFXLibrary::registerTexture("mario", mario);
 
@@ -136,8 +136,8 @@ public:
 
 		Jam::Texture up_test;
 		up_test.path = "texture/up_test.png";
-		up_test.minFilter = GL_LINEAR;
-		up_test.magFilter = GL_LINEAR;
+		up_test.minFilter = Jam::TEX_PARAM_NEAREST;
+		up_test.magFilter = Jam::TEX_PARAM_NEAREST;
 
 		Jam::GFXLibrary::registerTexture("up_test", up_test);
 

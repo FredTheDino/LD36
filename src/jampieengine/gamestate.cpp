@@ -15,6 +15,9 @@ void GameState::_updateRoot(double delta)
 
 void GameState::enterRoot(std::string tag)
 {
+	if (_currentRoot != nullptr)
+		_currentRoot->_rootExit();
+
 	_currentRoot = _roots.at(tag);
 
 	_currentRoot->_rootEnter();

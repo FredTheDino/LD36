@@ -31,13 +31,22 @@ namespace Jam
 		~RenderEngine();
 
 		//Adds mesh associated with tag to load queue
-		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag }); };
+		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag, true }); };
 
 		//Adds shader program associated with tag to load queue
-		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag }); };
+		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag, true }); };
 
 		//Adds texture associated with tag to load queue
-		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag }); };
+		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, true }); };
+
+		//Adds mesh with associated tag to unload queue
+		static void unloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag, false }); };
+
+		//Adds shader program with associated tag to unload queue
+		static void unloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag, false }); };
+
+		//Adds texture with associated tag to unload queue
+		static void unloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, false }); };
 
 		//Sets _shouldLoad to true in order to process load queue on render thread
 		static void load() { _accessingLoadQueues = true; _shouldLoad = true; };
@@ -57,6 +66,9 @@ namespace Jam
 		//Returns the number of remaining load entries
 		static unsigned int remainingLoadEntries() { return _loadQueue.size(); };
 
+		//If called by any thread, the render loop will break
+		void cancelRendering() { _cancelRendering = true; };
+
 		const GraphicsCoreType GRAPHICS_TYPE;
 
 	private:
@@ -72,6 +84,7 @@ namespace Jam
 		struct LoadEntry {
 			LoadType loadType;
 			std::string tag;
+			bool load;
 		};
 
 		Camera* _camera;
@@ -81,6 +94,9 @@ namespace Jam
 		Window& _window;
 
 		SDL_GLContext _glContext;
+
+		//If set to true by any thread, the render loop will break
+		bool _cancelRendering = false;
 
 		//Booleans used to communicate between threads
 		static bool _shouldLoad;
@@ -103,6 +119,9 @@ namespace Jam
 
 		//Deletes context of selected graphics API
 		void _deleteContext();
+
+		//Load default content
+		void _loadDefaultContent();
 
 		//Friends!
 		friend GraphicsCore;
