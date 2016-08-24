@@ -46,8 +46,6 @@ public:
 			getParent()->transform.translateY(-delta);
 		
 		getParent()->transform.rotateZ(delta);
-
-		getParent()->transform.translateX(sin(delta)); //CRASHES
 	}
 
 	void _end() {
