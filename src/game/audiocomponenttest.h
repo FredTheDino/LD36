@@ -36,7 +36,6 @@ public:
 				}
 			}
 		}
-		/* CRASHES
 		if (Jam::InputHandler::keyDown("e_left"))
 			getParent()->transform.translateX(-delta);
 		if (Jam::InputHandler::keyDown("e_right"))
@@ -45,10 +44,10 @@ public:
 			getParent()->transform.translateY(delta);
 		if (Jam::InputHandler::keyDown("e_down"))
 			getParent()->transform.translateY(-delta);
-		*/
+		
 		getParent()->transform.rotateZ(delta);
 
-		//getParent()->transform.translateX(sin(delta)); //CRASHES
+		getParent()->transform.translateX(sin(delta)); //CRASHES
 	}
 
 	void _end() {
