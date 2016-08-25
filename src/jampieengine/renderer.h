@@ -31,6 +31,10 @@ namespace Jam
 		void setMesh(std::string tag);
 
 		void setShaderProgram(std::string tag);
+		
+		void setTexture(std::string tag);
+
+		void setTexture(std::string spriteSheet, unsigned int x, unsigned int y);
 
 		void _rootEnter();
 		void _init();

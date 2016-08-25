@@ -7,6 +7,7 @@
 #include "glshaderprogram.h"
 #include "gfxlibrary.h"
 #include "gltexture.h"
+#include "glspritesheet.h"
 
 namespace Jam
 {
@@ -25,6 +26,9 @@ namespace Jam
 
 		//Return loaded texture
 		static GLTexture* getTexture(std::string tag) { return _glTextureRegistry.at(tag); };
+
+		//Return loaded sprite sheet
+		static GLSpriteSheet* getSpriteSheet(std::string tag) { return _glSpriteSheetRegistry.at(tag); };
 
 	private:
 
@@ -64,6 +68,15 @@ namespace Jam
 
 		//Unloads GLTexture with specified tag (has to be called from graphicscore thread)
 		static void _unloadTexture(std::string tag) { delete _glTextureRegistry.at(tag); _glTextureRegistry.erase(tag); };
+
+		//Loaded sprite sheets
+		static std::unordered_map<std::string, GLSpriteSheet*> _glSpriteSheetRegistry;
+
+		//Instantiates GLSpriteSheet from generic sprite sheet associated with tag (has to be called from graphicscore thread)
+		static void _loadSpriteSheet(std::string tag) { _glSpriteSheetRegistry.insert(std::make_pair(tag, new GLSpriteSheet(GFXLibrary::getSpriteSheet(tag)))); };
+
+		//Unloads GLSpriteSheet with specified tag (has to be calld from graphicscore thread)
+		static void _unloadSpriteSheet(std::string tag) { delete _glSpriteSheetRegistry.at(tag); _glSpriteSheetRegistry.erase(tag); };
 
 		//Unloads everything from this library
 		static void _unloadAll();

@@ -5,6 +5,7 @@
 #include "mesh.h"
 #include "shaderprogram.h"
 #include "texture.h"
+#include "spritesheet.h"
 
 namespace Jam
 {
@@ -24,6 +25,10 @@ namespace Jam
 		static void registerTexture(std::string tag, Texture texture) { _textureRegistry.insert(std::make_pair(tag, texture)); };
 		static Texture getTexture(std::string tag) { return _textureRegistry.at(tag); };
 
+		//User sprite sheet interaction
+		static void registerSpriteSheet(std::string tag, SpriteSheet spriteSheet) { _spriteSheetRegistry.insert(std::make_pair(tag, spriteSheet)); };
+		static SpriteSheet getSpriteSheet(std::string tag) { return _spriteSheetRegistry.at(tag); };
+
 	private:
 		//Generic meshes
 		static std::unordered_map<std::string, Mesh> _meshRegistry;
@@ -33,5 +38,8 @@ namespace Jam
 
 		//Generic textures
 		static std::unordered_map<std::string, Texture> _textureRegistry;
+
+		//Generic sprite sheet
+		static std::unordered_map<std::string, SpriteSheet> _spriteSheetRegistry;
 	};
 }

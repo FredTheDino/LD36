@@ -32,6 +32,10 @@ namespace Jam
 		GraphicsCoreType graphicsCoreType = GRAPHICS_TYPE_OPENGL;
 		Camera* camera = nullptr;
 		unsigned char sstEncryptionKey = 0x69;
+		float bgColorR = 0;
+		float bgColorG = 0;
+		float bgColorB = 0;
+		float bgColorA = 1;
 	};
 
 	//Main class definition

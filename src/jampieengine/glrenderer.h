@@ -4,6 +4,7 @@
 #include "glshaderprogram.h"
 #include "glmesh.h"
 #include "material.h"
+#include "gltexture.h"
 
 namespace Jam
 {
@@ -31,11 +32,15 @@ namespace Jam
 
 		GLShaderProgram* _shaderProgram;
 
+		GLTexture* _texture;
+
 		Material& _material;
 
 		void _setMesh(GLMesh* mesh);
 
 		void _setShaderProgram(GLShaderProgram* shaderProgram);
+
+		void _setTexture(GLTexture* texture);
 
 		friend Renderer;
 	};

@@ -21,6 +21,7 @@
 #include "inputhandler.h"
 #include "material.h"
 #include "sst.h"
+#include "spritesheet.h"
 
 void col(b2Contact* contact) {
 	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
@@ -32,80 +33,42 @@ public:
 
 	void init()
 	{
-		//Save
-
-		std::cout << "SAVES===========" << std::endl;
-
-		Jam::SST save;
-
-		save.add("str_test", "This is a string!");
-		save.add("int_test", 1337);
-		save.add("short_test", (short) 420);
-		save.add("char_test", (char) 69);
-
-		Jam::Loader::saveSST(save, "save/test.sst");
-
-		Jam::SST load = Jam::Loader::loadSST("save/test.sst");
-
-		short v_short;
-		load.get("short_test", v_short);
-
-		std::string str;
-
-		load.get("str_test", str);
-
-		std::cout << "SAVES===========" << std::endl;
-
-		loadStuff();
-
-		//Root 1
-
 		Jam::Root* root = new Jam::Root();
 
-		Jam::Entity* entity = new Jam::Entity();
-		entity->add(new TestComponent(getRenderEngine()->getCamera()));
+		//Sprite sheet
 
+		Jam::SpriteSheet ss;
+		ss.path = "texture/fire_ball.png";
+		ss.tilesX = 6;
+		ss.tilesY = 2;
+
+		Jam::GFXLibrary::registerSpriteSheet("fire_ball", ss);
+
+		Jam::RenderEngine::preloadSpriteSheet("fire_ball");
+
+		Jam::RenderEngine::load();
+
+		while (Jam::RenderEngine::remainingLoadEntries() > 0);
+
+		//Entity
+
+		Jam::Entity* entity = new Jam::Entity();
+		
 		Jam::Material material;
-		material.texture = "metal";
+		material.texture = "fire_ball";
+		material.spriteSheet = true;
+		material.ssOffsetX = 0;
+		material.ssOffsetY = 0;
 
 		entity->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material));
-		entity->add(new AudioComponentTest());
-
-		root->addNode(0, "t_metal", (Jam::Node*) entity);
-
-		Jam::Entity* mario = new Jam::Entity();
-		mario->add(new TestComponent(getRenderEngine()->getCamera()));
 		
-		Jam::Material material_mario;
-		material_mario.texture = "mario";
-
-		mario->add(new Jam::Renderer(getRenderEngine(), 1, "quad", material_mario));
-
-		root->addNode(0, "t_mario", (Jam::Node*) mario);
-
-		mario->transform.translateX(.5f);
+		root->addNode(0, "fire_ball", (Jam::Node*) entity);
 
 		addRoot("t_root", root);
-
-		//Root 2
-
-		Jam::Root* root2 = new Jam::Root();
-
-		Jam::Entity* entity_up_test = new Jam::Entity();
-
-		Jam::Material material_up_test;
-		material_up_test.texture = "up_test";
-
-		entity_up_test->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material_up_test));
-
-		root2->addNode(0, "up_test", (Jam::Node*) entity_up_test);
-
-		addRoot("up_test", root2);
-
 		enterRoot("t_root");
 
 		//Keys
-		Jam::InputHandler::registerInput("switch_root", Jam::InputBinding(true, SDLK_p));
+		Jam::InputHandler::registerInput("blue", Jam::InputBinding(true, SDLK_k));
 	}
 
 	void loadStuff()
@@ -150,8 +113,25 @@ public:
 
 	void update(double delta)
 	{
-		if (Jam::InputHandler::keyPressed("switch_root")) {
-			enterRoot("up_test");
+		static int blue = 0;
+
+		if (Jam::InputHandler::keyPressed("blue")) {
+			if (blue == 0)
+				blue = 1;
+			else
+				blue = 0;
+		}
+
+		static float d;
+		d += delta;
+		if (d >= .05f) {
+			static int i;
+
+			((Jam::Entity*) getCurrentRoot()->getNode("fire_ball"))->get<Jam::Renderer>()->setTexture("fire_ball", i % 6, blue);
+
+			i++;
+
+			d = 0;
 		}
 	}
 

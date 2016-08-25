@@ -8,6 +8,13 @@ GLRenderer::GLRenderer(Renderer& renderer, std::string mesh, std::string shaderP
 {
 	_setMesh(GLLibrary::getMesh(mesh));
 	_setShaderProgram(GLLibrary::getShaderProgram(shaderProgram));
+	
+	if (material.spriteSheet) {
+		_setTexture(GLLibrary::getSpriteSheet(material.texture)->getTexture(material.ssOffsetX, material.ssOffsetY));
+	}
+	else {
+		_setTexture(GLLibrary::getTexture(material.texture));
+	}
 }
 
 void GLRenderer::draw()
@@ -21,7 +28,9 @@ void GLRenderer::draw()
 	_shaderProgram->sendUniformMat4f("model", _renderer.getParent()->transform.getMatrix());
 
 	//Bind material
-	GLLibrary::getTexture(_material.texture)->bind();
+	
+	_texture->bind();
+
 	_shaderProgram->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
 
 	_mesh->draw();
@@ -35,4 +44,9 @@ void GLRenderer::_setMesh(GLMesh* mesh)
 void GLRenderer::_setShaderProgram(GLShaderProgram* shaderProgram)
 {
 	_shaderProgram = shaderProgram;
+}
+
+void GLRenderer::_setTexture(GLTexture* texture)
+{
+	_texture = texture;
 }

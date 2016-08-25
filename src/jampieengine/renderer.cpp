@@ -63,6 +63,24 @@ void Renderer::setShaderProgram(std::string tag)
 	}
 }
 
+void Renderer::setTexture(std::string tag)
+{
+	switch (GRAPHICS_TYPE) {
+	case GRAPHICS_TYPE_OPENGL:
+		_glRenderer->_setTexture(GLLibrary::getTexture(tag));
+		break;
+	}
+}
+
+void Renderer::setTexture(std::string spriteSheet, unsigned int x, unsigned int y)
+{
+	switch (GRAPHICS_TYPE) {
+	case GRAPHICS_TYPE_OPENGL:
+		_glRenderer->_setTexture(GLLibrary::getSpriteSheet(spriteSheet)->getTexture(x, y));
+		break;
+	}
+}
+
 Renderer::~Renderer()
 {
 	switch (GRAPHICS_TYPE) {

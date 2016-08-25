@@ -4,6 +4,8 @@ using namespace Jam;
 
 GLTexture::GLTexture(Texture& texture)
 {
+	std::cout << texture.data.size() << std::endl;
+
 	if (texture.data.size() == 0) {
 		unsigned int error = lodepng::decode(texture.data, _width, _height, Loader::prefix + texture.path);
 

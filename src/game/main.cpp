@@ -38,6 +38,7 @@ int main(int c, char** args) {
 	flavor.title = "My Test Game";
 	flavor.enterState = "TestState";
 	flavor.transparancy = true;
+	flavor.bgColorG = 1;
 
 	Jam::Pie pie(flavor);
 

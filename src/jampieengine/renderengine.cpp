@@ -49,6 +49,7 @@ void RenderEngine::_load()
 			case LOAD_TYPE_MESH: le.load ? GLLibrary::_loadMesh(le.tag) : GLLibrary::_unloadMesh(le.tag); break;
 			case LOAD_TYPE_SHADER_PROGRAM: le.load ? GLLibrary::_loadShaderProgram(le.tag) : GLLibrary::_unloadShaderProgram(le.tag); break;
 			case LOAD_TYPE_TEXTURE: le.load ? GLLibrary::_loadTexture(le.tag) : GLLibrary::_unloadTexture(le.tag); break;
+			case LOAD_TYPE_SPRITE_SHEET: le.load ? GLLibrary::_loadSpriteSheet(le.tag) : GLLibrary::_unloadSpriteSheet(le.tag); break;
 			}
 
 			_loadQueue.pop_back();
@@ -90,7 +91,8 @@ void RenderEngine::_createContext()
 		glewExperimental = GL_TRUE;
 		glewInit();
 		GLLibrary::_renderEngine = this;
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(_graphicsCore._pie._flavor.bgColorR, _graphicsCore._pie._flavor.bgColorG,
+			_graphicsCore._pie._flavor.bgColorB, _graphicsCore._pie._flavor.bgColorA);
 		glEnable(GL_TEXTURE_2D);
 		if (_graphicsCore._pie._flavor.transparancy) {
 			glEnable(GL_BLEND);
