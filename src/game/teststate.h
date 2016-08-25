@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "node.h"
 #include "component.h"
+#include "camera.h"
 #include "audiohandler.h"
 #include "soundsource.h"
 #include "audiocomponenttest.h"
@@ -35,15 +36,29 @@ public:
 	{
 		loadStuff();
 
-		Jam::Entity* gui = new Jam::Entity();
 
 		Jam::Material material;
 		material.texture = "up_test";
+		
+		Jam::Entity* dummy = new Jam::Entity();
 
+		Jam::Entity* gui = new Jam::Entity();
+
+		Jam::Material mat;
+		mat.texture = "mario";
+		mat.baseColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
+
+		//gui->move(100, -50);
+		gui->scale(500);
+
+		dummy->add(new Jam::Renderer(getRenderEngine(), 0, "quad", mat));
+
+		gui->add(new AudioComponentTest());
 		gui->add(new Jam::GUIElement(getRenderEngine(), 10, 0, 0, material));
 
 		Jam::Root* root = new Jam::Root();
 
+		root->addNode(0, "dummy", (Jam::Node*) dummy);
 		root->addNode(0, "gui", (Jam::Node*) gui);
 
 		addRoot("gui", root);
@@ -106,8 +121,9 @@ public:
 
 	void update(double delta)
 	{
-		if (Jam::InputHandler::keyPressed("switch_root")) {
-			enterRoot("up_test");
+		if (Jam::InputHandler::keyDown("switch_root")) {
+			//enterRoot("up_test");
+			getRenderEngine()->getCamera()->transform.position.y += delta * 2;
 		}
 	}
 

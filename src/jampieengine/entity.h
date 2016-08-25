@@ -130,7 +130,8 @@ namespace Jam
 		glm::vec3 getPosition();
 
 		//Scale	
-		void scale(float x, float y = 1.0, float z = 1.0);
+		void scale(float scalar);
+		void scale(float x, float y, float z = 1.0);
 
 		//Set the scale
 		void setScale(glm::vec3 scale);
@@ -150,6 +151,9 @@ namespace Jam
 		
 		//Get the transformation matrix
 		glm::mat4 getTransformationMatrix();
+
+		//Returns the transform
+		Transform getTransform();
 
 		//The update function
 		void update(double delta);

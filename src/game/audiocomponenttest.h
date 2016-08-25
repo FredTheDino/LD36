@@ -44,11 +44,6 @@ public:
 			getParent()->move(0.0, delta);
 		if (Jam::InputHandler::keyDown("e_down"))
 			getParent()->move(0.0, -delta);
-		
-		getParent()->rotate(delta);
-		static float t = 0;
-		t += delta;
-		getParent()->move(sin(t) * 0.01, cos(t) * 0.01);
 	}
 
 	void _end() {

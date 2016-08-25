@@ -1,4 +1,6 @@
 #include "entity.h"
+#include "entity.h"
+#include "entity.h"
 #include "renderer.h"
 #include "box2dcomponent.h"
 
@@ -72,6 +74,12 @@ glm::vec3 Jam::Entity::getPosition() {
 	}
 }
 
+void Jam::Entity::scale(float scalar) {
+	_transform.scale.x *= scalar;
+	_transform.scale.y *= scalar;
+	_transform.scale.z *= scalar;
+}
+
 void Jam::Entity::scale(float x, float y, float z) {
 	_transform.scale.x *= x;
 	_transform.scale.y *= y;
@@ -133,6 +141,10 @@ glm::vec3 Jam::Entity::getRotation() {
 
 glm::mat4 Jam::Entity::getTransformationMatrix() {
 	return _transform.getMatrix();
+}
+
+Transform Jam::Entity::getTransform() {
+	return _transform;
 }
 
 void Entity::update(double delta)

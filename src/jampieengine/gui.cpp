@@ -1,9 +1,11 @@
 #include "gui.h"
 #include "entity.h"
+#include "glm/glm.hpp"
 
 Jam::GUIElement::GUIElement(RenderEngine* engine, int layer, float anchorX, float anchorY, Material material):
-	Renderer(engine, layer, "quad", material), _anchor(anchorX, anchorY) {
-}
+	Renderer(engine, layer, "quad", material) {
+		setAnchor(anchorX, anchorY);
+	}
 
 Jam::GUIElement::~GUIElement() {}
 
@@ -23,16 +25,26 @@ void Jam::GUIElement::draw() {
 			//Bind shader program
 			_glRenderer->getShaderProgram()->bind();
 
-			//Send transform
-			_glRenderer->getShaderProgram()->sendUniformMat4f("model", getParent()->getTransformationMatrix());
-			
-			//Send shader data
 			int w, h;
 			_renderEngine->getWindow().getSize(&w, &h);
-			_glRenderer->getShaderProgram()->sendUniform2i("screen", w, h);
-			_glRenderer->getShaderProgram()->sendUniform2f("anchor", _anchor[0], _anchor[1]);
+
+			//Send transform
+			Transform t = getParent()->getTransform();
+
+			t.position.x /= w;
+			t.position.y /= h;
+			t.translate(_anchor[0], _anchor[1]);
+
+			t.scale.x /= w;
+			t.scale.y /= h;
+
+			_glRenderer->getShaderProgram()->sendUniformMat4f("model", t.getMatrix());
+
+			//Send shader data
+			//_glRenderer->getShaderProgram()->sendUniform2i("screen", w, h);
 			_glRenderer->getShaderProgram()->sendUniform1i("isFader", _isFader);
 			
+
 			//Bind material
 			GLLibrary::getTexture(_material.texture)->bind();
 			_glRenderer->getShaderProgram()->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);

@@ -9,5 +9,5 @@ in vec2 pass_texCoords;
 
 void main()
 {
-	out_color = texture2D(texture, pass_texCoords) * color + vec4(1, 0, 1, 0);
+	out_color = texture2D(texture, pass_texCoords) * color;
 }
