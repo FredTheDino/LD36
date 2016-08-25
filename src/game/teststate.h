@@ -13,7 +13,7 @@
 #include "soundsource.h"
 #include "audiocomponenttest.h"
 #include "renderer.h"
-#include "gui.h"
+#include "guibutton.h"
 
 #include "testcomponent.h"
 
@@ -28,18 +28,27 @@ void col(b2Contact* contact) {
 	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
 }
 
+void onDown(Jam::GUIInput* component) {
+	std::cout << "Something pressed this! :D" << std::endl;
+}
+
+void onHover(Jam::GUIInput* component) {
+	component->setTexture("on");
+}
+
+void offHover(Jam::GUIInput* component) {
+	component->setTexture("off");
+}
+
 class TestState: Jam::GameState
 {
 public:
+
 
 	void init()
 	{
 		loadStuff();
 
-
-		Jam::Material material;
-		material.texture = "up_test";
-		
 		Jam::Entity* dummy = new Jam::Entity();
 
 		Jam::Entity* gui = new Jam::Entity();
@@ -47,14 +56,18 @@ public:
 		Jam::Material mat;
 		mat.texture = "mario";
 		mat.baseColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
-
-		//gui->move(100, -50);
-		gui->scale(500);
-
 		dummy->add(new Jam::Renderer(getRenderEngine(), 0, "quad", mat));
 
-		gui->add(new AudioComponentTest());
-		gui->add(new Jam::GUIElement(getRenderEngine(), 10, 0, 0, material));
+
+		gui->scale(300, 100);
+		b2PolygonShape shape;
+		shape.SetAsBox(150, 50);
+		gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
+		//gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
+
+		gui->get<Jam::GUIButton>()->setOnPress(onDown);
+		gui->get<Jam::GUIButton>()->setOnHighlight(onHover);
+		gui->get<Jam::GUIButton>()->setOnDehighlight(offHover);
 
 		Jam::Root* root = new Jam::Root();
 
@@ -102,6 +115,39 @@ public:
 		Jam::GFXLibrary::registerTexture("mario", mario);
 
 		Jam::RenderEngine::preloadTexture("mario");
+
+		//slider test stuff
+		Jam::Texture on;
+		on.path = "slidertest/on.png";
+		on.minFilter = Jam::TEX_PARAM_LINEAR;
+		on.magFilter = Jam::TEX_PARAM_LINEAR;
+		on.wrapS = Jam::TEX_PARAM_CLAMP;
+		on.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("on", on);
+		Jam::RenderEngine::preloadTexture("on");
+		
+		Jam::Texture off;
+		off.path = "slidertest/off.png";
+		off.minFilter = Jam::TEX_PARAM_LINEAR;
+		off.magFilter = Jam::TEX_PARAM_LINEAR;
+		off.wrapS = Jam::TEX_PARAM_CLAMP;
+		off.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("off", off);
+		Jam::RenderEngine::preloadTexture("off");
+
+		Jam::Texture map;
+		map.path = "slidertest/map.png";
+		map.minFilter = Jam::TEX_PARAM_LINEAR;
+		map.magFilter = Jam::TEX_PARAM_LINEAR;
+		map.wrapS = Jam::TEX_PARAM_CLAMP;
+		map.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("map", map);
+
+		Jam::RenderEngine::preloadTexture("map");
+
 
 		//Up Test
 

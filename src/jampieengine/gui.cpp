@@ -1,10 +1,13 @@
 #include "gui.h"
 #include "entity.h"
 #include "glm/glm.hpp"
+#include "material.h"
+#include "transform.h"
 
-Jam::GUIElement::GUIElement(RenderEngine* engine, int layer, float anchorX, float anchorY, Material material):
-	Renderer(engine, layer, "quad", material) {
+Jam::GUIElement::GUIElement(RenderEngine* engine, int layer, float anchorX, float anchorY, std::string texture):
+	Renderer(engine, layer, "quad", texture) {
 		setAnchor(anchorX, anchorY);
+		
 	}
 
 Jam::GUIElement::~GUIElement() {}
@@ -25,20 +28,8 @@ void Jam::GUIElement::draw() {
 			//Bind shader program
 			_glRenderer->getShaderProgram()->bind();
 
-			int w, h;
-			_renderEngine->getWindow().getSize(&w, &h);
-
-			//Send transform
-			Transform t = getParent()->getTransform();
-
-			t.position.x /= w;
-			t.position.y /= h;
-			t.translate(_anchor[0], _anchor[1]);
-
-			t.scale.x /= w;
-			t.scale.y /= h;
-
-			_glRenderer->getShaderProgram()->sendUniformMat4f("model", t.getMatrix());
+			_glRenderer->getShaderProgram()->sendUniformMat4f("model", 
+															  _calculateTransform().getMatrix());
 
 			//Send shader data
 			//_glRenderer->getShaderProgram()->sendUniform2i("screen", w, h);
@@ -46,7 +37,8 @@ void Jam::GUIElement::draw() {
 			
 
 			//Bind material
-			GLLibrary::getTexture(_material.texture)->bind();
+			GLLibrary::getTexture(_material.texture)->bind(0);
+			_glRenderer->getShaderProgram()->sendUniform1i("texture", 0);
 			_glRenderer->getShaderProgram()->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
 
 			//Draw the basterd
@@ -67,4 +59,25 @@ void Jam::GUIElement::setAnchor(float x, float y) {
 
 glm::vec2 Jam::GUIElement::getAnchor() {
 	return _anchor;
+}
+
+Jam::Transform Jam::GUIElement::_calculateTransform() {
+	int w, h;
+	_renderEngine->getWindow().getSize(&w, &h);
+
+	//Send transform
+	Transform t = getParent()->getTransform();
+
+	t.position.x /= w;
+	t.position.y /= h;
+
+	t.position.x += 0.5;
+	t.position.y += 0.5;
+
+	t.translate(_anchor[0], _anchor[1]);
+
+	t.scale.x /= 0.5 * w;
+	t.scale.y /= 0.5 * h;
+
+	return t;
 }

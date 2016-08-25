@@ -5,10 +5,10 @@
 using namespace Jam;
 
 Jam::GUIFader::GUIFader(RenderEngine * engine, int layer, float anchorX, float anchorY, 
-						Material off, Material on, Material value): 
+						std::string on, std::string off, std::string value):
 	GUIElement(engine, layer, anchorX, anchorY, on) {
-	_materialOff = off;
-	_materialValue = value;
+	_materialOff.texture = off;
+	_materialValue.texture = value;
 	_isFader = true;
 }
 
@@ -33,24 +33,24 @@ void Jam::GUIFader::draw() {
 			//Bind shader program
 			_glRenderer->getShaderProgram()->bind();
 
-			//Send transform
-			_glRenderer->getShaderProgram()->sendUniformMat4f("model", getParent()->getTransformationMatrix());
-
-			//Send shader data
-			int w, h;
-			_renderEngine->getWindow().getSize(&w, &h);
-			_glRenderer->getShaderProgram()->sendUniform2i("screen", w, h);
-			_glRenderer->getShaderProgram()->sendUniform2f("anchor", _anchor[0], _anchor[1]);
-			_glRenderer->getShaderProgram()->sendUniform1i("isFader", _isFader);
-
-			//Since it is a fader
-			_glRenderer->getShaderProgram()->sendUniform1f("value", _value);
-			GLLibrary::getTexture(_materialOff.texture)->bind();
-			GLLibrary::getTexture(_materialValue.texture)->bind();
+			_glRenderer->getShaderProgram()->sendUniformMat4f("model",
+								_calculateTransform().getMatrix());
 
 			//Bind material
-			GLLibrary::getTexture(_material.texture)->bind();
-			_glRenderer->getShaderProgram()->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
+			_glRenderer->getShaderProgram()->sendUniform4f("color", 1.0, 1.0, 1.0, 1.0);
+			_glRenderer->getShaderProgram()->sendUniform1i("texture", 0);
+			GLLibrary::getTexture(_material.texture)->bind(0);
+
+			//Since it is a fader
+			_glRenderer->getShaderProgram()->sendUniform1i("textureOff", 1);
+			GLLibrary::getTexture(_materialOff.texture)->bind(1);
+			_glRenderer->getShaderProgram()->sendUniform1i("valueTexture", 2);
+			GLLibrary::getTexture(_materialValue.texture)->bind(2);
+
+			//It is a fader
+			_glRenderer->getShaderProgram()->sendUniform1i("isFader", _isFader);
+
+			_glRenderer->getShaderProgram()->sendUniform1f("value", _value);
 
 			//Draw the basterd
 			_glRenderer->getMesh()->draw();

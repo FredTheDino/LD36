@@ -8,7 +8,7 @@ namespace Jam {
 	class GUIFader : public GUIElement{
 	public:
 		GUIFader(RenderEngine* engine, int layer, float anchorX, float anchorY, 
-				 Material off, Material on, Material value);
+				 std::string on, std::string off, std::string value);
 		~GUIFader();
 
 		float getValue();

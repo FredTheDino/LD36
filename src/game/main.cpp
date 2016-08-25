@@ -22,6 +22,7 @@ int main(int c, char** args) {
 	Jam::InputHandler::registerInput("t_decrement", Jam::InputBinding(true, -1, 0, SDLK_i));
 	Jam::InputHandler::registerInput("t_reset", Jam::InputBinding(true, -1, 0, SDLK_p));
 	*/
+	Jam::InputHandler::registerInput("ui_select", Jam::InputBinding(1));
 	Jam::InputHandler::registerInput("t_play", Jam::InputBinding(true, -1, 0, SDLK_BACKSPACE));
 	Jam::Time::setFPS(60);
 

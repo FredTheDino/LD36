@@ -7,7 +7,20 @@ Renderer::Renderer(RenderEngine* renderEngine, int priority, std::string mesh, M
 	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE), _renderEngine(renderEngine), _priority(priority), _mesh(mesh),
 		_material(material)
 {
-	_shaderProgram = (shaderProgram.length() == 0 ? GFXLibrary::getMesh(_mesh).shaderProgram : shaderProgram);
+	_shaderProgram = (shaderProgram.length() == 0 ? 
+					  GFXLibrary::getMesh(_mesh).shaderProgram : shaderProgram);
+}
+
+Jam::Renderer::Renderer(RenderEngine * renderEngine, int priority, std::string mesh, std::string texture, std::string shaderProgram)
+	: GRAPHICS_TYPE(renderEngine->GRAPHICS_TYPE), _renderEngine(renderEngine), _priority(priority), _mesh(mesh) {
+	
+	Material m;
+	m.texture = texture;
+	m.baseColor = glm::vec4(1.0);
+	_material = m;
+
+	_shaderProgram = (shaderProgram.length() == 0 ? 
+					  GFXLibrary::getMesh(_mesh).shaderProgram : shaderProgram);
 }
 
 void Renderer::_rootEnter()
@@ -28,6 +41,10 @@ void Renderer::_rootExit()
 {
 	_renderEngine->removeRenderer(_associationID);
 	_renderEngine->cancelRendering();
+}
+
+void Jam::Renderer::setTexture(std::string texture) {
+	_material.texture = texture;
 }
 
 void Renderer::draw()

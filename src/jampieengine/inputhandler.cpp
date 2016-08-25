@@ -99,13 +99,13 @@ void Jam::InputHandler::_update() {
 			}
 			case SDL_MOUSEBUTTONDOWN:
 			{
-				data = InputBinding(true, e.button.button); 
+				data = InputBinding(e.button.button); 
 				digitalEvent(true, data);
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:
 			{
-				data = InputBinding(true, e.button.button);
+				data = InputBinding(e.button.button);
 				digitalEvent(false, data);
 				break;
 			}
@@ -209,7 +209,7 @@ void Jam::InputHandler::digitalEvent(bool wasPressed, InputBinding & binding) {
 			}
 		}
 	}
-
+	
 	while (_accessingInputMap) {}
 	_accessingInputMap = true;
 	for (auto it = _inputMapper.begin(); it != _inputMapper.end(); it++) {

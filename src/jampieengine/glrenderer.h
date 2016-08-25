@@ -3,7 +3,6 @@
 #include "gllibrary.h"
 #include "glshaderprogram.h"
 #include "glmesh.h"
-#include "material.h"
 
 namespace Jam
 {
