@@ -54,11 +54,14 @@ void Jam::GUIElement::setAnchor(glm::vec2 anchor) {
 }
 
 void Jam::GUIElement::setAnchor(float x, float y) {
-	_anchor = glm::vec2(x, y);
+	_anchor = glm::vec2(x * 0.5, y * 0.5);
 }
 
 glm::vec2 Jam::GUIElement::getAnchor() {
-	return _anchor;
+	glm::vec2 temp;
+	temp.x = _anchor.x * 2;
+	temp.y = _anchor.y * 2;
+	return temp;
 }
 
 Jam::Transform Jam::GUIElement::_calculateTransform() {
@@ -76,8 +79,8 @@ Jam::Transform Jam::GUIElement::_calculateTransform() {
 
 	t.translate(_anchor[0], _anchor[1]);
 
-	t.scale.x /= 0.5 * w;
-	t.scale.y /= 0.5 * h;
+	t.scale.x /= w;
+	t.scale.y /= h;
 
 	return t;
 }

@@ -43,6 +43,10 @@ void Renderer::_rootExit()
 	_renderEngine->cancelRendering();
 }
 
+void Jam::Renderer::setMaterial(Material mat) {
+	_material = mat;
+}
+
 void Jam::Renderer::setTexture(std::string texture) {
 	_material.texture = texture;
 }

@@ -38,6 +38,8 @@ namespace Jam
 		void _end() {};
 		void _rootExit();
 
+		void setMaterial(Material mat);
+
 		void setTexture(std::string texture);
 
 		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };

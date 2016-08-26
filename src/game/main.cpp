@@ -36,6 +36,9 @@ int main(int c, char** args) {
 	
 	Jam::Flavor flavor;
 	
+	flavor.w_width = 1500;
+	flavor.w_height = 500;
+
 	flavor.title = "My Test Game";
 	flavor.enterState = "TestState";
 	flavor.transparancy = true;

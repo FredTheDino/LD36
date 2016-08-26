@@ -14,6 +14,8 @@
 #include "audiocomponenttest.h"
 #include "renderer.h"
 #include "guibutton.h"
+#include "guitoggle.h"
+#include "guislider.h"
 
 #include "testcomponent.h"
 
@@ -26,18 +28,6 @@
 
 void col(b2Contact* contact) {
 	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
-}
-
-void onDown(Jam::GUIInput* component) {
-	std::cout << "Something pressed this! :D" << std::endl;
-}
-
-void onHover(Jam::GUIInput* component) {
-	component->setTexture("on");
-}
-
-void offHover(Jam::GUIInput* component) {
-	component->setTexture("off");
 }
 
 class TestState: Jam::GameState
@@ -60,19 +50,13 @@ public:
 
 
 		gui->scale(300, 100);
+		gui->move(100, -100);
 		b2PolygonShape shape;
 		shape.SetAsBox(150, 50);
+		gui->add(new Jam::GUISlider(getRenderEngine(), 10, -0.5, 1, "on", "off", "map", &shape));
 		//gui->add(new Jam::GUIFader(getRenderEngine(), 10, 0, 0, "on", "off", "map"));
-		gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 1, "on", &shape));
+		//gui->add(new Jam::GUIToggle(getRenderEngine(), 10, 1, 1, "on", "off", &shape));
 		//gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
-
-		//gui->add(new AudioComponentTest());
-
-		///*
-		gui->get<Jam::GUIButton>()->setOnPress(onDown);
-		gui->get<Jam::GUIButton>()->setOnHighlight(onHover);
-		gui->get<Jam::GUIButton>()->setOnDehighlight(offHover);
-		//*/
 
 		Jam::Root* root = new Jam::Root();
 

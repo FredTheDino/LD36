@@ -30,10 +30,6 @@ namespace Jam {
 		_onRelease = func;
 	}
 
-	void GUIInput::_init() {
-		
-	}
-
 	void GUIInput::_update(double delta) {
 		
 		int w, h;
@@ -42,16 +38,12 @@ namespace Jam {
 		Transform t = _calculateTransform();
 
 		t.position.x *= w;
-		t.position.y *= h;
+		t.position.y = (1 - t.position.y) * h;
 
 		glm::vec2 mousePos = InputHandler::getMousePos();
 		b2Vec2 b2MousePos;
 		b2MousePos.x = (float32) mousePos.x;
 		b2MousePos.y = (float32) mousePos.y;
-
-		if (InputHandler::keyPressed("ui_select")) {
-			std::cout << ":D" << std::endl;
-		}
 
 		if (_shape->TestPoint((b2Transform) t, b2MousePos)) {
 			if (!_hoverd) {

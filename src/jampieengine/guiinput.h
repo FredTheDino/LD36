@@ -17,13 +17,11 @@ namespace Jam {
 		void setOnPress(void(*func)(GUIInput*));
 		void setOnRelease(void(*func)(GUIInput*));
 
-		virtual void _init();
-
 		virtual void _update(double delta);
 
 		//NOTE: The shape does NOT scale with the button. 
 		//You'll have to re create it.
-		void setShape(b2Shape* shape);
+		virtual void setShape(b2Shape* shape);
 
 	protected:
 
