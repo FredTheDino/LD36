@@ -4,6 +4,7 @@
 // is included before gamestate.h.
 //#include "gamestate.h"
 #include "node.h"
+#include "entity.h"
 
 #include <string>
 #include <map>

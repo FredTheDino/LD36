@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
+#include "Box2D/Box2D.h"
 
 namespace Jam
 {
@@ -9,6 +10,10 @@ namespace Jam
 		glm::vec3 position = glm::vec3();
 		glm::vec3 scale = glm::vec3(1, 1, 1);
 		glm::vec3 rotation = glm::vec3();
+
+		operator b2Transform() const {
+			return b2Transform(b2Vec2(position.x, position.y), b2Rot(rotation.z));
+		}
 
 		glm::mat4 getMatrix()
 		{

@@ -1,5 +1,6 @@
 #include "spatialsoundsource.h"
 #include "entity.h"
+#include "glm/glm.hpp"
 
 Jam::SpatialSoundSource::SpatialSoundSource(): SpatialSound(), Component() {}
 
@@ -9,14 +10,14 @@ void Jam::SpatialSoundSource::_update(double delta) {
 	updateFade(delta);
 	
 	//Get the transform, the delta positon / time is the velocity
-	Transform* t = &getParent()->transform;
-	if (_position == t->position) {
+	glm::vec3 pos = getParent()->getPosition();
+	if (_position == pos) {
 		if (_stationary) return;
 		_stationary = true;
 		_setVelocity(glm::vec3(0, 0, 0));
 	} else {
 		_stationary = false;
-		_setVelocity((_position - t->position) * (float) (1.0 / delta));
-		_setPosition(t->position);
+		_setVelocity((_position - pos) * (float) (1.0 / delta));
+		_setPosition(pos);
 	}
 }

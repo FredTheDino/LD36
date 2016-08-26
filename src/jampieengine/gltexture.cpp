@@ -30,12 +30,26 @@ void GLTexture::_generate(Texture& texture)
 
 	bind();
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.wrapS);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _evaluateTexParam(texture.minFilter));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _evaluateTexParam(texture.magFilter));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _evaluateTexParam(texture.wrapS));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _evaluateTexParam(texture.wrapT));
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.data.data());
+}
+
+GLenum GLTexture::_evaluateTexParam(TextureParam texParam)
+{
+	GLenum param;
+
+	switch (texParam) {
+	case TEX_PARAM_NEAREST: param = GL_NEAREST; break;
+	case TEX_PARAM_LINEAR: param = GL_LINEAR; break;
+	case TEX_PARAM_CLAMP: param = GL_CLAMP; break;
+	case TEX_PARAM_REPEAT: param = GL_REPEAT; break;
+	}
+
+	return param;
 }
 
 GLTexture::~GLTexture()

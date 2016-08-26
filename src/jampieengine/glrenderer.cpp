@@ -18,7 +18,7 @@ void GLRenderer::draw()
 	//Send matrices
 	_shaderProgram->sendUniformMat4f("projection", _renderer._renderEngine->getCamera()->getProjection());
 	_shaderProgram->sendUniformMat4f("view", _renderer._renderEngine->getCamera()->getView());
-	_shaderProgram->sendUniformMat4f("model", _renderer.getParent()->transform.getMatrix());
+	_shaderProgram->sendUniformMat4f("model", _renderer.getParent()->getTransformationMatrix());
 
 	//Bind material
 	GLLibrary::getTexture(_material.texture)->bind();

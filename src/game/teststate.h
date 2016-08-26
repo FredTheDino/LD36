@@ -8,10 +8,14 @@
 #include "entity.h"
 #include "node.h"
 #include "component.h"
+#include "camera.h"
 #include "audiohandler.h"
 #include "soundsource.h"
 #include "audiocomponenttest.h"
 #include "renderer.h"
+#include "guibutton.h"
+#include "guitoggle.h"
+#include "guislider.h"
 
 #include "testcomponent.h"
 
@@ -30,76 +34,120 @@ class TestState: Jam::GameState
 {
 public:
 
+
 	void init()
 	{
-		//Save
+		loadStuff();
 
-		std::cout << "SAVES===========" << std::endl;
+		Jam::Entity* dummy = new Jam::Entity();
 
-		Jam::SST save;
+		Jam::Entity* gui = new Jam::Entity();
 
-		save.add("str_test", "This is a string!");
-		save.add("int_test", 1337);
-		save.add("short_test", (short) 420);
-		save.add("char_test", (char) 69);
+		Jam::Material mat;
+		mat.texture = "mario";
+		mat.baseColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
+		dummy->add(new Jam::Renderer(getRenderEngine(), 0, "quad", mat));
 
-		Jam::Loader::saveSST(save, "save/test.sst");
 
-		std::cout << "SAVES===========" << std::endl;
-
-		//Root
+		gui->scale(300, 100);
+		gui->move(100, -100);
+		b2PolygonShape shape;
+		shape.SetAsBox(150, 50);
+		gui->add(new Jam::GUISlider(getRenderEngine(), 10, -0.5, 1, "on", "off", "map", &shape));
+		//gui->add(new Jam::GUIFader(getRenderEngine(), 10, 0, 0, "on", "off", "map"));
+		//gui->add(new Jam::GUIToggle(getRenderEngine(), 10, 1, 1, "on", "off", &shape));
+		//gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
 
 		Jam::Root* root = new Jam::Root();
 
-		loadStuff();
+		root->addNode(0, "dummy", (Jam::Node*) dummy);
+		root->addNode(0, "gui", (Jam::Node*) gui);
 
-		Jam::Entity* entity = new Jam::Entity();
-		entity->add(new TestComponent(getRenderEngine()->getCamera()));
+		addRoot("gui", root);
 
-		Jam::Material material;
-		material.texture = "metal";
+		enterRoot("gui");
 
-		entity->add(new Jam::Renderer(getRenderEngine(), 0, "quad", material));
-		entity->add(new AudioComponentTest());
-
-		root->addNode(0, "t_metal", (Jam::Node*) entity);
-
-		Jam::Entity* mario = new Jam::Entity();
-		mario->add(new TestComponent(getRenderEngine()->getCamera()));
-		
-		Jam::Material material_mario;
-		material_mario.texture = "mario";
-
-		mario->add(new Jam::Renderer(getRenderEngine(), 1, "quad", material_mario));
-
-		root->addNode(0, "t_mario", (Jam::Node*) mario);
-
-		mario->transform.translateX(.5f);
-
-		addRoot("t_root", root);
-
-		enterRoot("t_root");
+		//Keys
+		Jam::InputHandler::registerInput("switch_root", Jam::InputBinding(true, SDLK_p));
 	}
 
 	void loadStuff()
 	{
+		//YAY COpY PASTE
+		Jam::ShaderProgram shaderProgram;
+
+		shaderProgram.vertexShader = Jam::Loader::loadText("shader/GUIShader.vert");
+		shaderProgram.fragmentShader = Jam::Loader::loadText("shader/GUIShader.frag");
+
+		Jam::GFXLibrary::registerShaderProgram("GUIShader", shaderProgram);
+
+		Jam::RenderEngine::preloadShaderProgram("GUIShader");
+
+		//Metal
+		
 		Jam::Texture metal;
 		metal.path = "texture/metal.png";
-		metal.minFilter = GL_LINEAR;
-		metal.magFilter = GL_LINEAR;
+		metal.minFilter = Jam::TEX_PARAM_LINEAR;
+		metal.magFilter = Jam::TEX_PARAM_LINEAR;
 
 		Jam::GFXLibrary::registerTexture("metal", metal);
 
 		Jam::RenderEngine::preloadTexture("metal");
 
+		//Mario
+
 		Jam::Texture mario;
 		mario.path = "texture/mario.png";
-		mario.minFilter = GL_LINEAR;
-		mario.magFilter = GL_LINEAR;
+		mario.minFilter = Jam::TEX_PARAM_LINEAR;
+		mario.magFilter = Jam::TEX_PARAM_LINEAR;
 
 		Jam::GFXLibrary::registerTexture("mario", mario);
 
 		Jam::RenderEngine::preloadTexture("mario");
+
+		//slider test stuff
+		Jam::Texture on;
+		on.path = "slidertest/on.png";
+		on.minFilter = Jam::TEX_PARAM_LINEAR;
+		on.magFilter = Jam::TEX_PARAM_LINEAR;
+		on.wrapS = Jam::TEX_PARAM_CLAMP;
+		on.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("on", on);
+		Jam::RenderEngine::preloadTexture("on");
+		
+		Jam::Texture off;
+		off.path = "slidertest/off.png";
+		off.minFilter = Jam::TEX_PARAM_LINEAR;
+		off.magFilter = Jam::TEX_PARAM_LINEAR;
+		off.wrapS = Jam::TEX_PARAM_CLAMP;
+		off.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("off", off);
+		Jam::RenderEngine::preloadTexture("off");
+
+		Jam::Texture map;
+		map.path = "slidertest/map.png";
+		map.minFilter = Jam::TEX_PARAM_LINEAR;
+		map.magFilter = Jam::TEX_PARAM_LINEAR;
+		map.wrapS = Jam::TEX_PARAM_CLAMP;
+		map.wrapT = Jam::TEX_PARAM_CLAMP;
+
+		Jam::GFXLibrary::registerTexture("map", map);
+
+		Jam::RenderEngine::preloadTexture("map");
+
+
+		//Up Test
+
+		Jam::Texture up_test;
+		up_test.path = "texture/up_test.png";
+		up_test.minFilter = Jam::TEX_PARAM_NEAREST;
+		up_test.magFilter = Jam::TEX_PARAM_NEAREST;
+
+		Jam::GFXLibrary::registerTexture("up_test", up_test);
+
+		Jam::RenderEngine::preloadTexture("up_test");
 
 		Jam::RenderEngine::load();
 
@@ -108,7 +156,10 @@ public:
 
 	void update(double delta)
 	{
-		
+		if (Jam::InputHandler::keyDown("switch_root")) {
+			//enterRoot("up_test");
+			getRenderEngine()->getCamera()->transform.position.y += delta * 2;
+		}
 	}
 
 	void exit()
