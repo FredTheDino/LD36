@@ -9,6 +9,8 @@
 
 namespace Jam
 {
+	class Pie;
+
 	class GFXLibrary
 	{
 	public:
@@ -41,5 +43,9 @@ namespace Jam
 
 		//Generic sprite sheet
 		static std::unordered_map<std::string, SpriteSheet> _spriteSheetRegistry;
+
+		static void _destroy();
+
+		friend Pie;
 	};
 }

@@ -49,3 +49,14 @@ void GLSpriteSheet::_generate(SpriteSheet& spriteSheet)
 		}
 	}
 }
+
+GLSpriteSheet::~GLSpriteSheet()
+{
+	for (std::vector<GLTexture*> row : _textures) {
+		for (GLTexture* texture : row) {
+			delete texture;
+		}
+	}
+
+	_textures.clear();
+}

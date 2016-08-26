@@ -11,6 +11,7 @@ namespace Jam
 	class Container : Node
 	{
 	public:
+		~Container();
 
 		void addNode(Node* node) { _nodes.push_back(node); };
 

@@ -12,6 +12,7 @@ namespace Jam
 	{
 	public:
 		GLSpriteSheet(SpriteSheet& spriteSheet);
+		~GLSpriteSheet();
 
 		GLTexture* getTexture(unsigned int x, unsigned int y) { return _textures[y][x]; };
 

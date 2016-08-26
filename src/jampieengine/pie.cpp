@@ -42,6 +42,8 @@ void Pie::bake()
 	InputHandler::_destroy();
 
 	delete _gameStateManager;
+
+	GFXLibrary::_destroy();
 }
 
 void Pie::_initSDL()
