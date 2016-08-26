@@ -69,6 +69,8 @@ namespace Jam
 		//Sets the camera to be used by this render engine
 		void useCamera(Camera* camera) { _camera = camera; };
 
+		Window& getWindow() { return _window; }
+
 		//Returns the number of remaining load entries
 		static unsigned int remainingLoadEntries() { return _loadQueue.size(); };
 

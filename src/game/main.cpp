@@ -18,13 +18,13 @@ void registerStuff();
 
 int main(int c, char** args) {
 	Jam::GameStateLibrary::registerGameState("test1", (Jam::GameState*) new TestState());
-	Jam::GameStateLibrary::registerGameState("test2", (Jam::GameState*) new TestState2());
 
 	/*
 	Jam::InputHandler::registerInput("t_increment", Jam::InputBinding(true, -1, 0, SDLK_o));
 	Jam::InputHandler::registerInput("t_decrement", Jam::InputBinding(true, -1, 0, SDLK_i));
 	Jam::InputHandler::registerInput("t_reset", Jam::InputBinding(true, -1, 0, SDLK_p));
 	*/
+	Jam::InputHandler::registerInput("ui_select", Jam::InputBinding(1));
 	Jam::InputHandler::registerInput("t_play", Jam::InputBinding(true, -1, 0, SDLK_BACKSPACE));
 	Jam::Time::setFPS(60);
 
@@ -38,6 +38,9 @@ int main(int c, char** args) {
 	
 	Jam::Flavor flavor;
 	
+	flavor.w_width = 1500;
+	flavor.w_height = 500;
+
 	flavor.title = "My Test Game";
 	flavor.enterState = "test1";
 	flavor.transparancy = true;

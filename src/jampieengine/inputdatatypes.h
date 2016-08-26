@@ -120,9 +120,9 @@ namespace Jam {
 		std::string toString() const{
 			std::string string;
 			string += SEPERATOR;
-			string += isMouseButton ? '0' : '1';
+			string += isMouseButton ? '1' : '0';
 			string += SEPERATOR;
-			string += isKeycode ? '0' : '1';
+			string += isKeycode ? '1' : '0';
 			string += SEPERATOR;
 			string += std::to_string(dev);
 			string += SEPERATOR;

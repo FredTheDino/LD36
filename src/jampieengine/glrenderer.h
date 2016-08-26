@@ -16,16 +16,16 @@ namespace Jam
 	public:
 		GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram, Material& material);
 
-		void draw();
-
 		GLMesh* getMesh() { return _mesh; };
 
 		GLShaderProgram* getShaderProgram() { return _shaderProgram; };
 
+		GLTexture* getTexture() { return _texture; };
+
 		Material& getMaterial() { return _material; };
 
 	private:
-		
+	
 		Renderer& _renderer;
 
 		GLMesh* _mesh;

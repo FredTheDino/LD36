@@ -22,14 +22,14 @@ namespace Jam
 	{
 	public:
 		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", Material material = {}, std::string shaderProgram = "");
+		Renderer(RenderEngine* renderEngine, int priority = 0, std::string mesh = "quad", std::string texture = "default", std::string shaderProgram = "");
 		~Renderer();
 
 		const GraphicsCoreType GRAPHICS_TYPE;
 
-		void draw();
+		virtual void draw();
 
 		void setMesh(std::string tag);
-
 		void setShaderProgram(std::string tag);
 		
 		void setTexture(std::string tag);
@@ -45,7 +45,7 @@ namespace Jam
 		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };
 		bool shouldDraw() { return _shouldDraw; };
 
-	private:
+	protected:
 
 		unsigned int _associationID;
 

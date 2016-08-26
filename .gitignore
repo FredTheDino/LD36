@@ -9,4 +9,6 @@ CTestTestfile.cmake
 #To suit my personal prefference when it comes to structure
 .vscode/
 /build/*
+/res/input.map
 !/build/build*.*
+*.map

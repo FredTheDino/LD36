@@ -17,25 +17,6 @@ GLRenderer::GLRenderer(Renderer& renderer, std::string mesh, std::string shaderP
 	}
 }
 
-void GLRenderer::draw()
-{
-	//Bind shader program
-	_shaderProgram->bind();
-	
-	//Send matrices
-	_shaderProgram->sendUniformMat4f("projection", _renderer._renderEngine->getCamera()->getProjection());
-	_shaderProgram->sendUniformMat4f("view", _renderer._renderEngine->getCamera()->getView());
-	_shaderProgram->sendUniformMat4f("model", _renderer.getParent()->transform.getMatrix());
-
-	//Bind material
-	
-	_texture->bind();
-
-	_shaderProgram->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
-
-	_mesh->draw();
-}
-
 void GLRenderer::_setMesh(GLMesh* mesh)
 {
 	_mesh = mesh;

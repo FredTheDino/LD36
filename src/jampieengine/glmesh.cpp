@@ -58,7 +58,6 @@ GLMesh::GLMesh(Mesh mesh)
 void GLMesh::draw()
 {
 	glBindVertexArray(_vao);
-
 	if (_usingIndices) {
 		glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, nullptr);
 	} else {

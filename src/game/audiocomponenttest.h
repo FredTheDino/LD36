@@ -5,6 +5,7 @@
 #include "spatialsoundsource.h"
 #include "audiohandler.h"
 #include "inputhandler.h"
+#include "guifader.h"
 
 class AudioComponentTest: public Jam::Component {
 public:
@@ -36,16 +37,23 @@ public:
 				}
 			}
 		}
-		if (Jam::InputHandler::keyDown("e_left"))
-			getParent()->transform.translateX(-delta);
-		if (Jam::InputHandler::keyDown("e_right"))
-			getParent()->transform.translateX(delta);
+		static double t = 0;
+		t += delta * 3.14;
+		if (Jam::InputHandler::keyDown("e_left")) {
+			getParent()->move(-delta * 100);
+		}
+		if (Jam::InputHandler::keyDown("e_right")) {
+			getParent()->move(delta * 100);
+		}
 		if (Jam::InputHandler::keyDown("e_up"))
-			getParent()->transform.translateY(delta);
+			getParent()->move(0.0, delta * 100);
 		if (Jam::InputHandler::keyDown("e_down"))
-			getParent()->transform.translateY(-delta);
-		
-		getParent()->transform.rotateZ(delta);
+			getParent()->move(0.0, -delta * 100);
+
+		Jam::GUIFader* fader = getParent()->get<Jam::GUIFader>();
+		if (fader) {
+			fader->setValue(sin(t) * 0.5 + 0.5);
+		}
 	}
 
 	void _end() {

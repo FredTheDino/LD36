@@ -11,6 +11,7 @@ RenderEngine::RenderEngine(GraphicsCore& graphicsCore, Window& window, GraphicsC
 	: _graphicsCore(graphicsCore), _window(window), GRAPHICS_TYPE(graphicsType), _camera(camera)
 {
 	_createContext();
+
 	_loadDefaultContent();
 }
 
@@ -156,6 +157,17 @@ void RenderEngine::_loadDefaultContent()
 
 	//Preload shader program for GPU loading
 	preloadShaderProgram("ortho");
+
+	/* GUI shader program initialization */
+
+	Jam::ShaderProgram guiShaderProgram;
+
+	guiShaderProgram.vertexShader = Jam::Loader::loadText("shader/GUIShader.vert");
+	guiShaderProgram.fragmentShader = Jam::Loader::loadText("shader/GUIShader.frag");
+
+	Jam::GFXLibrary::registerShaderProgram("GUIShader", guiShaderProgram);
+
+	Jam::RenderEngine::preloadShaderProgram("GUIShader");
 
 	/* Default texture initialization */
 	Texture texture;
