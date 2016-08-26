@@ -60,7 +60,10 @@ namespace Jam
 		static std::unordered_map<std::string, GLTexture*> _glTextureRegistry;
 
 		//Instantiates GLTexture from generic texture associated with tag (has to be called from graphicscore thread)
-		static void _loadTexture(std::string tag) { _glTextureRegistry.insert(std::make_pair(tag, new GLTexture(GFXLibrary::getTexture(tag)))); };
+		static void _loadTexture(std::string tag) { 
+			Texture texture = GFXLibrary::getTexture(tag);
+			_glTextureRegistry.insert(std::make_pair(tag, new GLTexture(texture))); 
+		};
 
 		//Unloads GLTexture with specified tag (has to be called from graphicscore thread)
 		static void _unloadTexture(std::string tag) { delete _glTextureRegistry.at(tag); _glTextureRegistry.erase(tag); };

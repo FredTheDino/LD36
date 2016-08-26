@@ -20,7 +20,7 @@ void main()
 {
 	if (isFader) {
 		//Use the fader variables
-		if (value > texture2D(valueTexture, pass_texCoords).x) {
+		if (texture2D(valueTexture, pass_texCoords).x < value) {
 			out_color = texture2D(textureOff, pass_texCoords) * color;
 			return;
 		} else {

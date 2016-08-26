@@ -1,6 +1,8 @@
 #include "loader.h"
 #include "debug.h"
 
+#include <string>
+
 using namespace Jam;
 
 std::string Loader::prefix("");

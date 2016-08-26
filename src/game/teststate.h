@@ -62,12 +62,17 @@ public:
 		gui->scale(300, 100);
 		b2PolygonShape shape;
 		shape.SetAsBox(150, 50);
-		gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
+		//gui->add(new Jam::GUIFader(getRenderEngine(), 10, 0, 0, "on", "off", "map"));
+		gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 1, "on", &shape));
 		//gui->add(new Jam::GUIButton(getRenderEngine(), 10, 0, 0, "on", &shape));
 
+		//gui->add(new AudioComponentTest());
+
+		///*
 		gui->get<Jam::GUIButton>()->setOnPress(onDown);
 		gui->get<Jam::GUIButton>()->setOnHighlight(onHover);
 		gui->get<Jam::GUIButton>()->setOnDehighlight(offHover);
+		//*/
 
 		Jam::Root* root = new Jam::Root();
 

@@ -12,4 +12,4 @@ ADD_SUBDIRECTORY("Box2D")
 ADD_SUBDIRECTORY("jampieengine")
 ADD_SUBDIRECTORY("game")
 
-set_property(TARGET Box2D jampieengine game PROPERTY CXX_STANDARD 11)
+set_property(TARGET Box2D jampieengine game PROPERTY CXX_STANDARD 14)
