@@ -2,7 +2,7 @@
 
 using namespace Jam;
 
-GLSpriteSheet::GLSpriteSheet(SpriteSheet& spriteSheet)
+GLSpriteSheet::GLSpriteSheet(SpriteSheet spriteSheet)
 {
 	if (spriteSheet.data.size() == 0) {
 		unsigned int error = lodepng::decode(spriteSheet.data, spriteSheet.width, spriteSheet.height, Loader::prefix + spriteSheet.path);

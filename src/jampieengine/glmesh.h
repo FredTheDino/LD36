@@ -11,7 +11,7 @@ namespace Jam
 	class GLMesh
 	{
 	public:
-		GLMesh(Mesh& mesh);
+		GLMesh(Mesh mesh);
 		~GLMesh();
 
 		void draw();

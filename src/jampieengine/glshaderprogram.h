@@ -16,7 +16,7 @@ namespace Jam
 	class GLShaderProgram
 	{
 	public:
-		GLShaderProgram(ShaderProgram& shaderProgram);
+		GLShaderProgram(ShaderProgram shaderProgram);
 		~GLShaderProgram();
 
 		void bind();

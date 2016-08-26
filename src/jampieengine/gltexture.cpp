@@ -2,7 +2,7 @@
 
 using namespace Jam;
 
-GLTexture::GLTexture(Texture& texture)
+GLTexture::GLTexture(Texture texture)
 {
 	std::cout << texture.data.size() << std::endl;
 

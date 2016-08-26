@@ -2,7 +2,7 @@
 
 using namespace Jam;
 
-GLShaderProgram::GLShaderProgram(ShaderProgram& shaderProgram)
+GLShaderProgram::GLShaderProgram(ShaderProgram shaderProgram)
 {
 	//Generate vertex shader if available
 	if (shaderProgram.vertexShader.length()) {
