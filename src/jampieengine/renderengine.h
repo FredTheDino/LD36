@@ -39,6 +39,9 @@ namespace Jam
 		//Adds texture associated with tag to load queue
 		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, true }); };
 
+		//Adds sprite sheet associated with tag to load queue
+		static void preloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SPRITE_SHEET, tag, true }); };
+
 		//Adds mesh with associated tag to unload queue
 		static void unloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag, false }); };
 
@@ -47,6 +50,9 @@ namespace Jam
 
 		//Adds texture with associated tag to unload queue
 		static void unloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, false }); };
+
+		//Adds sprite sheet with associated tag to unload queue
+		static void unloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SPRITE_SHEET, tag, false }); };
 
 		//Sets _shouldLoad to true in order to process load queue on render thread
 		static void load() { _accessingLoadQueues = true; _shouldLoad = true; };
@@ -80,7 +86,8 @@ namespace Jam
 		enum LoadType {
 			LOAD_TYPE_MESH,
 			LOAD_TYPE_SHADER_PROGRAM,
-			LOAD_TYPE_TEXTURE
+			LOAD_TYPE_TEXTURE,
+			LOAD_TYPE_SPRITE_SHEET
 		};
 
 		struct LoadEntry {

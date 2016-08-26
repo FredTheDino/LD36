@@ -33,8 +33,11 @@ void GameStateManager::enterState(GameState* gameState)
 
 void GameStateManager::_enterState()
 {
-	if (_currentState != nullptr)
+	if (_currentState != nullptr) {
+		_currentState->_currentRoot->_rootExit();
 		_currentState->exit();
+		_currentState->_roots.clear();
+	}
 
 	_currentState = _stateToEnter;
 

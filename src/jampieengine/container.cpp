@@ -22,3 +22,12 @@ void Container::_rootExit()
 		node->_rootExit();
 	}
 }
+
+Container::~Container()
+{
+	for (Node* node : _nodes) {
+		delete node;
+	}
+
+	_nodes.clear();
+}

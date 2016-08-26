@@ -13,8 +13,8 @@ namespace Jam {
 
 	private:
 
-		Material _on;
-		Material _off;
+		std::string _texOn;
+		std::string _texOff;
 
 		virtual void _highlight();
 		virtual void _dehighlight();

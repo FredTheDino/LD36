@@ -7,6 +7,7 @@
 #include "glshaderprogram.h"
 #include "gfxlibrary.h"
 #include "gltexture.h"
+#include "glspritesheet.h"
 
 namespace Jam
 {
@@ -26,6 +27,9 @@ namespace Jam
 		//Return loaded texture
 		static GLTexture* getTexture(std::string tag) { return _glTextureRegistry.at(tag); };
 
+		//Return loaded sprite sheet
+		static GLSpriteSheet* getSpriteSheet(std::string tag) { return _glSpriteSheetRegistry.at(tag); };
+
 	private:
 
 		//Render engine
@@ -37,8 +41,7 @@ namespace Jam
 		//Instantiate GLMesh from generic mesh associated with tag (has to be called from graphicscore thread)
 		static void _loadMesh(std::string tag) {
 			Mesh mesh = GFXLibrary::getMesh(tag);
-			GLMesh* glmesh = new GLMesh(mesh);
-			_glMeshRegistry.insert(std::make_pair(tag, glmesh)); 
+			_glMeshRegistry.insert(std::make_pair(tag, new GLMesh(mesh)));
 		};
 
 		//Unloads GLMesh with specified tag (has to be called from graphicscore thread)
@@ -60,13 +63,25 @@ namespace Jam
 		static std::unordered_map<std::string, GLTexture*> _glTextureRegistry;
 
 		//Instantiates GLTexture from generic texture associated with tag (has to be called from graphicscore thread)
-		static void _loadTexture(std::string tag) { 
+		static void _loadTexture(std::string tag) {
 			Texture texture = GFXLibrary::getTexture(tag);
-			_glTextureRegistry.insert(std::make_pair(tag, new GLTexture(texture))); 
+			_glTextureRegistry.insert(std::make_pair(tag, new GLTexture(texture)));
 		};
 
 		//Unloads GLTexture with specified tag (has to be called from graphicscore thread)
 		static void _unloadTexture(std::string tag) { delete _glTextureRegistry.at(tag); _glTextureRegistry.erase(tag); };
+
+		//Loaded sprite sheets
+		static std::unordered_map<std::string, GLSpriteSheet*> _glSpriteSheetRegistry;
+
+		//Instantiates GLSpriteSheet from generic sprite sheet associated with tag (has to be called from graphicscore thread)
+		static void _loadSpriteSheet(std::string tag) {
+			SpriteSheet spriteSheet = GFXLibrary::getSpriteSheet(tag);
+			_glSpriteSheetRegistry.insert(std::make_pair(tag, new GLSpriteSheet(spriteSheet)));
+		};
+
+		//Unloads GLSpriteSheet with specified tag (has to be calld from graphicscore thread)
+		static void _unloadSpriteSheet(std::string tag) { delete _glSpriteSheetRegistry.at(tag); _glSpriteSheetRegistry.erase(tag); };
 
 		//Unloads everything from this library
 		static void _unloadAll();

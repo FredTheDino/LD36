@@ -3,6 +3,8 @@
 #include "gllibrary.h"
 #include "glshaderprogram.h"
 #include "glmesh.h"
+#include "material.h"
+#include "gltexture.h"
 
 namespace Jam
 {
@@ -14,18 +16,15 @@ namespace Jam
 	public:
 		GLRenderer(Renderer& renderer, std::string mesh, std::string shaderProgram, Material& material);
 
-		void draw();
-
 		GLMesh* getMesh() { return _mesh; };
 
 		GLShaderProgram* getShaderProgram() { return _shaderProgram; };
 
+		GLTexture* getTexture() { return _texture; };
+
 		Material& getMaterial() { return _material; };
 
-	private:	
-		void _setMesh(GLMesh* mesh);
-
-		void _setShaderProgram(GLShaderProgram* shaderProgram);
+	private:
 	
 		Renderer& _renderer;
 
@@ -33,7 +32,15 @@ namespace Jam
 
 		GLShaderProgram* _shaderProgram;
 
+		GLTexture* _texture;
+
 		Material& _material;
+
+		void _setMesh(GLMesh* mesh);
+
+		void _setShaderProgram(GLShaderProgram* shaderProgram);
+
+		void _setTexture(GLTexture* texture);
 
 		friend Renderer;
 	};

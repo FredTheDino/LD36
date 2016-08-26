@@ -11,7 +11,7 @@ namespace Jam
 	class GLTexture
 	{
 	public:
-		GLTexture(Texture& texture);
+		GLTexture(Texture texture);
 		~GLTexture();
 
 		void bind(unsigned int target = 0);

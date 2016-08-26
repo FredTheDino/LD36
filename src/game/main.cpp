@@ -14,8 +14,10 @@
 #include "teststate.h"
 #include "testcomponent.h"
 
+void registerStuff();
+
 int main(int c, char** args) {
-	Jam::GameStateLibrary::registerGameState("TestState", (Jam::GameState*) new TestState());
+	Jam::GameStateLibrary::registerGameState("test1", (Jam::GameState*) new TestState());
 
 	/*
 	Jam::InputHandler::registerInput("t_increment", Jam::InputBinding(true, -1, 0, SDLK_o));
@@ -40,12 +42,32 @@ int main(int c, char** args) {
 	flavor.w_height = 500;
 
 	flavor.title = "My Test Game";
-	flavor.enterState = "TestState";
+	flavor.enterState = "test1";
 	flavor.transparancy = true;
+	flavor.bgColorG = 1;
 
 	Jam::Pie pie(flavor);
+
+	registerStuff();
 
 	pie.bake();
 
 	return 0;
+}
+
+void registerStuff()
+{
+	//Texture: "mario"
+	Jam::Texture t_mario;
+	t_mario.path = "texture/mario.png";
+
+	Jam::GFXLibrary::registerTexture("mario", t_mario);
+
+	//SpriteSheet: "fire_ball"
+	Jam::SpriteSheet ss;
+	ss.path = "texture/fire_ball.png";
+	ss.tilesX = 6;
+	ss.tilesY = 2;
+
+	Jam::GFXLibrary::registerSpriteSheet("fire_ball", ss);
 }

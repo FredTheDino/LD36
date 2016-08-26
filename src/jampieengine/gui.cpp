@@ -37,7 +37,7 @@ void Jam::GUIElement::draw() {
 			
 
 			//Bind material
-			GLLibrary::getTexture(_material.texture)->bind(0);
+			_glRenderer->getTexture()->bind(0);
 			_glRenderer->getShaderProgram()->sendUniform1i("texture", 0);
 			_glRenderer->getShaderProgram()->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
 

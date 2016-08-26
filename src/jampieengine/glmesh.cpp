@@ -2,7 +2,7 @@
 
 using namespace Jam;
 
-GLMesh::GLMesh(Mesh& mesh)
+GLMesh::GLMesh(Mesh mesh)
 {
 	//Generate VAO
 	glGenVertexArrays(1, &_vao);

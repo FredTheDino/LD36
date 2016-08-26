@@ -25,6 +25,8 @@
 #include "inputhandler.h"
 #include "material.h"
 #include "sst.h"
+#include "spritesheet.h"
+#include "animation.h"
 
 void col(b2Contact* contact) {
 	std::cout << "y: " << contact->GetFixtureA()->GetBody()->GetTransform().p.y << std::endl;
@@ -68,23 +70,13 @@ public:
 		enterRoot("gui");
 
 		//Keys
-		Jam::InputHandler::registerInput("switch_root", Jam::InputBinding(true, SDLK_p));
+		Jam::InputHandler::registerInput("switch", Jam::InputBinding(true, SDLK_g));
 	}
 
 	void loadStuff()
 	{
-		//YAY COpY PASTE
-		Jam::ShaderProgram shaderProgram;
-
-		shaderProgram.vertexShader = Jam::Loader::loadText("shader/GUIShader.vert");
-		shaderProgram.fragmentShader = Jam::Loader::loadText("shader/GUIShader.frag");
-
-		Jam::GFXLibrary::registerShaderProgram("GUIShader", shaderProgram);
-
-		Jam::RenderEngine::preloadShaderProgram("GUIShader");
-
 		//Metal
-		
+
 		Jam::Texture metal;
 		metal.path = "texture/metal.png";
 		metal.minFilter = Jam::TEX_PARAM_LINEAR;
@@ -115,7 +107,7 @@ public:
 
 		Jam::GFXLibrary::registerTexture("on", on);
 		Jam::RenderEngine::preloadTexture("on");
-		
+
 		Jam::Texture off;
 		off.path = "slidertest/off.png";
 		off.minFilter = Jam::TEX_PARAM_LINEAR;
@@ -156,20 +148,14 @@ public:
 
 	void update(double delta)
 	{
-		if (Jam::InputHandler::keyDown("switch_root")) {
-			//enterRoot("up_test");
-			getRenderEngine()->getCamera()->transform.position.y += delta * 2;
-		}
+
 	}
 
 	void exit()
 	{
-		removeRoot("TestRoot");
-		delete root;
+
 	}
 
 private:
-	Jam::Root* root = nullptr;
-	Jam::Box2DListener _listener;
-	b2World* _world;
+	
 };

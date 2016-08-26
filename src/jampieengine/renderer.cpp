@@ -43,14 +43,6 @@ void Renderer::_rootExit()
 	_renderEngine->cancelRendering();
 }
 
-void Jam::Renderer::setMaterial(Material mat) {
-	_material = mat;
-}
-
-void Jam::Renderer::setTexture(std::string texture) {
-	_material.texture = texture;
-}
-
 void Renderer::draw()
 {
 	if (!isActive())
@@ -69,7 +61,7 @@ void Renderer::draw()
 		_glRenderer->_shaderProgram->sendUniformMat4f("model", getParent()->getTransformationMatrix());
 
 		//Bind material
-		GLLibrary::getTexture(_material.texture)->bind();
+		_glRenderer->getTexture()->bind();
 		_glRenderer->_shaderProgram->sendUniform4f("color", _material.baseColor.x, _material.baseColor.y, _material.baseColor.z, _material.baseColor.w);
 
 		_glRenderer->_mesh->draw();
@@ -91,6 +83,24 @@ void Renderer::setMesh(std::string tag)
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
 		_glRenderer->_setMesh(GLLibrary::getMesh(tag));
+		break;
+	}
+}
+
+void Renderer::setTexture(std::string tag)
+{
+	switch (GRAPHICS_TYPE) {
+	case GRAPHICS_TYPE_OPENGL:
+		_glRenderer->_setTexture(GLLibrary::getTexture(tag));
+		break;
+	}
+}
+
+void Renderer::setTexture(std::string spriteSheet, unsigned int x, unsigned int y)
+{
+	switch (GRAPHICS_TYPE) {
+	case GRAPHICS_TYPE_OPENGL:
+		_glRenderer->_setTexture(GLLibrary::getSpriteSheet(spriteSheet)->getTexture(x, y));
 		break;
 	}
 }

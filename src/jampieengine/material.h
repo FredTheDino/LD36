@@ -7,8 +7,10 @@
 namespace Jam
 {
 	struct Material {
-
-		std::string texture = "default";
 		glm::vec4 baseColor = glm::vec4(1.0f);
+		std::string texture = "default";
+		bool spriteSheet = false;
+		unsigned int ssOffsetX;
+		unsigned int ssOffsetY;
 	};
 }
