@@ -13,12 +13,17 @@ void MenuState::init()
 
 void MenuState::update(double delta)
 {
-
+	
 }
 
 void MenuState::exit()
 {
 
+}
+
+void MenuState::playGame()
+{
+	_gameStateManager->enterState("play");
 }
 
 /* Initialization */
@@ -36,7 +41,8 @@ void MenuState::_initMainMenu()
 
 	playButton->add(new GUIButton(getRenderEngine(), 0, 0, .4, "button_play", &shape));
 	playButton->get<GUIButton>()->setOnHighlight(callback_button_highlight);
-	playButton->get<GUIButton>()->setOnHighlight(callback_button_dehighlight);
+	playButton->get<GUIButton>()->setOnDehighlight(callback_button_dehighlight);
+	playButton->get<GUIButton>()->setOnPress(callback_button_play);
 	
 	mainMenu->addNode(0, "button_play", (Node*) playButton);
 
@@ -46,7 +52,7 @@ void MenuState::_initMainMenu()
 
 	exitButton->add(new GUIButton(getRenderEngine(), 0, 0, -.4, "button_exit", &shape));
 	exitButton->get<GUIButton>()->setOnHighlight(callback_button_highlight);
-	exitButton->get<GUIButton>()->setOnHighlight(callback_button_dehighlight);
+	exitButton->get<GUIButton>()->setOnDehighlight(callback_button_dehighlight);
 
 	mainMenu->addNode(0, "button_exit", (Node*) exitButton);
 
@@ -68,13 +74,17 @@ void MenuState::_loadContent()
 
 /* Callbacks */
 
-void callback_button_highlight(Jam::GUIInput* component)
+void callback_button_highlight(GUIInput* component)
 {
 	component->setBaseColor(glm::vec4(.7f, .7f, .7f, 1));
-	std::cout << "test" << std::endl;
 }
 
-void callback_button_dehighlight(Jam::GUIInput* component)
+void callback_button_dehighlight(GUIInput* component)
 {
 	component->setBaseColor(glm::vec4(1, 1, 1, 1));
+}
+
+void callback_button_play(GUIInput* component)
+{
+	((MenuState*) GameStateLibrary::getGameState("menu"))->playGame();
 }

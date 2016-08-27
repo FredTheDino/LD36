@@ -11,6 +11,7 @@ public:
 	void update(double deta);
 	void exit();
 
+	void playGame();
 
 private:
 
@@ -23,3 +24,4 @@ private:
 
 void callback_button_highlight(Jam::GUIInput* component);
 void callback_button_dehighlight(Jam::GUIInput* component);
+void callback_button_play(Jam::GUIInput* component);

@@ -7,11 +7,13 @@
 #include "gamestatelibrary.h"
 
 #include "menustate.h"
+#include "playstate.h"
 
 void registerTextures();
 
 int main(int c, char** args) {
 	Jam::GameStateLibrary::registerGameState("menu", (Jam::GameState*) new MenuState());
+	Jam::GameStateLibrary::registerGameState("play", (Jam::GameState*) new PlayState());
 
 	Jam::Time::setFPS(60);
 
