@@ -12,4 +12,8 @@ public:
 
 private:
 
+	void _loadContent();
+
+	void _initLevel();
+
 };
