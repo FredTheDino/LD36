@@ -133,7 +133,6 @@ void Jam::InputHandler::_update() {
 
 			default:
 			{
-				e.type;
 				break;
 			}
 		}
