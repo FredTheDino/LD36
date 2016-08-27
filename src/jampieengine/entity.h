@@ -161,9 +161,10 @@ namespace Jam
 		void _rootEnter();
 		void _rootExit();
 
-	private:
 		//The transform of this entity
-		Transform _transform;
+		Transform transform;
+
+	private:
 
 		//The vector holding all the components
 		std::vector<Component*> _components;
