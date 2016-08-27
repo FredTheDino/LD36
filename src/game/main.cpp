@@ -10,12 +10,13 @@
 #include "playstate.h"
 
 void registerTextures();
+void registerSpriteSheets();
 
 int main(int c, char** args) {
 	Jam::GameStateLibrary::registerGameState("menu", (Jam::GameState*) new MenuState());
 	Jam::GameStateLibrary::registerGameState("play", (Jam::GameState*) new PlayState());
 
-	Jam::Time::setFPS(60);
+	//Jam::Time::setFPS(60);
 
 #ifdef WIN32
 	Jam::Loader::prefix = "../../res/";
@@ -34,6 +35,7 @@ int main(int c, char** args) {
 	Jam::Pie pie(flavor);
 
 	registerTextures();
+	registerSpriteSheets();
 
 	pie.bake();
 
@@ -53,4 +55,15 @@ void registerTextures()
 	t_buttonExit.path = "texture/gui/button_exit.png";
 
 	Jam::GFXLibrary::registerTexture("button_exit", t_buttonExit);
+
+	//terrain
+	Jam::Texture t_terrain;
+	t_terrain.path = "texture/terrain.png";
+
+	Jam::GFXLibrary::registerTexture("terrain", t_terrain);
+}
+
+void registerSpriteSheets()
+{
+	
 }
