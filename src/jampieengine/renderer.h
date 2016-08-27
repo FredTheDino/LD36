@@ -42,6 +42,8 @@ namespace Jam
 		void _end() {};
 		void _rootExit();
 
+		void setBaseColor(glm::vec4 color) { _material.baseColor = color; };
+
 		void setShouldDraw(bool shouldDraw) { _shouldDraw = shouldDraw; };
 		bool shouldDraw() { return _shouldDraw; };
 

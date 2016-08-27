@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-PROJECT(JamPieEngine C CXX)
+PROJECT(LD36 C CXX)
 
 #Sets which kind of windows target you want.
 #x32 or x64 for the different architectures.

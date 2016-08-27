@@ -5,27 +5,16 @@
 
 #include "gamestate.h"
 #include "gamestatelibrary.h"
-#include "root.h"
-#include "entity.h"
-#include "node.h"
-#include "component.h"
-#include "audiohandler.h"
 
-#include "teststate.h"
-#include "testcomponent.h"
+#include "menustate.h"
+#include "playstate.h"
 
-void registerStuff();
+void registerTextures();
 
 int main(int c, char** args) {
-	Jam::GameStateLibrary::registerGameState("test1", (Jam::GameState*) new TestState());
+	Jam::GameStateLibrary::registerGameState("menu", (Jam::GameState*) new MenuState());
+	Jam::GameStateLibrary::registerGameState("play", (Jam::GameState*) new PlayState());
 
-	/*
-	Jam::InputHandler::registerInput("t_increment", Jam::InputBinding(true, -1, 0, SDLK_o));
-	Jam::InputHandler::registerInput("t_decrement", Jam::InputBinding(true, -1, 0, SDLK_i));
-	Jam::InputHandler::registerInput("t_reset", Jam::InputBinding(true, -1, 0, SDLK_p));
-	*/
-	Jam::InputHandler::registerInput("ui_select", Jam::InputBinding(1));
-	Jam::InputHandler::registerInput("t_play", Jam::InputBinding(true, -1, 0, SDLK_BACKSPACE));
 	Jam::Time::setFPS(60);
 
 #ifdef WIN32
@@ -34,40 +23,34 @@ int main(int c, char** args) {
 	Jam::Loader::prefix = "../res/";
 #endif
 
-	std::cout << Jam::Loader::loadText("test.txt") << std::endl;
-	
 	Jam::Flavor flavor;
-	
-	flavor.w_width = 1500;
-	flavor.w_height = 500;
+	flavor.w_width = 800;
+	flavor.w_height = 600;
 
-	flavor.title = "My Test Game";
-	flavor.enterState = "test1";
+	flavor.title = "LD36";
+	flavor.enterState = "menu";
 	flavor.transparancy = true;
-	flavor.bgColorG = 1;
 
 	Jam::Pie pie(flavor);
 
-	registerStuff();
+	registerTextures();
 
 	pie.bake();
 
 	return 0;
 }
 
-void registerStuff()
+void registerTextures()
 {
-	//Texture: "mario"
-	Jam::Texture t_mario;
-	t_mario.path = "texture/mario.png";
+	//button_play
+	Jam::Texture t_buttonPlay;
+	t_buttonPlay.path = "texture/gui/button_play.png";
 
-	Jam::GFXLibrary::registerTexture("mario", t_mario);
+	Jam::GFXLibrary::registerTexture("button_play", t_buttonPlay);
 
-	//SpriteSheet: "fire_ball"
-	Jam::SpriteSheet ss;
-	ss.path = "texture/fire_ball.png";
-	ss.tilesX = 6;
-	ss.tilesY = 2;
+	//button_exit
+	Jam::Texture t_buttonExit;
+	t_buttonExit.path = "texture/gui/button_exit.png";
 
-	Jam::GFXLibrary::registerSpriteSheet("fire_ball", ss);
+	Jam::GFXLibrary::registerTexture("button_exit", t_buttonExit);
 }
