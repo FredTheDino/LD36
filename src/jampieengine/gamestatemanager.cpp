@@ -12,7 +12,6 @@ GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 
 void GameStateManager::update(double delta)
 {
-
 	if (_shouldEnterNewState)
 		_enterState();
 
