@@ -19,7 +19,7 @@ unsigned int RenderEngine::addRenderer(int priority, Renderer* renderer)
 {
 	_rendererIDCounter++;
 
-	_rendererAddQueue.push_back(std::make_pair(priority, std::make_pair(_rendererIDCounter, renderer)));
+	_renderers.insert(std::make_pair(priority, std::make_pair(_rendererIDCounter, renderer)));
 
 	return _rendererIDCounter;
 }
@@ -65,6 +65,7 @@ void RenderEngine::_load()
 
 void RenderEngine::_draw()
 {
+
 	//Should enter loading stance?
 	if (_shouldLoad) {
 		_shouldLoad = false;
@@ -72,10 +73,10 @@ void RenderEngine::_draw()
 		_accessingLoadQueues = false;
 	}
 
-	while (_rendererAddQueue.size() > 0) {
+	/*while (_rendererAddQueue.size() > 0) {
 		_renderers.insert(_rendererAddQueue.back());
 		_rendererAddQueue.pop_back();
-	}
+	}*/
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -89,6 +90,8 @@ void RenderEngine::_draw()
 	}
 
 	SDL_GL_SwapWindow(_window.getHandle());
+
+	GameStateManager::setShouldUpdate(true);
 }
 
 void RenderEngine::_createContext()

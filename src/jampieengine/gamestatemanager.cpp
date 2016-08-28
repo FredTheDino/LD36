@@ -2,6 +2,8 @@
 
 using namespace Jam;
 
+bool GameStateManager::_shouldUpdate = true;
+
 GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 	: _pie(pie)
 {
@@ -10,14 +12,19 @@ GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 
 void GameStateManager::update(double delta)
 {
+
 	if (_shouldEnterNewState)
 		_enterState();
+
+	while (!_shouldUpdate);
 
 	if (_currentState != nullptr) {
 		GameState* state = _currentState;
 		state->update(delta);
 		state->_updateRoot(delta);
 	}
+
+	_shouldUpdate = false;
 }
 
 void GameStateManager::enterState(std::string tag)

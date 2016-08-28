@@ -24,7 +24,12 @@ namespace Jam
 
 		Pie& getPie() { return _pie; };
 
+		static bool shouldUpdate() { return _shouldUpdate; };
+		static void setShouldUpdate(bool shouldUpdate) { _shouldUpdate = shouldUpdate; };
+
 	private:
+
+		static bool _shouldUpdate;
 
 		void _enterState();
 		bool _shouldEnterNewState = false;
