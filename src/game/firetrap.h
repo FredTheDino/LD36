@@ -2,14 +2,14 @@
 
 namespace Jam {
 
-	class FireTrap {
+	class FireTrap : public TrapComponent{
 	public:
-		FireTrap();
+		FireTrap(RenderEngine* engine, b2World* world, Root* root);
 		~FireTrap();
 
 		virtual void _init();
 
-		virtual void _update();
+		virtual void _update(double delta);
 
 		virtual void _end();
 
@@ -19,6 +19,7 @@ namespace Jam {
 
 	private:
 		b2World* _world;
-		RenderEngine* _engine;
+		Root* _root;
+		Entity* _flame;
 	};
 }
