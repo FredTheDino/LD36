@@ -5,7 +5,7 @@
 #include "adventurer.h"
 
 namespace Jam {
-	void fireDeathCallback(b2Contact* contact) {
+	void spikeDeathCallback(b2Contact* contact) {
 
 		Entity* bodyA = ((Box2DComponent*)contact->GetFixtureA()->GetBody()->GetUserData())->getParent();
 		Adventurer* adventurer;
@@ -45,7 +45,7 @@ namespace Jam {
 
 	  Box2DComponent* b = new Box2DComponent(_world, body, fixture);
 	  getParent()->add(b);
-	  b->setBeginContactCallback(fireDeathCallback);
+	  b->setBeginContactCallback(spikeDeathCallback);
 
 	  getParent()->get<Renderer>()->setTexture("spike_trap", 0, 0);
   }
