@@ -6,6 +6,7 @@
 #include "adventurer.h"
 #include "box2dlistener.h"
 #include "arrowtrap.h"
+#include "container.h"
 
 Jam::Box2DListener listener;
 
@@ -22,6 +23,15 @@ void Jam::TestState::update(double deta) {
 void Jam::TestState::exit() {}
 
 void Jam::TestState::_initTestStuff() {
+
+	RenderEngine::preloadSpriteSheet("spike_trap");
+	RenderEngine::preloadTexture("arrow");
+	RenderEngine::preloadTexture("arrow_trap");
+
+	RenderEngine::load();
+
+	while (RenderEngine::remainingLoadEntries() > 0) {}
+
 	Root* root = new Root();
 
 	_world = new b2World(b2Vec2(0, -9.82));
@@ -49,15 +59,17 @@ void Jam::TestState::_initTestStuff() {
 	//Trap
 	Entity* trap = new Entity();
 	trap->scale(1);
-	trap->move(3, 1);
+	trap->move(-3, 1.5);
 
 	Material spikeMaterial;
-	spikeMaterial.texture = "default";
-	spikeMaterial.baseColor.x = 0.75;
-	spikeMaterial.baseColor.z = 0.20;
+	spikeMaterial.texture = "arrow_trap";
+	/*spikeMaterial.spriteSheet = true;
+	spikeMaterial.ssOffsetX = 0;
+	spikeMaterial.ssOffsetY = 0;
+	*/
 
 	trap->add(new ArrowTrap(getRenderEngine(), _world, spikeMaterial));
-	
+	trap->rotate(-0.5 * M_PI);
 	root->addNode(0, "trap", (Node*) trap);
 
 	//The adventurer
@@ -71,6 +83,10 @@ void Jam::TestState::_initTestStuff() {
 	getRenderEngine()->getCamera()->transform.scaleT(8);
 
 	InputHandler::registerInput("fire_spike", InputBinding(3));
+
+	Container* container = new Container();
+
+	root->addNode(0, "arrowContainer", (Node*) container);
 
 	//Add root
 	addRoot("root", root);

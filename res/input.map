@@ -1,9 +1,9 @@
 ui_select:1:0:-1:0:1
 arrow_up:0:1:-1:0:1073741906
-arrow_down:0:1:-1:0:1073741905
 zoom_in:0:1:-1:0:105
+arrow_down:0:1:-1:0:1073741905
 arrow_left:0:1:-1:0:1073741904
-arrow_right:0:1:-1:0:1073741903
-zoom_out:0:1:-1:0:111
 fire_spike:1:0:-1:0:3
+zoom_out:0:1:-1:0:111
+arrow_right:0:1:-1:0:1073741903
 fire_spike:1:0:-1:0:2

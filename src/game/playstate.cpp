@@ -20,12 +20,6 @@ void PlayState::init()
 void PlayState::update(double delta)
 {
 	_level->update(delta);
-
-	if (InputHandler::keyDown("ui_select")) {
-		glm::vec2 pos = _level->toGLSpace(getRenderEngine(), InputHandler::getMousePos());
-
-		printf("X: %f\tY: %f\n", (double) pos.x, (double) pos.y);
-	}
 }
 
 void PlayState::exit()

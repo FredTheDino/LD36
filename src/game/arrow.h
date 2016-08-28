@@ -7,7 +7,7 @@ namespace Jam {
 	class Arrow: public Component {
 	public:
 		//direction should be passed in as radians
-		Arrow(RenderEngine* engine, b2World* world, Material material, float direction);
+		Arrow(RenderEngine* engine, b2World* world, float direction);
 		~Arrow();
 		
 		virtual void _init();
@@ -17,11 +17,12 @@ namespace Jam {
 		virtual void _end();
 
 	private:
-		float _speed = 50;
+		float _speed = 0.02;
 		float _direction;
+		float _time = 0;
+		float _lifeTime = 4;
 
 		b2World* _world;
 		RenderEngine* _engine;
-		Material _material;
 	};
 }

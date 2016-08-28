@@ -21,7 +21,6 @@ namespace Jam {
 
 		adventurer->die(Death::PHYSICAL);
 	}
-	
 		
 	SpikeTrap::SpikeTrap(RenderEngine* engine, b2World* world, Material material): 
 		TrapComponent(engine, material, "fire_spike" , 2.0f, 1.0f, glm::vec2(-0.5), glm::vec2(0.5)) {
@@ -47,8 +46,8 @@ namespace Jam {
 	  Box2DComponent* b = new Box2DComponent(_world, body, fixture);
 	  getParent()->add(b);
 	  b->setBeginContactCallback(fireDeathCallback);
-	
-	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(0.0, 0.8, 0.8, 1.0));
+
+	  getParent()->get<Renderer>()->setTexture("spike_trap", 0, 0);
   }
 
   void SpikeTrap::_update(double delta) {
@@ -59,17 +58,15 @@ namespace Jam {
 	  b2Filter filter;
 	  filter.maskBits = 0xFFFFFF;
 	  getParent()->get<Box2DComponent>()->fixture->SetFilterData(filter);
-	  std::cout << "FIRE!" << std::endl;
-
-	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(1.0, 0.0, 0.0, 1.0));
+	  
+	  getParent()->get<Renderer>()->setTexture("spike_trap", 1, 0);
   }
 
   void SpikeTrap::_reset() {
 	  b2Filter filter;
 	  filter.maskBits = 0x000000;
 	  getParent()->get<Box2DComponent>()->fixture->SetFilterData(filter);
-	  std::cout << "RESET!" << std::endl;
-
-	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(0.0, 0.8, 0.8, 1.0));
+	  
+	  getParent()->get<Renderer>()->setTexture("spike_trap", 0, 0);
   }
 }
