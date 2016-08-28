@@ -129,13 +129,13 @@ void Jam::Entity::setRotation(glm::vec3 newRotation) {
 glm::vec3 Jam::Entity::getRotation() {
 	Box2DComponent* c = get<Box2DComponent>();
 	if (c) {
-		return transform.rotation;
-	} else {
 		return glm::vec3(
 			transform.rotation.x,
 			transform.rotation.y,
 			c->body->GetAngle()
 			);
+	} else {
+		return transform.rotation;
 	}
 }
 
@@ -155,9 +155,9 @@ void Entity::update(double delta)
 	for (size_t i = 0; i < _components.size(); i++) {
 		_components[i]->_update(delta);
 	}
+
 	if (has<Renderer>())
 		get<Renderer>()->setShouldDraw(true);
-
 }
 
 void Entity::_rootEnter()

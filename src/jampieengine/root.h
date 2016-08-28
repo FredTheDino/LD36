@@ -39,6 +39,8 @@ namespace Jam
 
 	private:
 
+		//The trash heap
+		std::vector<std::string> _trash;
 		//A list holding all nodes
 		std::unordered_map<std::string, Node*> _nodes;
 		//A list that holds the update order of the nodes
