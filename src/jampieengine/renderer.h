@@ -39,7 +39,7 @@ namespace Jam
 		void _rootEnter();
 		void _init();
 		void _update(double delta) {};
-		void _end() {};
+		void _end() { _rootExit(); };
 		void _rootExit();
 
 		void setBaseColor(glm::vec4 color) { _material.baseColor = color; };

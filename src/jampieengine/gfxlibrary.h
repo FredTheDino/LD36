@@ -17,6 +17,7 @@ namespace Jam
 
 		//User mesh interaction
 		static void registerMesh(std::string tag, Mesh mesh) { _meshRegistry.insert(std::make_pair(tag, mesh)); };
+		static void removeMesh(std::string tag) { _meshRegistry.erase(tag); };
 		static Mesh getMesh(std::string tag) { return _meshRegistry.at(tag); };
 
 		//User shader program interaction

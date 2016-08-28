@@ -9,17 +9,23 @@ Level::Level(Jam::Root* root, RenderEngine* renderEngine, int difficulty)
 	_chunksX = 5 + difficulty * 2;
 	_chunksY = 5 + difficulty;
 
+	//World
+	_world = new b2World(b2Vec2(0, -9.82f));
+	
 	//Level background
 	Entity* terrain = new Entity();
-	terrain->add(new LevelBackground(this));
+	terrain->add(new Terrain(this));
 
 	_root->addNode(0, "terrain", (Node*) terrain);
 
 	//Level shop
 	Entity* shop = new Entity();
-	shop->add(new Shop(this));
+	shop->add(new Shop(this, (1 + difficulty) * 5));
 
 	_root->addNode(0, "shop", (Node*) shop);
+
+	//Traps
+
 
 	//Playing music
 	AudioHandler::preload("dunes", "audio/dunes.wav");
@@ -31,8 +37,9 @@ Level::Level(Jam::Root* root, RenderEngine* renderEngine, int difficulty)
 	_music->setLooping(true);
 	_music->play("dunes");
 
+
 	//Camera setup
-	_renderEngine->getCamera()->transform.setPosition(1.5f * LevelBackground::CHUNK_SIZE, -1.5f * LevelBackground::CHUNK_SIZE);
+	_renderEngine->getCamera()->transform.setPosition(1.5f * Terrain::CHUNK_SIZE, -1.5f * Terrain::CHUNK_SIZE);
 	_renderEngine->getCamera()->transform.setScale(5.0f);
 }
 
@@ -52,16 +59,23 @@ void Level::update(double delta)
 		_renderEngine->getCamera()->transform.addScale(-delta * 4);
 	if (InputHandler::keyDown("zoom_out"))
 		_renderEngine->getCamera()->transform.addScale(delta * 4);
+
+	_world->Step(delta, 8, 2);
 }
 
 void Level::buyChunk(unsigned int x, unsigned int y)
 {
-	((Entity*)_root->getNode("terrain"))->get<LevelBackground>()->buyChunk(x, y);
+	((Entity*)_root->getNode("terrain"))->get<Terrain>()->buyChunk(x, y);
 }
 
 void Level::sellChunk(unsigned int x, unsigned int y)
 {
-	((Entity*)_root->getNode("terrain"))->get<LevelBackground>()->sellChunk(x, y);
+	((Entity*)_root->getNode("terrain"))->get<Terrain>()->sellChunk(x, y);
+}
+
+void Level::complete()
+{
+	Jam::GameStateLibrary::getGameState("play")->getCurrentRoot()->deleteNode("level");
 }
 
 glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
@@ -89,4 +103,11 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	windowCoords.y += renderEngine->getCamera()->getTransform().position.y;
 
 	return windowCoords;
+}
+
+Level::~Level()
+{
+	_music->stop();
+	delete _world;
+	_world = nullptr;
 }

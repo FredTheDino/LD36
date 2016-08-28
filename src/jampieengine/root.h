@@ -5,6 +5,7 @@
 //#include "gamestate.h"
 #include "node.h"
 #include "entity.h"
+#include "renderer.h"
 
 #include <string>
 #include <map>

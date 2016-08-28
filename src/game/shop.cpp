@@ -2,7 +2,8 @@
 
 using namespace Jam;
 
-unsigned const int Shop::ITEM_COUNT = 2;
+const unsigned int Shop::ITEM_COUNT = 2;
+const unsigned int Shop::COINS_PER_BAR = 8;
 
 bool Shop::mayPlace = true;
 
@@ -10,10 +11,23 @@ Item Shop::selectedItem = ITEM_ROOM;
 
 Entity* Shop::previousButton = nullptr;
 
-Shop::Shop(Level* level)
-	: _level(level)
+Shop::Shop(Level* level, int currency)
+	: _level(level), _currency(currency)
 {
 
+	int bars = ceil(((float)currency) / COINS_PER_BAR);
+	_coinBars.resize(bars);
+
+	for (unsigned int i = 0; i < bars; i++) {
+		_coinBars[i] = new Entity();
+		_coinBars[i]->add(new GUIFader(_level->_renderEngine, 100, 1, 1, "coins_on", "coins_off", "coins_map"));
+		_coinBars[i]->scale(140, 22);
+		_coinBars[i]->transform.translate((float)-92, ((float)-22) * i - 32);
+
+		_level->_root->addNode(0, std::to_string(i) + "_cb", (Node*) _coinBars[i]);
+	}
+
+	_updateCoinBars();
 }
 
 void Shop::_init()
@@ -55,15 +69,61 @@ void Shop::_update(double delta)
 		
 		glm::vec2 pos = Level::toGLSpace(_level->_renderEngine, InputHandler::getMousePos());
 
-		if (pos.x < 0 || pos.x > _level->_chunksX * LevelBackground::CHUNK_SIZE ||
-			-pos.y < 0 || -pos.y > _level->_chunksY * LevelBackground::CHUNK_SIZE || !mayPlace) {
+		if (pos.x < 0 || pos.x > _level->_chunksX * Terrain::CHUNK_SIZE ||
+			-pos.y < 0 || -pos.y > _level->_chunksY * Terrain::CHUNK_SIZE || !mayPlace) {
 			return;
 		}
+
 		switch (selectedItem) {
 		case ITEM_ROOM:
-			_level->buyChunk(floor(pos.x / LevelBackground::CHUNK_SIZE), floor((-pos.y) / LevelBackground::CHUNK_SIZE));
+			int x = floor(pos.x / Terrain::CHUNK_SIZE);
+			int y = floor((-pos.y) / Terrain::CHUNK_SIZE);
+			Chunk c = ((Entity*)_level->_root->getNode("terrain"))->get<Terrain>()->getChunk(x, y);
+			if (c.type == CHUNK_TYPE_SOLID) {
+				if (!_buy())
+					break;
+				_level->buyChunk(x, y);
+			}
+			else if (c.type == CHUNK_TYPE_NORMAL) {
+				if (!_sell())
+					break;
+				_level->sellChunk(x, y);
+			}
+
+			//std::cout << "Gold: " << _currency << std::endl;
 			break;
 		}
+	}
+}
+
+bool Shop::_buy()
+{
+	if (_currency == 0)
+		return false;
+
+	_currency--;
+
+	_updateCoinBars();
+
+	return true;
+}
+
+bool Shop::_sell()
+{
+	_currency++;
+
+	_updateCoinBars();
+
+	return true;
+}
+
+void Shop::_updateCoinBars()
+{
+	int bar = floor(_currency / COINS_PER_BAR);
+	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)_currency) * 31.0f) / 255.0f);
+
+	for (int i = bar + 1; i < _coinBars.size(); i++) {
+		_coinBars[bar]->get<GUIFader>()->setValue(0.0f);
 	}
 }
 

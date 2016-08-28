@@ -1,27 +1,27 @@
-#include "levelbackground.h"
+#include "terrain.h"
 
 using namespace Jam;
 
-const unsigned int LevelBackground::CHUNK_SIZE = 3;
+const unsigned int Terrain::CHUNK_SIZE = 3;
 
-LevelBackground::LevelBackground(Level* level)
+Terrain::Terrain(Level* level)
 	: _level(level)
 {
 	
 }
 
-void LevelBackground::_init()
+void Terrain::_init()
 {
 	_generateChunks();
 	_generateMesh();
 }
 
-void LevelBackground::_update(double delta)
+void Terrain::_update(double delta)
 {
 	
 }
 
-void LevelBackground::buyChunk(unsigned int x, unsigned int y)
+void Terrain::buyChunk(unsigned int x, unsigned int y)
 {
 	Chunk& c = _getChunk(x, y);
 
@@ -29,6 +29,9 @@ void LevelBackground::buyChunk(unsigned int x, unsigned int y)
 		sellChunk(x, y);
 		return;
 	}
+
+	if (c.type != CHUNK_TYPE_SOLID)
+		return;
 
 	for (unsigned int i = 0; i < c.tiles.size(); i++) {
 		switch (c.tiles[i].terrainOffset) {
@@ -41,10 +44,12 @@ void LevelBackground::buyChunk(unsigned int x, unsigned int y)
 
 	c.type = CHUNK_TYPE_NORMAL;
 
+	_level->_world->DestroyBody(c.body);
+
 	updateChunk(x, y);
 }
 
-void LevelBackground::sellChunk(unsigned int x, unsigned int y)
+void Terrain::sellChunk(unsigned int x, unsigned int y)
 {
 	Chunk& c = _getChunk(x, y);
 
@@ -52,6 +57,9 @@ void LevelBackground::sellChunk(unsigned int x, unsigned int y)
 		buyChunk(x, y);
 		return;
 	}
+
+	if (c.type != CHUNK_TYPE_NORMAL)
+		return;
 
 	for (unsigned int i = 0; i < c.tiles.size(); i++) {
 		switch (c.tiles[i].terrainOffset) {
@@ -64,10 +72,12 @@ void LevelBackground::sellChunk(unsigned int x, unsigned int y)
 
 	c.type = CHUNK_TYPE_SOLID;
 
+	_generateChunkBody(c);
+
 	updateChunk(x, y);
 }
 
-void LevelBackground::updateChunk(unsigned int x, unsigned int y)
+void Terrain::updateChunk(unsigned int x, unsigned int y)
 {
 	std::vector<Vertex*> vertices(CHUNK_SIZE * CHUNK_SIZE * 4);
 
@@ -78,7 +88,7 @@ void LevelBackground::updateChunk(unsigned int x, unsigned int y)
 	RenderEngine::load();
 }
 
-void LevelBackground::_generateChunks()
+void Terrain::_generateChunks()
 {
 	_chunks.resize(_level->_chunksX * _level->_chunksY);
 
@@ -89,6 +99,8 @@ void LevelBackground::_generateChunks()
 		c.y = floor(i / _level->_chunksX);
 
 		c.type = CHUNK_TYPE_SOLID;
+
+		_generateChunkBody(c);
 
 		std::vector<Tile> tiles(CHUNK_SIZE * CHUNK_SIZE);
 
@@ -151,7 +163,7 @@ void LevelBackground::_generateChunks()
 	}
 }
 
-void LevelBackground::_generateMesh()
+void Terrain::_generateMesh()
 {
 	Mesh mesh;
 	
@@ -184,7 +196,7 @@ void LevelBackground::_generateMesh()
 	//getParent()->transform.translate(- _level->_chunksX / 2, 1);
 }
 
-void LevelBackground::_generateChunkMesh(Chunk chunk, Vertex2D** vertices, unsigned int* indices)
+void Terrain::_generateChunkMesh(Chunk chunk, Vertex2D** vertices, unsigned int* indices)
 {
 	for (unsigned int i = 0; i < chunk.tiles.size(); i++) {
 
@@ -211,7 +223,7 @@ void LevelBackground::_generateChunkMesh(Chunk chunk, Vertex2D** vertices, unsig
 	}
 }
 
-float* LevelBackground::_generateTexCoords(unsigned int offset)
+float* Terrain::_generateTexCoords(unsigned int offset)
 {	
 	int tilesX = 12;
 	int tilesY = 3;
@@ -233,7 +245,30 @@ float* LevelBackground::_generateTexCoords(unsigned int offset)
 	return coords;
 }
 
-Chunk& LevelBackground::_getChunk(unsigned int x, unsigned int y)
+void Terrain::_generateChunkBody(Chunk& c)
+{
+	b2BodyDef bodyDef;
+
+	bodyDef.type = b2BodyType::b2_staticBody;
+	bodyDef.position = b2Vec2(((float)CHUNK_SIZE) * (((float)c.x) + .5f), ((float)CHUNK_SIZE) * (((float)c.y) + .5f));
+
+	b2PolygonShape shape;
+	shape.SetAsBox(((float)CHUNK_SIZE) / 2, ((float)CHUNK_SIZE) / 2);
+
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+
+	c.body = _level->_world->CreateBody(&bodyDef);
+
+	c.body->CreateFixture(&fixture);
+}
+
+Chunk Terrain::getChunk(unsigned int x, unsigned int y)
+{
+	return _getChunk(x, y);
+}
+
+Chunk& Terrain::_getChunk(unsigned int x, unsigned int y)
 {
 	return _chunks[x + y * _level->_chunksX];
 }

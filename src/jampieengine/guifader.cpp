@@ -26,7 +26,7 @@ void Jam::GUIFader::draw() {
 	if (!isActive())
 		return;
 
-	while (!_shouldDraw && !RenderEngine::shouldLoad());
+	while (!_shouldDraw && !RenderEngine::shouldLoad() && !RenderEngine::shouldCancelRendering());
 
 	switch (GRAPHICS_TYPE) {
 		case GRAPHICS_TYPE_OPENGL:

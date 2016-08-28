@@ -2,6 +2,11 @@
 
 using namespace Jam;
 
+bool RenderEngine::_shouldRender = true;
+bool RenderEngine::_cancelRendering = false;
+
+bool RenderEngine::avoidConflicts = false;
+
 //Static instantiation
 bool RenderEngine::_shouldLoad;
 bool RenderEngine::_accessingLoadQueues;
@@ -65,23 +70,24 @@ void RenderEngine::_load()
 
 void RenderEngine::_draw()
 {
+	/*while (_rendererAddQueue.size() > 0) {
+		_renderers.insert(_rendererAddQueue.back());
+		_rendererAddQueue.pop_back();
+	}*/
 
-	//Should enter loading stance?
 	if (_shouldLoad) {
 		_shouldLoad = false;
 		_load();
 		_accessingLoadQueues = false;
 	}
 
-	/*while (_rendererAddQueue.size() > 0) {
-		_renderers.insert(_rendererAddQueue.back());
-		_rendererAddQueue.pop_back();
-	}*/
-
 	GameStateManager::setShouldUpdate(true);
-	while (GameStateManager::shouldUpdate()) {
-		if (_shouldLoad)
-			return;
+	while (!_shouldRender && Pie::isCooking()) {
+		if (_shouldLoad) {
+			_shouldLoad = false;
+			_load();
+			_accessingLoadQueues = false;
+		}
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -91,11 +97,24 @@ void RenderEngine::_draw()
 
 		if (_cancelRendering) {
 			_cancelRendering = false;
-			break;
+			return;
 		}
 	}
 
 	SDL_GL_SwapWindow(_window.getHandle());
+
+	while (avoidConflicts) {
+		int i = 0;
+	}
+
+	_shouldRender = false;
+	while (GameStateManager::shouldUpdate() && Pie::isCooking()) {
+		if (_shouldLoad) {
+			_shouldLoad = false;
+			_load();
+			_accessingLoadQueues = false;
+		}
+	}
 }
 
 void RenderEngine::_createContext()

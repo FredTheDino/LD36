@@ -48,7 +48,7 @@ namespace Jam
 		void bake();
 
 		//Returns true if the engine is running
-		bool isCooking() { return _cooking; };
+		static bool isCooking() { return _cooking; };
 
 		//Called to stop engine
 		void eat() { _cooking = false; };
@@ -60,7 +60,7 @@ namespace Jam
 	private:
 
 		//True if the engine is running
-		bool _cooking = false;
+		static bool _cooking;
 
 		//User information saved
 		Flavor& _flavor;
