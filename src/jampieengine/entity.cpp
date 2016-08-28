@@ -155,9 +155,9 @@ void Entity::update(double delta)
 	for (size_t i = 0; i < _components.size(); i++) {
 		_components[i]->_update(delta);
 	}
+
 	if (has<Renderer>())
 		get<Renderer>()->setShouldDraw(true);
-
 }
 
 void Entity::_rootEnter()

@@ -32,7 +32,7 @@ void Jam::Arrow::_init() {
 void Jam::Arrow::_update(double delta) {
 	if (!getParent()->get<Box2DComponent>()->body->IsAwake()) {
 		printf("Delete entity!");
-		GameStateLibrary::getGameState("test")->getRoot("root")->deleteNode("arrow");
+		//GameStateLibrary::getGameState("test")->getRoot("root")->deleteNode("arrow");
 	}
 }
 
