@@ -25,7 +25,7 @@ Jam::Renderer::Renderer(RenderEngine * renderEngine, int priority, std::string m
 
 void Renderer::_rootEnter()
 {
-	_associationID = _renderEngine->addRenderer(_priority, this);
+	
 }
 
 void Renderer::_init()
@@ -35,6 +35,8 @@ void Renderer::_init()
 		_glRenderer = new GLRenderer(*this, _mesh, _shaderProgram, _material);
 		break;
 	}
+
+	_associationID = _renderEngine->addRenderer(_priority, this);
 }
 
 void Renderer::_rootExit()
@@ -48,7 +50,7 @@ void Renderer::draw()
 	if (!isActive())
 		return;
 
-	while (!_shouldDraw && !RenderEngine::shouldLoad());
+	while (!_shouldDraw && !RenderEngine::shouldLoad() && !RenderEngine::shouldCancelRendering() && !GameStateManager::shouldUpdate());
 
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:

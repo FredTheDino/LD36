@@ -2,6 +2,8 @@
 
 using namespace Jam;
 
+bool Pie::_cooking = false;
+
 Pie::Pie(Flavor& flavor)
 	: _flavor(flavor)
 {

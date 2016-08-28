@@ -247,10 +247,10 @@ float* Terrain::_generateTexCoords(unsigned int offset)
 
 void Terrain::_generateChunkBody(Chunk& c)
 {
-	b2BodyDef* bodyDef = new b2BodyDef();
+	b2BodyDef bodyDef;
 
-	bodyDef->type = b2BodyType::b2_staticBody;
-	bodyDef->position = b2Vec2(((float)CHUNK_SIZE) * (((float)c.x) + .5f), ((float)CHUNK_SIZE) * (((float)c.y) + .5f));
+	bodyDef.type = b2BodyType::b2_staticBody;
+	bodyDef.position = b2Vec2(((float)CHUNK_SIZE) * (((float)c.x) + .5f), ((float)CHUNK_SIZE) * (((float)c.y) + .5f));
 
 	b2PolygonShape shape;
 	shape.SetAsBox(((float)CHUNK_SIZE) / 2, ((float)CHUNK_SIZE) / 2);
@@ -258,7 +258,9 @@ void Terrain::_generateChunkBody(Chunk& c)
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 
-	c.body = _level->_world->CreateBody(bodyDef);
+	c.body = _level->_world->CreateBody(&bodyDef);
+
+	c.body->CreateFixture(&fixture);
 }
 
 Chunk Terrain::getChunk(unsigned int x, unsigned int y)

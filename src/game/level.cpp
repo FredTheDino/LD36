@@ -106,4 +106,5 @@ Level::~Level()
 {
 	_music->stop();
 	delete _world;
+	_world = nullptr;
 }
