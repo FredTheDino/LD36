@@ -141,7 +141,7 @@ namespace Jam
 		static std::vector<LoadEntry> _loadQueue;
 
 		//Render add queue
-		std::vector<std::pair<int, std::pair<unsigned int, Renderer*>>> _rendererAddQueue;
+		//std::vector<std::pair<int, std::pair<unsigned int, Renderer*>>> _rendererAddQueue;
 
 		//Objects to render each frame
 		std::multimap<int, std::pair<unsigned int, Renderer*>, std::less<int>> _renderers;

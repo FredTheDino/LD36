@@ -30,6 +30,10 @@ Level::Level(Jam::Root* root, RenderEngine* renderEngine, int difficulty)
 	_music->setGain(0.1f);
 	_music->setLooping(true);
 	_music->play("dunes");
+
+	//Camera setup
+	_renderEngine->getCamera()->transform.setPosition(1.5f * LevelBackground::CHUNK_SIZE, -1.5f * LevelBackground::CHUNK_SIZE);
+	_renderEngine->getCamera()->transform.setScale(5.0f);
 }
 
 

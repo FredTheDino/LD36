@@ -149,8 +149,8 @@ Transform Jam::Entity::getTransform() {
 
 void Entity::update(double delta)
 {
-	if (has<Renderer>())
-		while (get<Renderer>()->shouldDraw());
+	/*if (has<Renderer>())
+		while (get<Renderer>()->shouldDraw());*/
 
 	for (size_t i = 0; i < _components.size(); i++) {
 		_components[i]->_update(delta);
