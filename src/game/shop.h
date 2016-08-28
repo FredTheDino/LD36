@@ -18,7 +18,7 @@ enum Item {
 class Shop : public Jam::Component
 {
 public:
-	Shop(Level* level);
+	Shop(Level* level, int currency);
 
 	void _rootEnter() {};
 	void _init();
@@ -27,6 +27,7 @@ public:
 	void _rootExit() {};
 
 	static const unsigned int ITEM_COUNT;
+	static const unsigned int COINS_PER_BAR;
 
 	static bool mayPlace;
 
@@ -38,6 +39,14 @@ private:
 
 	Level* _level;
 
+	std::vector<Jam::Entity*> _coinBars;
+
+	int _currency;
+
+	bool _buy();
+	bool _sell();
+
+	void _updateCoinBars();
 };
 	/* Callbacks */
 

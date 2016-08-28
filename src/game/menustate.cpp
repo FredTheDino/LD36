@@ -4,6 +4,8 @@ using namespace Jam;
 
 void MenuState::init()
 {
+	//SDL_SetWindowFullscreen(getRenderEngine()->getWindow().getHandle(), SDL_WINDOW_FULLSCREEN);
+
 	_loadContent();
 
 	_initMainMenu();

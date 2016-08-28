@@ -14,6 +14,8 @@ public:
 
 private:
 
+	unsigned int _difficulty = 0;
+
 	Level* _level;
 
 	void _loadContent();

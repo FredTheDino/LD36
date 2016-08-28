@@ -14,11 +14,19 @@ void PlayState::init()
 
 	_initLevel();
 
+	Jam::InputHandler::registerInput("switch", Jam::InputBinding(true, SDLK_k));
+
 	enterRoot("game");
 }
 
 void PlayState::update(double delta)
 {
+	if (Jam::InputHandler::keyPressed("switch")) {
+		_level->complete();
+		delete _level;
+		_initLevel();
+	}
+
 	_level->update(delta);
 }
 
@@ -35,7 +43,7 @@ void PlayState::_initLevel()
 	getRoot("game")->addNode(0, "level", r_level);
 
 	//Level
-	_level = new Level(r_level, getRenderEngine(), 0);
+	_level = new Level(r_level, getRenderEngine(), _difficulty++);
 
 }
 
@@ -43,6 +51,11 @@ void PlayState::_loadContent()
 {
 	//Terrain
 	RenderEngine::preloadTexture("terrain");
+
+	//Coins
+	RenderEngine::preloadTexture("coins_on");
+	RenderEngine::preloadTexture("coins_off");
+	RenderEngine::preloadTexture("coins_map");
 
 
 	//Load

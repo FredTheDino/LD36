@@ -25,8 +25,8 @@ int main(int c, char** args) {
 #endif
 
 	Jam::Flavor flavor;
-	flavor.w_width = 800;
-	flavor.w_height = 600;
+	flavor.w_width = 1280;
+	flavor.w_height = 720;
 
 	flavor.title = "LD36";
 	flavor.enterState = "menu";
@@ -79,6 +79,25 @@ void registerTextures()
 		Jam::GFXLibrary::registerTexture(id + "_off", t_icon_off);
 		Jam::GFXLibrary::registerTexture(id + "_on", t_icon_on);
 	}
+
+	//coins_on
+	Jam::Texture t_coins_on;
+	t_coins_on.path = "texture/gui/shop/coins_on.png";
+
+	Jam::GFXLibrary::registerTexture("coins_on", t_coins_on);
+
+	//coins_off
+	Jam::Texture t_coins_off;
+	t_coins_off.path = "texture/gui/shop/coins_off.png";
+
+	Jam::GFXLibrary::registerTexture("coins_off", t_coins_off);
+	
+	
+	//coins_map
+	Jam::Texture t_coins_map;
+	t_coins_map.path = "texture/gui/shop/coins_map.png";
+
+	Jam::GFXLibrary::registerTexture("coins_map", t_coins_map);
 }
 
 void registerSpriteSheets()
