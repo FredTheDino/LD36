@@ -55,6 +55,24 @@ GLMesh::GLMesh(Mesh mesh)
 	glBindVertexArray(0);
 }
 
+void GLMesh::modifyData(unsigned int offset, std::vector<Vertex*> vertices)
+{
+	Vertex* vert = vertices[0];
+
+	for (unsigned int i = 0; i < vert->numAttributes(); i++) {
+		glBindBuffer(GL_ARRAY_BUFFER, _vboList[i]);
+
+		std::vector<char> data(vertices.size() * vert->getAttributeSize(i));
+		for (unsigned int j = 0; j < vertices.size(); j++) {
+			vertices[j]->getAttributeData(i, &data[j * vert->getAttributeSize(i)]);
+		}
+
+		glBufferSubData(GL_ARRAY_BUFFER, offset * vert->getAttributeSize(i), data.size(), data.data());
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void GLMesh::draw()
 {
 	glBindVertexArray(_vao);

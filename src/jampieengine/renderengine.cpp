@@ -19,7 +19,7 @@ unsigned int RenderEngine::addRenderer(int priority, Renderer* renderer)
 {
 	_rendererIDCounter++;
 
-	_renderers.insert(std::make_pair(priority, std::make_pair(_rendererIDCounter, renderer)));
+	_rendererAddQueue.push_back(std::make_pair(priority, std::make_pair(_rendererIDCounter, renderer)));
 
 	return _rendererIDCounter;
 }
@@ -45,14 +45,17 @@ void RenderEngine::_load()
 		while (_loadQueue.size() > 0) {
 			LoadEntry le = _loadQueue.back();
 
-
-			switch (le.loadType) {
-			case LOAD_TYPE_MESH: le.load ? GLLibrary::_loadMesh(le.tag) : GLLibrary::_unloadMesh(le.tag); break;
-			case LOAD_TYPE_SHADER_PROGRAM: le.load ? GLLibrary::_loadShaderProgram(le.tag) : GLLibrary::_unloadShaderProgram(le.tag); break;
-			case LOAD_TYPE_TEXTURE: le.load ? GLLibrary::_loadTexture(le.tag) : GLLibrary::_unloadTexture(le.tag); break;
-			case LOAD_TYPE_SPRITE_SHEET: le.load ? GLLibrary::_loadSpriteSheet(le.tag) : GLLibrary::_unloadSpriteSheet(le.tag); break;
+			if (le.modify) {
+				GLLibrary::getMesh(le.tag)->modifyData(le.offset, le.vertices);
 			}
-
+			else {
+				switch (le.loadType) {
+				case LOAD_TYPE_MESH: le.load ? GLLibrary::_loadMesh(le.tag) : GLLibrary::_unloadMesh(le.tag); break;
+				case LOAD_TYPE_SHADER_PROGRAM: le.load ? GLLibrary::_loadShaderProgram(le.tag) : GLLibrary::_unloadShaderProgram(le.tag); break;
+				case LOAD_TYPE_TEXTURE: le.load ? GLLibrary::_loadTexture(le.tag) : GLLibrary::_unloadTexture(le.tag); break;
+				case LOAD_TYPE_SPRITE_SHEET: le.load ? GLLibrary::_loadSpriteSheet(le.tag) : GLLibrary::_unloadSpriteSheet(le.tag); break;
+				}
+			}
 			_loadQueue.pop_back();
 		}
 
@@ -67,6 +70,11 @@ void RenderEngine::_draw()
 		_shouldLoad = false;
 		_load();
 		_accessingLoadQueues = false;
+	}
+
+	while (_rendererAddQueue.size() > 0) {
+		_renderers.insert(_rendererAddQueue.back());
+		_rendererAddQueue.pop_back();
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT);

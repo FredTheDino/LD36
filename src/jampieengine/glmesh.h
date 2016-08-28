@@ -16,6 +16,8 @@ namespace Jam
 
 		void draw();
 
+		void modifyData(unsigned int offset, std::vector<Vertex*> vertices);
+
 	private:
 
 		bool _usingIndices;
