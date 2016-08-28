@@ -35,9 +35,10 @@ namespace Jam {
 
 		std::string _trigger = "";
 
+		Jam::RenderEngine* _engine = nullptr;
+
 	private:
 		Jam::Material _material;
 		glm::vec2 _min, _max;
-		Jam::RenderEngine* _engine = nullptr;
 	};
 }

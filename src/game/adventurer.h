@@ -1,5 +1,6 @@
 #pragma once
 #include "component.h"
+#include "renderengine.h"
 
 namespace Jam {
 
@@ -11,14 +12,22 @@ namespace Jam {
 	class Adventurer : public Component {
 
 	public:
-		Adventurer() {};
-		~Adventurer() {};
+		Adventurer(RenderEngine* engine, b2World* world);
+		~Adventurer();
+
+		virtual void _init();
+
+		virtual void _update(double delta);
+
+		virtual void _end();
 
 		bool isAlive() { return _alive; }
 
-		void die(Death death) {};
+		void die(Death death);
 
 	private:
+		b2World* _world = nullptr;
+		RenderEngine* _engine = nullptr;
 
 		bool _alive = false;
 

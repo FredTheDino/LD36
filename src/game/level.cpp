@@ -39,9 +39,12 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	renderEngine->getWindow().getSize(&w, &h);
 
 	//X
+	/* Jag kunde inte motstå
 	windowCoords.x /= w;
 	windowCoords.x *= ((float)w) / h * 2;
 	windowCoords.x -= ((float)w) / h;
+	*/
+	windowCoords.x = windowCoords.x / h * 2 - ((float) w) / h;
 	windowCoords.x *= renderEngine->getCamera()->getTransform().scale.x;
 
 	windowCoords.x += renderEngine->getCamera()->getTransform().position.x;

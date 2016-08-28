@@ -31,6 +31,8 @@ namespace Jam {
   SpikeTrap::~SpikeTrap() {}
 
   void SpikeTrap::_init() {
+	  TrapComponent::_init();
+
 	  b2BodyDef body;
 	  body.type = b2BodyType::b2_staticBody;
 
@@ -40,10 +42,13 @@ namespace Jam {
 	  b2FixtureDef fixture;
 	  fixture.isSensor = true;
 	  fixture.shape = &shape;
+	  fixture.filter.maskBits = 0x000000;
 
 	  Box2DComponent* b = new Box2DComponent(_world, body, fixture);
 	  getParent()->add(b);
 	  b->setBeginContactCallback(fireDeathCallback);
+	
+	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(0.0, 0.8, 0.8, 1.0));
   }
 
   void SpikeTrap::_update(double delta) {
@@ -54,11 +59,17 @@ namespace Jam {
 	  b2Filter filter;
 	  filter.maskBits = 0xFFFFFF;
 	  getParent()->get<Box2DComponent>()->fixture->SetFilterData(filter);
+	  std::cout << "FIRE!" << std::endl;
+
+	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(1.0, 0.0, 0.0, 1.0));
   }
 
   void SpikeTrap::_reset() {
 	  b2Filter filter;
 	  filter.maskBits = 0x000000;
 	  getParent()->get<Box2DComponent>()->fixture->SetFilterData(filter);
+	  std::cout << "RESET!" << std::endl;
+
+	  getParent()->get<Renderer>()->setBaseColor(glm::vec4(0.0, 0.8, 0.8, 1.0));
   }
 }

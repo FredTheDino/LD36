@@ -11,6 +11,7 @@ TrapComponent::TrapComponent(Jam::RenderEngine* engine, Jam::Material material, 
 	_engine = engine;
 	_coolDown = coolDown;
 	_fireTime = fireTime;
+	_t = _fireTime;
 	_material = material;
 	_trigger = trigger;
 	_min = min;
@@ -25,11 +26,7 @@ void TrapComponent::_init() {
 
 void TrapComponent::_update(double delta) {
 	/*
-	FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
-	THIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-	*/
-	/*
-	if (Jam::InputHandler::keyPressed("ui_select")) {
+	if (Jam::InputHandler::keyPressed("fire_spike")) {
 		std::cout << "CLICK!" << std::endl;
 
 		int w, h;
@@ -42,10 +39,13 @@ void TrapComponent::_update(double delta) {
 		mouse.x = (mousePos.x / w - 0.5) * 2;
 		mouse.y = (mousePos.y / h - 0.5) * 2;
 
-		Jam::Transform t = getParent()->getTransform();
-		mouse = mouse * t.getMatrix();
+		//Jam::Transform t = getParent()->getTransform();
+		//mouse = mouse * t.getMatrix();
 		mouse = mouse * _engine->getCamera()->orthographic(-1 * (float) h / (float) w, 1 * (float) h / (float) w, -1, 1);
 		//mouse = mouse + glm::vec4(-_engine->getCamera()->transform.position.x + t.position.x, _engine->getCamera()->transform.position.y - t.position.y, 0.0, 0.0);
+		
+		
+
 		if (_min.x < mouse.x && _min.y < mouse.y) {
 			if (mouse.x < _max.x && mouse.y < _max.y) {
 				_fire();
@@ -53,7 +53,6 @@ void TrapComponent::_update(double delta) {
 		}
 	}
 	*/
-
 	_t += delta;
 	if (_isFireing) {
 		if (_fireTime <= _t) {

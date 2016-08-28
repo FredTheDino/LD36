@@ -129,13 +129,13 @@ void Jam::Entity::setRotation(glm::vec3 newRotation) {
 glm::vec3 Jam::Entity::getRotation() {
 	Box2DComponent* c = get<Box2DComponent>();
 	if (c) {
-		return transform.rotation;
-	} else {
 		return glm::vec3(
 			transform.rotation.x,
 			transform.rotation.y,
 			c->body->GetAngle()
 			);
+	} else {
+		return transform.rotation;
 	}
 }
 
