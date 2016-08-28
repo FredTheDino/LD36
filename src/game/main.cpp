@@ -16,7 +16,7 @@ int main(int c, char** args) {
 	Jam::GameStateLibrary::registerGameState("menu", (Jam::GameState*) new MenuState());
 	Jam::GameStateLibrary::registerGameState("play", (Jam::GameState*) new PlayState());
 
-	//Jam::Time::setFPS(60);
+	Jam::Time::setFPS(0);
 
 #ifdef WIN32
 	Jam::Loader::prefix = "../../res/";

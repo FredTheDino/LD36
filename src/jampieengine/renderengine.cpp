@@ -78,6 +78,12 @@ void RenderEngine::_draw()
 		_rendererAddQueue.pop_back();
 	}*/
 
+	GameStateManager::setShouldUpdate(true);
+	while (GameStateManager::shouldUpdate()) {
+		if (_shouldLoad)
+			return;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (const std::pair<int, std::pair<unsigned int, Renderer*>> renderer : _renderers) {
@@ -90,8 +96,6 @@ void RenderEngine::_draw()
 	}
 
 	SDL_GL_SwapWindow(_window.getHandle());
-
-	GameStateManager::setShouldUpdate(true);
 }
 
 void RenderEngine::_createContext()

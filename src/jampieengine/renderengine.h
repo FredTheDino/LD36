@@ -82,8 +82,11 @@ namespace Jam
 
 		//If called by any thread, the render loop will break
 		void cancelRendering() { _cancelRendering = true; };
+		
+		static bool shouldLoad() { return _shouldLoad; };
 
 		const GraphicsCoreType GRAPHICS_TYPE;
+
 
 	private:
 

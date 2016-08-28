@@ -48,7 +48,7 @@ void Renderer::draw()
 	if (!isActive())
 		return;
 
-	while (!_shouldDraw);
+	while (!_shouldDraw && !RenderEngine::shouldLoad());
 
 	switch (GRAPHICS_TYPE) {
 	case GRAPHICS_TYPE_OPENGL:
