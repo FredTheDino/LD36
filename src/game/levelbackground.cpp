@@ -16,6 +16,68 @@ void LevelBackground::_init()
 	_generateMesh();
 }
 
+void LevelBackground::_update(double delta)
+{
+	
+}
+
+void LevelBackground::buyChunk(unsigned int x, unsigned int y)
+{
+	Chunk& c = _getChunk(x, y);
+
+	if (c.type == CHUNK_TYPE_NORMAL) {
+		sellChunk(x, y);
+		return;
+	}
+
+	for (unsigned int i = 0; i < c.tiles.size(); i++) {
+		switch (c.tiles[i].terrainOffset) {
+		case 0: c.tiles[i].terrainOffset = 12; break;
+		case 3: c.tiles[i].terrainOffset = 15; break;
+		case 5: c.tiles[i].terrainOffset = 14; break;
+		case 7: c.tiles[i].terrainOffset = 13; break;
+		}
+	}
+
+	c.type = CHUNK_TYPE_NORMAL;
+
+	updateChunk(x, y);
+}
+
+void LevelBackground::sellChunk(unsigned int x, unsigned int y)
+{
+	Chunk& c = _getChunk(x, y);
+
+	if (c.type == CHUNK_TYPE_SOLID) {
+		buyChunk(x, y);
+		return;
+	}
+
+	for (unsigned int i = 0; i < c.tiles.size(); i++) {
+		switch (c.tiles[i].terrainOffset) {
+		case 12: c.tiles[i].terrainOffset = 0; break;
+		case 15: c.tiles[i].terrainOffset = 3; break;
+		case 14: c.tiles[i].terrainOffset = 5; break;
+		case 13: c.tiles[i].terrainOffset = 7; break;
+		}
+	}
+
+	c.type = CHUNK_TYPE_SOLID;
+
+	updateChunk(x, y);
+}
+
+void LevelBackground::updateChunk(unsigned int x, unsigned int y)
+{
+	std::vector<Vertex*> vertices(CHUNK_SIZE * CHUNK_SIZE * 4);
+
+	_generateChunkMesh(_getChunk(x, y), (Vertex2D**) vertices.data(), nullptr);
+
+	RenderEngine::modifyMesh("level_terrain", vertices, (x + y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE * 4);
+
+	RenderEngine::load();
+}
+
 void LevelBackground::_generateChunks()
 {
 	_chunks.resize(_level->_chunksX * _level->_chunksY);
@@ -56,7 +118,7 @@ void LevelBackground::_generateChunks()
 
 	//Decorate spawn
 	Chunk& c_spawn = _getChunk(1, 1);
-	c_spawn.type = CHUNK_TYPE_SOLID;
+	c_spawn.type = CHUNK_TYPE_SPAWN;
 
 	for (unsigned int i = 0; i < c_spawn.tiles.size(); i++) {
 		srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -136,13 +198,15 @@ void LevelBackground::_generateChunkMesh(Chunk chunk, Vertex2D** vertices, unsig
 
 		vertices[i * 4 + 3] = new Vertex2D(chunk.tiles[i].x, -((float)chunk.tiles[i].y) - 1, texCoords[6], texCoords[7]);
 		
-		indices[i * 6 + 0] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 0;
-		indices[i * 6 + 1] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 1;
-		indices[i * 6 + 2] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 3;
-		indices[i * 6 + 3] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 3;
-		indices[i * 6 + 4] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 1;
-		indices[i * 6 + 5] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 2;
-		
+		if (indices != nullptr) {
+			indices[i * 6 + 0] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 0;
+			indices[i * 6 + 1] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 1;
+			indices[i * 6 + 2] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 3;
+			indices[i * 6 + 3] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 3;
+			indices[i * 6 + 4] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 1;
+			indices[i * 6 + 5] = ((chunk.x + chunk.y * _level->_chunksX) * CHUNK_SIZE * CHUNK_SIZE + i) * 4 + 2;
+		}
+
 		free(texCoords);
 	}
 }
