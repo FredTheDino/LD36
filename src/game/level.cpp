@@ -20,9 +20,12 @@ Level::Level(Jam::Root* root, RenderEngine* renderEngine, int difficulty)
 
 	//Level shop
 	Entity* shop = new Entity();
-	shop->add(new Shop(this, 4 + difficulty * 2));
+	shop->add(new Shop(this, (1 + difficulty) * 5));
 
 	_root->addNode(0, "shop", (Node*) shop);
+
+	//Traps
+
 
 	//Playing music
 	AudioHandler::preload("dunes", "audio/dunes.wav");

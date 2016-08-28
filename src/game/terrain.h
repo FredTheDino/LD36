@@ -25,6 +25,7 @@ struct Tile {
 	unsigned int x;
 	unsigned int y;
 	unsigned int terrainOffset = 0;
+	bool solid;
 };
 
 struct Chunk {

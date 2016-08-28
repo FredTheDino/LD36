@@ -90,7 +90,7 @@ void Shop::_update(double delta)
 				_level->sellChunk(x, y);
 			}
 
-			std::cout << "Gold: " << _currency << std::endl;
+			//std::cout << "Gold: " << _currency << std::endl;
 			break;
 		}
 	}
@@ -123,7 +123,7 @@ void Shop::_updateCoinBars()
 	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)_currency) * 31.0f) / 255.0f);
 
 	for (int i = bar + 1; i < _coinBars.size(); i++) {
-		_coinBars[bar]->get<GUIFader>()->setValue(255.0f);
+		_coinBars[bar]->get<GUIFader>()->setValue(0.0f);
 	}
 }
 
