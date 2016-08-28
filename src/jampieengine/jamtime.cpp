@@ -161,7 +161,7 @@ void Time::wait() {
 	_accessingNextFrame = false;
 	
 	//Decrease it a bit, to make sure we don't over sleep
-	timeToSleep -= std::chrono::nanoseconds(1000000);
+	timeToSleep -= std::chrono::nanoseconds(2000000);
 
 	//Sleep if you have the time to spare
 	if (0.0 < timeToSleep.count()) {

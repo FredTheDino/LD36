@@ -1,6 +1,10 @@
 #include "menustate.h"
 
+#include "trapcomponent.h"
+
 using namespace Jam;
+
+static bool enterState = false;
 
 void MenuState::init()
 {
@@ -15,7 +19,7 @@ void MenuState::init()
 
 void MenuState::update(double delta)
 {
-	
+
 }
 
 void MenuState::exit()
@@ -57,6 +61,8 @@ void MenuState::_initMainMenu()
 	exitButton->get<GUIButton>()->setOnDehighlight(callback_button_dehighlight);
 
 	mainMenu->addNode(0, "button_exit", (Node*) exitButton);
+
+	//InputHandler::registerInput("ui_select", InputBinding(1));
 
 	//Add root
 	addRoot("menu_main", mainMenu);

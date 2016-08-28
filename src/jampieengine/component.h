@@ -18,7 +18,7 @@ namespace Jam {
 		bool isActive();
 
 		//This function is called when the parent's root is entered
-		virtual void _rootEnter() = 0;
+		virtual void _rootEnter() {};
 
 		//A functions that is ment to initalize everything 
 		// after the parent has been assigned.
@@ -32,7 +32,7 @@ namespace Jam {
 		virtual void _end() = 0;
 
 		//This function is called when the parent's root is exited
-		virtual void _rootExit() = 0;
+		virtual void _rootExit() {};
 
 		//Get the parent entity
 		Entity* getParent();

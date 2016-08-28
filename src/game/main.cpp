@@ -8,6 +8,7 @@
 
 #include "menustate.h"
 #include "playstate.h"
+#include "teststate.h"
 
 void registerTextures();
 void registerSpriteSheets();
@@ -15,6 +16,7 @@ void registerSpriteSheets();
 int main(int c, char** args) {
 	Jam::GameStateLibrary::registerGameState("menu", (Jam::GameState*) new MenuState());
 	Jam::GameStateLibrary::registerGameState("play", (Jam::GameState*) new PlayState());
+	Jam::GameStateLibrary::registerGameState("test", (Jam::GameState*) new Jam::TestState());
 
 	Jam::Time::setFPS(0);
 
@@ -79,7 +81,7 @@ void registerTextures()
 		Jam::GFXLibrary::registerTexture(id + "_off", t_icon_off);
 		Jam::GFXLibrary::registerTexture(id + "_on", t_icon_on);
 	}
-
+	
 	//coins_on
 	Jam::Texture t_coins_on;
 	t_coins_on.path = "texture/gui/shop/coins_on.png";
@@ -98,9 +100,29 @@ void registerTextures()
 	t_coins_map.path = "texture/gui/shop/coins_map.png";
 
 	Jam::GFXLibrary::registerTexture("coins_map", t_coins_map);
+
+	//Traps
+	//arrow_trap
+	Jam::Texture t_arrowTrap;
+	t_arrowTrap.path = "texture/traps/arrow_trap.png";
+
+	Jam::GFXLibrary::registerTexture("arrow_trap", t_arrowTrap);
+
+	//arrow
+	Jam::Texture t_arrow;
+	t_arrow.path = "texture/traps/arrow.png";
+
+	Jam::GFXLibrary::registerTexture("arrow", t_arrow);
 }
 
 void registerSpriteSheets()
 {
-	
+	//Traps
+	//spike_trap
+	Jam::SpriteSheet ss_spikes;
+	ss_spikes.path = "texture/traps/spikes.png";
+	ss_spikes.tilesX = 2;
+	ss_spikes.tilesY = 1;
+
+	Jam::GFXLibrary::registerSpriteSheet("spike_trap", ss_spikes);
 }
