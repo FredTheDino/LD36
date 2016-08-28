@@ -2,7 +2,7 @@
 
 #include "root.h"
 
-#include "levelbackground.h"
+#include "terrain.h"
 
 #include "shop.h"
 
@@ -10,24 +10,33 @@
 
 #include "sound.h"
 
-class LevelBackground;
+#include "Box2D/Box2D.h"
+
+#include "guifader.h"
+
+class Terrain;
 class Shop;
 
 class Level
 {
 public:
 	Level(Jam::Root* root, Jam::RenderEngine* renderEngine, int difficulty);
+	~Level();
 
 	void update(double delta);
 	
 	void buyChunk(unsigned int x, unsigned int y);
 	void sellChunk(unsigned int x, unsigned int y);
 
+	void complete();
+
 	static glm::vec2 toGLSpace(Jam::RenderEngine* renderEngine, glm::vec2 windowCoords);
 
 private:
 
 	Jam::Root* _root;
+	
+	b2World* _world;
 
 	Jam::Sound* _music;
 
@@ -38,6 +47,6 @@ private:
 	int _chunksX;
 	int _chunksY;
 
-	friend LevelBackground;
+	friend Terrain;
 	friend Shop;
 };

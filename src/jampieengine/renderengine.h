@@ -81,14 +81,24 @@ namespace Jam
 		static unsigned int remainingLoadEntries() { return _loadQueue.size(); };
 
 		//If called by any thread, the render loop will break
-		void cancelRendering() { _cancelRendering = true; };
+		static void cancelRendering() { _cancelRendering = true; };
 		
+		static bool shouldCancelRendering() { return _cancelRendering; };
+
 		static bool shouldLoad() { return _shouldLoad; };
+
+		static bool setShouldRender(bool shouldRender) { return _shouldRender = shouldRender; };
+
+		static bool shouldRender() { return _shouldRender; };
+
 
 		const GraphicsCoreType GRAPHICS_TYPE;
 
+		static bool avoidConflicts;
 
 	private:
+
+		static bool _shouldRender;
 
 		unsigned int _rendererIDCounter = 0;
 
@@ -134,7 +144,7 @@ namespace Jam
 		SDL_GLContext _glContext;
 
 		//If set to true by any thread, the render loop will break
-		bool _cancelRendering = false;
+		static bool _cancelRendering;
 
 		//Booleans used to communicate between threads
 		static bool _shouldLoad;

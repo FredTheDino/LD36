@@ -25,6 +25,7 @@ struct Tile {
 	unsigned int x;
 	unsigned int y;
 	unsigned int terrainOffset = 0;
+	bool solid;
 };
 
 struct Chunk {
@@ -32,12 +33,13 @@ struct Chunk {
 	unsigned int y;
 	ChunkType type;
 	std::vector<Tile> tiles;
+	b2Body* body;
 };
 
-class LevelBackground : public Jam::Component
+class Terrain : public Jam::Component
 {
 public:
-	LevelBackground(Level* level);
+	Terrain(Level* level);
 
 	static const unsigned int CHUNK_SIZE;
 
@@ -52,6 +54,8 @@ public:
 
 	void updateChunk(unsigned int x, unsigned int y);
 
+	Chunk getChunk(unsigned int x, unsigned int y);
+
 private:
 
 	Level* _level;
@@ -65,6 +69,8 @@ private:
 	void _generateChunkMesh(Chunk chunk, Jam::Vertex2D** vertices, unsigned int* indices);
 
 	float* _generateTexCoords(unsigned int offset);
+	
+	void _generateChunkBody(Chunk& c);
 
 	Chunk& _getChunk(unsigned int x, unsigned int y);
 

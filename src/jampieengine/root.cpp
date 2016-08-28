@@ -1,6 +1,4 @@
 #include "root.h"
-#include "root.h"
-#include "root.h"
 
 using namespace Jam;
 

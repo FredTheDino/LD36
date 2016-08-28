@@ -12,10 +12,13 @@ GameStateManager::GameStateManager(Pie& pie, GameState* gameState)
 
 void GameStateManager::update(double delta)
 {
-	if (_shouldEnterNewState)
-		_enterState();
 
-	while (!_shouldUpdate);
+	if (_shouldEnterNewState) {
+		_enterState();
+	}
+
+	RenderEngine::setShouldRender(true);
+	while (!_shouldUpdate && Pie::isCooking());
 
 	if (_currentState != nullptr) {
 		GameState* state = _currentState;
@@ -23,7 +26,13 @@ void GameStateManager::update(double delta)
 		state->_updateRoot(delta);
 	}
 
+	if (RenderEngine::avoidConflicts) {
+		RenderEngine::cancelRendering();
+		RenderEngine::avoidConflicts = false;
+	}
+
 	_shouldUpdate = false;
+	while (RenderEngine::shouldRender() && Pie::isCooking());
 }
 
 void GameStateManager::enterState(std::string tag)
