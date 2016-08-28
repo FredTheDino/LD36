@@ -31,28 +31,34 @@ namespace Jam
 		~RenderEngine();
 
 		//Adds mesh associated with tag to load queue
-		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag, true }); };
+		static void preloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_MESH, tag, true)); };
 
 		//Adds shader program associated with tag to load queue
-		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag, true }); };
+		static void preloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_SHADER_PROGRAM, tag, true)); };
 
 		//Adds texture associated with tag to load queue
-		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, true }); };
+		static void preloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_TEXTURE, tag, true)); };
 
 		//Adds sprite sheet associated with tag to load queue
-		static void preloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SPRITE_SHEET, tag, true }); };
+		static void preloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_SPRITE_SHEET, tag, true)); };
+
+		//Adds modify assignment to mesh associated with tag
+		static void modifyMesh(std::string tag, std::vector<Vertex*> vertices, unsigned int offset)
+		{
+			while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(tag, vertices, offset));
+		};
 
 		//Adds mesh with associated tag to unload queue
-		static void unloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_MESH, tag, false }); };
+		static void unloadMesh(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_MESH, tag, false)); };
 
 		//Adds shader program with associated tag to unload queue
-		static void unloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SHADER_PROGRAM, tag, false }); };
+		static void unloadShaderProgram(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_SHADER_PROGRAM, tag, false)); };
 
 		//Adds texture with associated tag to unload queue
-		static void unloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_TEXTURE, tag, false }); };
+		static void unloadTexture(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_TEXTURE, tag, false)); };
 
 		//Adds sprite sheet with associated tag to unload queue
-		static void unloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry{ LOAD_TYPE_SPRITE_SHEET, tag, false }); };
+		static void unloadSpriteSheet(std::string tag) { while (_accessingLoadQueues); _loadQueue.push_back(LoadEntry(LOAD_TYPE_SPRITE_SHEET, tag, false)); };
 
 		//Sets _shouldLoad to true in order to process load queue on render thread
 		static void load() { _accessingLoadQueues = true; _shouldLoad = true; };
@@ -91,9 +97,29 @@ namespace Jam
 		};
 
 		struct LoadEntry {
+
+			LoadEntry(LoadType lt, std::string t, bool l)
+			{
+				loadType = lt;
+				tag = t;
+				load = l;
+			}
+
+			LoadEntry(std::string t, std::vector<Vertex*> v, unsigned int o)
+			{
+				loadType = LOAD_TYPE_MESH;
+				tag = t;
+				modify = true;
+				vertices = v;
+				offset = o;
+			}
+
 			LoadType loadType;
 			std::string tag;
 			bool load;
+			bool modify = false;
+			std::vector<Vertex*> vertices;
+			unsigned int offset;
 		};
 
 		Camera* _camera;
@@ -113,6 +139,9 @@ namespace Jam
 
 		//Queue of load entries
 		static std::vector<LoadEntry> _loadQueue;
+
+		//Render add queue
+		std::vector<std::pair<int, std::pair<unsigned int, Renderer*>>> _rendererAddQueue;
 
 		//Objects to render each frame
 		std::multimap<int, std::pair<unsigned int, Renderer*>, std::less<int>> _renderers;

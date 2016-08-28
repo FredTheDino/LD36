@@ -8,6 +8,7 @@
 #include "vertex2d.h"
 #include "gfxlibrary.h"
 #include "entity.h"
+#include "inputhandler.h"
 
 #include "level.h"
 
@@ -42,9 +43,14 @@ public:
 
 	void _rootEnter() {};
 	void _init();
-	void _update(double delta) {};
+	void _update(double delta);
 	void _end() {};
 	void _rootExit() {};
+
+	void buyChunk(unsigned int x, unsigned int y);
+	void sellChunk(unsigned int x, unsigned int y);
+
+	void updateChunk(unsigned int x, unsigned int y);
 
 private:
 

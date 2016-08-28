@@ -31,6 +31,9 @@ int main(int c, char** args) {
 	flavor.title = "LD36";
 	flavor.enterState = "menu";
 	flavor.transparancy = true;
+	flavor.bgColorR = 1.0f;
+	flavor.bgColorG = 0.94f;
+	flavor.bgColorB = 0.65f;
 
 	Jam::Pie pie(flavor);
 
@@ -61,6 +64,21 @@ void registerTextures()
 	t_terrain.path = "texture/terrain.png";
 
 	Jam::GFXLibrary::registerTexture("terrain", t_terrain);
+
+	//shop icons
+	for (int i = 0; i < Shop::ITEM_COUNT; i++) {
+
+		std::string id = std::to_string(i);
+
+		Jam::Texture t_icon_off;
+		t_icon_off.path = "texture/gui/shop/" + id + "_off.png";
+
+		Jam::Texture t_icon_on;
+		t_icon_on.path = "texture/gui/shop/" + id + "_on.png";
+
+		Jam::GFXLibrary::registerTexture(id + "_off", t_icon_off);
+		Jam::GFXLibrary::registerTexture(id + "_on", t_icon_on);
+	}
 }
 
 void registerSpriteSheets()

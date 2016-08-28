@@ -35,7 +35,7 @@ void PlayState::_initLevel()
 	getRoot("game")->addNode(0, "level", r_level);
 
 	//Level
-	_level = new Level(r_level, getRenderEngine(), 1);
+	_level = new Level(r_level, getRenderEngine(), 0);
 
 }
 
