@@ -17,8 +17,7 @@ void MenuState::init()
 
 void MenuState::update(double delta)
 {
-	if (enterState)
-		_gameStateManager->enterState("test");
+
 }
 
 void MenuState::exit()
@@ -93,6 +92,5 @@ void callback_button_dehighlight(GUIInput* component)
 
 void callback_button_play(GUIInput* component)
 {
-	//((MenuState*) GameStateLibrary::getGameState("menu"))->playGame();
-	enterState = true;
+	((MenuState*) GameStateLibrary::getGameState("menu"))->playGame();
 }
