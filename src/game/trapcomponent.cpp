@@ -21,7 +21,7 @@ TrapComponent::TrapComponent(Jam::RenderEngine* engine, Jam::Material material, 
 TrapComponent::~TrapComponent() {}
 
 void TrapComponent::_init() {
-	getParent()->add(new Jam::Renderer(_engine, 10, "quad", _material));
+	getParent()->add(new Jam::Renderer(_engine, 100, "quad", _material));
 }
 
 void TrapComponent::_update(double delta) {

@@ -12,7 +12,9 @@ class Level;
 
 enum Item {
 	ITEM_ROOM,
-	ITEM_SPIKE
+	ITEM_SPIKE,
+	ITEM_ARROW,
+	ITEM_FIRE
 };
 
 class Shop : public Jam::Component

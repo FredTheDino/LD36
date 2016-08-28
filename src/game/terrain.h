@@ -56,6 +56,8 @@ public:
 
 	Chunk getChunk(unsigned int x, unsigned int y);
 
+	Tile getTile(unsigned int x, unsigned int y);
+
 private:
 
 	Level* _level;
@@ -73,5 +75,4 @@ private:
 	void _generateChunkBody(Chunk& c);
 
 	Chunk& _getChunk(unsigned int x, unsigned int y);
-
 };
