@@ -90,7 +90,7 @@ namespace Jam {
 		Level* _level;
 		Terrain* _terrain = nullptr;
 
-		float _speed = 1;
+		float _speed = 2;
 
 		glm::vec2 _direction;
 		glm::vec2 _lastChunk = glm::vec2(-1, -1);
@@ -98,7 +98,7 @@ namespace Jam {
 		std::vector<std::vector<MapNotation>> _map;
 
 		bool _updateDirection = false;
-
+		bool _firstFrame = true;
 		bool _alive = true;
 
 	};
