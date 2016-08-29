@@ -18,14 +18,22 @@ enum ChunkType {
 	CHUNK_TYPE_SOLID,
 	CHUNK_TYPE_NORMAL,
 	CHUNK_TYPE_SPAWN,
-	CHUNK_TYPE_END
+	CHUNK_TYPE_END,
+};
+
+enum TileType {
+	SOLID,
+	AIR,
+	LADDER,
+	EXIT,
+	TRESSURE,
 };
 
 struct Tile {
 	unsigned int x;
 	unsigned int y;
 	unsigned int terrainOffset = 0;
-	bool solid;
+	TileType type;
 };
 
 struct Chunk {

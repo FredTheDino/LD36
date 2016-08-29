@@ -32,6 +32,9 @@ public:
 
 	static glm::vec2 toGLSpace(Jam::RenderEngine* renderEngine, glm::vec2 windowCoords);
 
+	int getChunksX() { return _chunksX; }
+	int getChunksY() { return _chunksY; }
+
 private:
 
 	Jam::Root* _root;

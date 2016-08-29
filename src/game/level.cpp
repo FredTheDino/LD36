@@ -105,6 +105,10 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	return windowCoords;
 }
 
+glm::vec2 Level::toChunkCords(Jam::RenderEngine * renderEngine, glm::vec2 windowCoords) {
+	return glm::vec2();
+}
+
 Level::~Level()
 {
 	_music->stop();

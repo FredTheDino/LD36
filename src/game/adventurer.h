@@ -1,13 +1,16 @@
 #pragma once
 #include "component.h"
 #include "renderengine.h"
+#include "level.h"
+#include "terrain.h"
 
 namespace Jam {
 
 	enum Direction {
 		COMPLEATED,
 		VISITED,
-		UNVISITED
+		UNVISITED,
+		UNAVAILABLE,
 	};
 
 	struct MapNotation {
@@ -16,7 +19,7 @@ namespace Jam {
 		Direction south = Direction::UNVISITED;
 		Direction west = Direction::UNVISITED;
 
-		int operator[] (int i) {
+		Direction operator[] (int i) {
 			i %= 4;
 			switch (i) {
 				case 0:
@@ -41,7 +44,7 @@ namespace Jam {
 	class Adventurer : public Component {
 
 	public:
-		Adventurer(RenderEngine* engine, b2World* world);
+		Adventurer(RenderEngine* engine, b2World* world, Level* level);
 		~Adventurer();
 
 		virtual void _init();
@@ -57,8 +60,11 @@ namespace Jam {
 	private:
 		b2World* _world = nullptr;
 		RenderEngine* _engine = nullptr;
+		Level* _level;
+		Terrain* _terrain;
 
 		glm::vec2 _direction;
+		glm::vec2 _lastChunk;
 
 		std::vector<std::vector<MapNotation>> _map;
 
