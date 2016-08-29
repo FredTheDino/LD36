@@ -68,6 +68,9 @@ void PlayState::_loadContent()
 	RenderEngine::preloadTexture("coins_off");
 	RenderEngine::preloadTexture("coins_map");
 
+	//Traps
+	RenderEngine::preloadSpriteSheet("spike_trap");
+	RenderEngine::preloadTexture("arrow_trap");
 
 	//Load
 	RenderEngine::load();

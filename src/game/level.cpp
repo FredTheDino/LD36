@@ -60,7 +60,7 @@ void Level::update(double delta)
 	if (InputHandler::keyDown("zoom_out"))
 		_renderEngine->getCamera()->transform.addScale(delta * 4);
 
-	_world->Step(delta, 8, 2);
+	//_world->Step(delta, 8, 2);
 }
 
 void Level::buyChunk(unsigned int x, unsigned int y)
@@ -84,7 +84,7 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	renderEngine->getWindow().getSize(&w, &h);
 
 	//X
-	/* Jag kunde inte motstå
+	/* Jag kunde inte motstï¿½
 	windowCoords.x /= w;
 	windowCoords.x *= ((float)w) / h * 2;
 	windowCoords.x -= ((float)w) / h;
@@ -114,4 +114,69 @@ Level::~Level()
 	_music->stop();
 	delete _world;
 	_world = nullptr;
+}
+
+void Level::buyTrap(Item item, unsigned int x, unsigned int y)
+{
+	Trap trap;
+	trap.trapType = TrapType(item - 1);
+	trap.x = x;
+	trap.y = y;
+	
+	Entity* entity = new Entity();
+
+	Material material;
+
+	switch (trap.trapType) {
+	case TRAP_TYPE_SPIKE:
+		material.spriteSheet = true;
+		material.texture = "spike_trap";
+		material.ssOffsetX = 0;
+		material.ssOffsetY = 0;
+
+		entity->transform.setPosition(x + .5f, -(int)y - .5f);
+		entity->add(new SpikeTrap(_renderEngine, _world, material));
+		break;
+	case TRAP_TYPE_ARROW:
+		material.texture = "arrow_trap";
+
+		entity->transform.setPosition(x + .5f, -(int)y);
+		entity->add(new ArrowTrap(_renderEngine, _world, material));
+		break;
+	}
+
+	trap.name = "trap_" + std::to_string(x) + "_" + std::to_string(y);
+	_root->addNode(0, trap.name, (Node*)entity);
+	entity->_rootEnter();
+
+	_traps.push_back(trap);
+}
+
+void Level::sellTrap(Item item, unsigned int x, unsigned int y)
+{
+	for (int i = 0; i < _traps.size(); i++) {
+		if (_traps[i].trapType == TrapType(item - 1) && _traps[i].x == x && _traps[i].y == y) {
+			((Entity*)_root->getNode(_traps[i].name))->_rootExit();
+			_root->deleteNode(_traps[i].name);
+			_traps.erase(_traps.begin() + i);
+			break;
+		}
+	}
+}
+
+Trap Level::getTrap(unsigned int x, unsigned int y)
+{
+	for (Trap t : _traps) {
+		if (t.x == x && t.y == y)
+			return t;
+	}
+
+	Trap t;
+	t.x = -1;
+	return t;
+}
+
+Tile Level::getTile(unsigned int x, unsigned int y)
+{
+	return ((Entity*)_root->getNode("terrain"))->get<Terrain>()->getTile(x, y);
 }
