@@ -60,9 +60,168 @@ void Terrain::buyChunk(unsigned int x, unsigned int y)
 
 	c.type = CHUNK_TYPE_NORMAL;
 
+	_updateLadders(x, y, true);
+
 	_level->_world->DestroyBody(c.body);
 
 	updateChunk(x, y);
+}
+
+void Terrain::_updateLadders(unsigned int x, unsigned int y, bool chain)
+{
+	if (_getChunk(x, y).type != CHUNK_TYPE_NORMAL)
+		return;
+
+	int start = 0;
+
+	if (chain) {
+		_updateLadders(x - 1, y);
+		_updateLadders(x + 1, y);
+	}
+
+	//Find bottom of pit
+	for (int i = y; i < _level->_chunksY; i++) {
+		if (_getChunk(x, i + 1).type == CHUNK_TYPE_SOLID) {
+			start = i;
+			break;
+		}
+	}
+
+	int hits = 0; //How many branches were descovered?
+	int first = 0; //At what Y coordinate was the first branch?
+	int last = 0; //At what Y coordinate was the last branch?
+
+	//Check if ladders should be placed
+	for (int i = start; i > 0; i--) {
+		if (_getChunk(x, i).type == CHUNK_TYPE_NORMAL) {
+			if ((_getChunk(x - 1, i).type != CHUNK_TYPE_SOLID && _getChunk(x - 1, i + 1).type == CHUNK_TYPE_SOLID) ||
+					(_getChunk(x + 1, i).type != CHUNK_TYPE_SOLID && _getChunk(x + 1, i + 1).type == CHUNK_TYPE_SOLID)) {
+				hits++;
+				if (first == 0)
+					first = i;
+				last = i;
+			}
+		}
+		else {
+			break;
+		}
+	}
+
+	if (hits < 2)
+		return;
+
+	//Place ladders
+	for (int i = first; i > last; i--) {
+		_getChunk(x, i).tiles[1].terrainOffset = 25;
+		_getChunk(x, i).tiles[1].tileType = TILE_TYPE_LADDER;
+		_getChunk(x, i).tiles[4].terrainOffset = 25;
+		_getChunk(x, i).tiles[4].tileType = TILE_TYPE_LADDER;
+		_getChunk(x, i).tiles[7].terrainOffset = 25;
+		_getChunk(x, i).tiles[7].tileType = TILE_TYPE_LADDER;
+
+		if (_getChunk(x - 1, i - 1).type != CHUNK_TYPE_SOLID && _getChunk(x - 1, i).type == CHUNK_TYPE_SOLID) {
+
+			_getChunk(x, i).tiles[0].terrainOffset = 0;
+		}
+
+		if (_getChunk(x + 1, i - 1).type != CHUNK_TYPE_SOLID && _getChunk(x + 1, i).type == CHUNK_TYPE_SOLID) {
+
+			_getChunk(x, i).tiles[2].terrainOffset = 0;
+		}
+
+		updateChunk(x, i);
+	}
+
+	/*
+	
+	if (_getChunk(x - 1, i).type != CHUNK_TYPE_SOLID) {
+	if (first == 0)
+	first = i;
+
+	distance = i - first;
+
+	_getChunk(x, i + 1).tiles[0].terrainOffset = 0;
+
+	updateChunk(x, i + 1);
+	}
+
+	if (_getChunk(x + 1, i).type != CHUNK_TYPE_SOLID) {
+	if (first == 0)
+	first = i;
+
+	distance = i - first;
+
+	_getChunk(x, i + 1).tiles[2].terrainOffset = 0;
+
+	updateChunk(x, i + 1);
+	}
+	
+	*/
+
+	/*
+	for (int i = y; i > d; i--) {
+		if (_getChunk(x, i).type == CHUNK_TYPE_NORMAL) {
+			_getChunk(x, i).tiles[1].tileType = TILE_TYPE_LADDER;
+			_getChunk(x, i).tiles[1].terrainOffset = 25;
+			_getChunk(x, i).tiles[4].tileType = TILE_TYPE_LADDER;
+			_getChunk(x, i).tiles[4].terrainOffset = 25;
+			_getChunk(x, i).tiles[7].tileType = TILE_TYPE_LADDER;
+			_getChunk(x, i).tiles[7].terrainOffset = 25;
+
+			updateChunk(x, i);
+		}
+		else {
+			break;
+		}
+	}
+	*/
+	/*if (_getChunk(x, y + 1).type != CHUNK_TYPE_SOLID) {
+		int d = 0;
+
+		if (_getChunk(x - 1, y).type == CHUNK_TYPE_SOLID && _getChunk(x + 1, y).type == CHUNK_TYPE_SOLID)
+			return;
+
+		for (int i = y; i < _level->_chunksY; i++) {
+			if (_getChunk(x, i).type == CHUNK_TYPE_NORMAL) {
+				if (_getChunk(x - 1, i).type == CHUNK_TYPE_NORMAL) {
+					d = i;
+
+					_getChunk(x, i + 1).tiles[0].terrainOffset = 0;
+
+					updateChunk(x, i + 1);
+				}
+
+				if (_getChunk(x + 1, i).type == CHUNK_TYPE_NORMAL) {
+					d = i;
+
+					_getChunk(x, i + 1).tiles[2].terrainOffset = 0;
+
+					updateChunk(x, i + 1);
+				}
+			}
+			else {
+				break;
+			}
+		}
+
+		for (int i = y; i <= d; i++) {
+			if (d == 0)
+				break;
+			if (_getChunk(x, i).type == CHUNK_TYPE_NORMAL) {
+				_getChunk(x, i).tiles[1].tileType = TILE_TYPE_LADDER;
+				_getChunk(x, i).tiles[1].terrainOffset = 25;
+				_getChunk(x, i).tiles[4].tileType = TILE_TYPE_LADDER;
+				_getChunk(x, i).tiles[4].terrainOffset = 25;
+				_getChunk(x, i).tiles[7].tileType = TILE_TYPE_LADDER;
+				_getChunk(x, i).tiles[7].terrainOffset = 25;
+
+				updateChunk(x, i);
+			}
+			else {
+				break;
+			}
+		}
+	}*/
 }
 
 void Terrain::sellChunk(unsigned int x, unsigned int y)

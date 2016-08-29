@@ -145,19 +145,20 @@ void Shop::_updateCoinBars()
 {
 	int bar = floor(((float)(abs(_currency - 1))) / COINS_PER_BAR);
 
-	for (int i = 0; i <= bar && i < _coinBars.size(); i++) {
-		_coinBars[i]->get<GUIFader>()->setValue(0.0f);
+	for (int i = 0; i < _coinBars.size(); i++) {
+		_coinBars[i]->get<GUIFader>()->setValue(1.0f * (bar < i));
 	}
 
-	/*if (bar == _coinBars.size())
-		bar;*/
+	if (bar == _coinBars.size())
+		bar;
 
-	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)(_currency % COINS_PER_BAR)) * 31.0f) / 255.0f);
 
-	/*for (int i = bar + 1; i < _coinBars.size(); i++) {
-		_coinBars[i]->get<GUIFader>()->setValue(1.0f);
-	}*/
-
+	if (_currency == 0) {
+		_coinBars[bar]->get<GUIFader>()->setValue(1.0f);
+	}
+	else {
+		_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)(_currency % COINS_PER_BAR)) * 31.0f) / 255.0f * ((_currency % COINS_PER_BAR) != 0));
+	}
 }
 
 void callback_item_highlight(GUIInput* component)

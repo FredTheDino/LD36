@@ -81,6 +81,8 @@ private:
 	
 	void _generateChunkBody(Chunk& c);
 
+	void _updateLadders(unsigned int x, unsigned int y, bool chain = false);
+
 	Chunk& _getChunk(unsigned int x, unsigned int y);
 	Tile& _getTile(unsigned int x, unsigned int y);
 };
