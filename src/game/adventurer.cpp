@@ -46,6 +46,8 @@ void Jam::Adventurer::_update(double delta) {
 
 	getParent()->get<Box2DComponent>()->body->ApplyForceToCenter(b2Vec2(25.0 * delta, 0.0), true);
 
+	printf("HERE!");
+
 	if (_updateDirection) {
 
 		float x = getParent()->getPosition().x - _lastChunk.x * Terrain::CHUNK_SIZE;
@@ -106,8 +108,8 @@ void Jam::Adventurer::_update(double delta) {
 	//Get our current posiiton
 	glm::vec2 currentChunk;
 	//Convert it to a chunk coordinate
-	currentChunk.x = floor(abs(getParent()->getPosition().x / (float)Terrain::CHUNK_SIZE));
-	currentChunk.y = floor(abs(getParent()->getPosition().y / (float)Terrain::CHUNK_SIZE));
+	currentChunk.x = floor(getParent()->getPosition().x / (float)Terrain::CHUNK_SIZE);
+	currentChunk.y = floor(getParent()->getPosition().y / (float)Terrain::CHUNK_SIZE);
 
 	//Check if we moved
 	if (currentChunk != _lastChunk || _firstFrame) {
@@ -124,37 +126,66 @@ void Jam::Adventurer::_update(double delta) {
 		}
 		_map[_lastChunk.x][_lastChunk.y][target] == acceptability;
 
-		//Check if there is an exit to the north, and update the map
-		if (_terrain->getChunk(currentChunk.x, currentChunk.y + 1).type == CHUNK_TYPE_SOLID) {
-			_map[currentChunk.x][currentChunk.y][0] = Direction::UNAVAILABLE;
-		} else {
-			_map[currentChunk.x][currentChunk.y][0] = _map[currentChunk.x][currentChunk.y + 1].getLowestPriority();
+		printf("In the update!");
+
+
+		try {
+			//Check if there is an exit to the north, and update the map
+			if (_terrain->getChunk(currentChunk.x, currentChunk.y + 1).type == CHUNK_TYPE_SOLID) {
+				_map[currentChunk.x][currentChunk.y][0] = Direction::UNAVAILABLE;
+			} else {
+				_map[currentChunk.x][currentChunk.y][0] = _map[currentChunk.x][currentChunk.y + 1].getLowestPriority();
+			}
+		} catch (const std::exception& e) {
+			/*if (_terrain->getChunk(currenChunk.x, currentChunk.y + 1).tiles[1].type == TILE_TYPE_LADDER) {
+				_map[currentChunk.x][currentChunk.y][0] = _map[currentChunk.x][currentChunk.y - 1].getLowestPriority();
+			} else {
+			*/	_map[currentChunk.x][currentChunk.y][0] = Direction::UNAVAILABLE;
+			//}
 		}
 
-		//Check if there is an exit to the east, and update the map
-		if (_terrain->getChunk(currentChunk.x + 1, currentChunk.y).type == CHUNK_TYPE_SOLID) {
+		try {
+			//Check if there is an exit to the east, and update the map
+			if (_terrain->getChunk(currentChunk.x + 1, currentChunk.y).type == CHUNK_TYPE_SOLID) {
+				_map[currentChunk.x][currentChunk.y][1] = Direction::UNAVAILABLE;
+			} else {
+				_map[currentChunk.x][currentChunk.y][1] = _map[currentChunk.x + 1][currentChunk.y].getLowestPriority();
+			}
+		} catch (const std::exception& e) {
 			_map[currentChunk.x][currentChunk.y][1] = Direction::UNAVAILABLE;
-		} else {
-			_map[currentChunk.x][currentChunk.y][1] = _map[currentChunk.x + 1][currentChunk.y].getLowestPriority();
 		}
 
-		//Check if there is an exit to the south, and update the map
-		if (_terrain->getChunk(currentChunk.x, currentChunk.y - 1).type == CHUNK_TYPE_SOLID) {
+		//If it fails, make sure the adventurer doesn't go there
+		try {
+			//Check if there is an exit to the south, and update the map
+			if (_terrain->getChunk(currentChunk.x, currentChunk.y - 1).type == CHUNK_TYPE_SOLID) {
+				_map[currentChunk.x][currentChunk.y][2] = Direction::UNAVAILABLE;
+			} else {
+				/*if (_terrain->getChunk(currentChunk.x, currentChunk.y - 1).tiles[1].type == TILE_TYPE_LADDER) {
+					_map[currentChunk.x][currentChunk.y][2] = _map[currentChunk.x][currentChunk.y - 1].getLowestPriority();
+				} else {//*/
+					_map[currentChunk.x][currentChunk.y][2] = Direction::UNAVAILABLE;
+				//}
+			}
+		} catch (const std::exception& e) {
 			_map[currentChunk.x][currentChunk.y][2] = Direction::UNAVAILABLE;
-		} else {
-			_map[currentChunk.x][currentChunk.y][2] = _map[currentChunk.x][currentChunk.y - 1].getLowestPriority();
 		}
 
-		//Check if there is an exit to the west, and update the map
-		if (_terrain->getChunk(currentChunk.x - 1, currentChunk.y).type == CHUNK_TYPE_SOLID) {
+		try {
+			//Check if there is an exit to the west, and update the map
+			if (_terrain->getChunk(currentChunk.x - 1, currentChunk.y).type == CHUNK_TYPE_SOLID) {
+				_map[currentChunk.x][currentChunk.y][3] = Direction::UNAVAILABLE;
+			} else {
+				_map[currentChunk.x][currentChunk.y][3] = _map[currentChunk.x - 1][currentChunk.y].getLowestPriority();
+			}
+		} catch (const std::exception& e) {
 			_map[currentChunk.x][currentChunk.y][3] = Direction::UNAVAILABLE;
-		} else {
-			_map[currentChunk.x][currentChunk.y][3] = _map[currentChunk.x - 1][currentChunk.y].getLowestPriority();
 		}
-
 		//Update the current chunk
 		_lastChunk = currentChunk;
 
+
+/*
 		printf("===============================MAP===============================\n\n");
 
 		for (size_t x = 0; x < _map.size(); x++) {
@@ -164,8 +195,8 @@ void Jam::Adventurer::_update(double delta) {
 			}
 			printf("\n");
 		}
+*/
 	}
-
 	b2Vec2 f = b2Vec2(_direction.x * _speed, _direction.y * _speed);
 
 	getParent()->get<Box2DComponent>()->body->SetLinearVelocity(f);
