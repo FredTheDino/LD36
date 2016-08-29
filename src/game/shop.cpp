@@ -71,8 +71,8 @@ void Shop::_update(double delta)
 		
 		glm::vec2 pos = Level::toGLSpace(_level->_renderEngine, InputHandler::getMousePos());
 
-		if (pos.x < 0 || pos.x > _level->_chunksX * Terrain::CHUNK_SIZE ||
-			-pos.y < 0 || -pos.y > _level->_chunksY * Terrain::CHUNK_SIZE || !mayPlace) {
+		if (pos.x < Terrain::CHUNK_SIZE || pos.x >(_level->_chunksX - 1) * Terrain::CHUNK_SIZE ||
+			-pos.y < Terrain::CHUNK_SIZE || -pos.y > (_level->_chunksY - 1) * Terrain::CHUNK_SIZE || !mayPlace) {
 			return;
 		}
 
@@ -143,14 +143,21 @@ bool Shop::_sell()
 
 void Shop::_updateCoinBars()
 {
+	int bar = floor(((float)(abs(_currency - 1))) / COINS_PER_BAR);
 
-
-	int bar = floor(_currency / COINS_PER_BAR);
-	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)_currency) * 31.0f) / 255.0f);
-
-	for (int i = bar + 1; i < _coinBars.size(); i++) {
-		_coinBars[bar]->get<GUIFader>()->setValue(255.0f);
+	for (int i = 0; i <= bar && i < _coinBars.size(); i++) {
+		_coinBars[i]->get<GUIFader>()->setValue(0.0f);
 	}
+
+	/*if (bar == _coinBars.size())
+		bar;*/
+
+	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)(_currency % COINS_PER_BAR)) * 31.0f) / 255.0f);
+
+	/*for (int i = bar + 1; i < _coinBars.size(); i++) {
+		_coinBars[i]->get<GUIFader>()->setValue(1.0f);
+	}*/
+
 }
 
 void callback_item_highlight(GUIInput* component)
