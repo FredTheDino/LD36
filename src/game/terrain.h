@@ -21,11 +21,18 @@ enum ChunkType {
 	CHUNK_TYPE_END
 };
 
+enum TileType {
+	TILE_TYPE_SOLID,
+	TILE_TYPE_NORMAL,
+	TILE_TYPE_EXIT,
+	TILE_TYPE_LADDER
+};
+
 struct Tile {
 	unsigned int x;
 	unsigned int y;
 	unsigned int terrainOffset = 0;
-	bool solid;
+	TileType tileType;
 };
 
 struct Chunk {
@@ -56,6 +63,8 @@ public:
 
 	Chunk getChunk(unsigned int x, unsigned int y);
 
+	Tile getTile(unsigned int x, unsigned int y);
+
 private:
 
 	Level* _level;
@@ -73,5 +82,4 @@ private:
 	void _generateChunkBody(Chunk& c);
 
 	Chunk& _getChunk(unsigned int x, unsigned int y);
-
 };

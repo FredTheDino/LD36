@@ -1,8 +1,10 @@
 #include "shop.h"
 
+#include "level.h"
+
 using namespace Jam;
 
-const unsigned int Shop::ITEM_COUNT = 2;
+const unsigned int Shop::ITEM_COUNT = 3;
 const unsigned int Shop::COINS_PER_BAR = 8;
 
 bool Shop::mayPlace = true;
@@ -74,11 +76,12 @@ void Shop::_update(double delta)
 			return;
 		}
 
+		int x = floor(pos.x / Terrain::CHUNK_SIZE);
+		int y = floor((-pos.y) / Terrain::CHUNK_SIZE);
+		Chunk c = ((Entity*)_level->_root->getNode("terrain"))->get<Terrain>()->getChunk(x, y);
+
 		switch (selectedItem) {
 		case ITEM_ROOM:
-			int x = floor(pos.x / Terrain::CHUNK_SIZE);
-			int y = floor((-pos.y) / Terrain::CHUNK_SIZE);
-			Chunk c = ((Entity*)_level->_root->getNode("terrain"))->get<Terrain>()->getChunk(x, y);
 			if (c.type == CHUNK_TYPE_SOLID) {
 				if (!_buy())
 					break;
@@ -89,8 +92,29 @@ void Shop::_update(double delta)
 					break;
 				_level->sellChunk(x, y);
 			}
+			break;
+		case ITEM_SPIKE:
+		case ITEM_ARROW:
+		case ITEM_FIRE:
+			int tx = floor(pos.x);
+			int ty = -floor(pos.y) - 1;
+			
+			std::cout << _level->getTile(tx, ty).tileType << std::endl;
 
-			//std::cout << "Gold: " << _currency << std::endl;
+			if (_level->getTrap(tx, ty).x == -1) {
+				if (_level->getTile(tx, ty + 1).tileType != TILE_TYPE_SOLID || _level->getTile(tx, ty).tileType == TILE_TYPE_SOLID)
+					break;
+
+				if (!_buy())
+					break;
+				_level->buyTrap(selectedItem, tx, ty);
+			}
+			else if (_level->getTrap(tx, ty).trapType == TrapType(selectedItem - 1)) {
+				if (!_sell())
+					break;
+				_level->sellTrap(selectedItem, tx, ty);
+			}
+			_updateCoinBars();
 			break;
 		}
 	}
@@ -119,11 +143,13 @@ bool Shop::_sell()
 
 void Shop::_updateCoinBars()
 {
+
+
 	int bar = floor(_currency / COINS_PER_BAR);
 	_coinBars[bar]->get<GUIFader>()->setValue((248.0f - ((float)_currency) * 31.0f) / 255.0f);
 
 	for (int i = bar + 1; i < _coinBars.size(); i++) {
-		_coinBars[bar]->get<GUIFader>()->setValue(0.0f);
+		_coinBars[bar]->get<GUIFader>()->setValue(255.0f);
 	}
 }
 
