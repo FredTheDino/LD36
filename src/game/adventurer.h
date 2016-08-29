@@ -19,7 +19,7 @@ namespace Jam {
 		Direction south = Direction::UNVISITED;
 		Direction west = Direction::UNVISITED;
 
-		Direction operator[] (int i) {
+		Direction& operator[] (int i) {
 			i %= 4;
 			switch (i) {
 				case 0:
@@ -34,6 +34,33 @@ namespace Jam {
 					return north;
 			}
 		}
+
+		Direction operator[] (int i) const {
+			i %= 4;
+			switch (i) {
+				case 0:
+					return north;
+				case 1:
+					return east;
+				case 2:
+					return south;
+				case 3:
+					return west;
+				default:
+					return north;
+			}
+		}
+
+		Direction getLowestPriority(int exclude = -1) {
+			
+			Direction lowest = Direction::UNAVAILABLE;
+			for (size_t i = 0; i < 4; i++) {
+				if (i == exclude) continue;
+				lowest = lowest <= (*this)[i] ? lowest : (*this)[i];
+			}
+			return lowest;
+		}
+
 	};
 
 	enum class Death {
@@ -61,14 +88,18 @@ namespace Jam {
 		b2World* _world = nullptr;
 		RenderEngine* _engine = nullptr;
 		Level* _level;
-		Terrain* _terrain;
+		Terrain* _terrain = nullptr;
+
+		float _speed = 1;
 
 		glm::vec2 _direction;
-		glm::vec2 _lastChunk;
+		glm::vec2 _lastChunk = glm::vec2(-1, -1);
 
 		std::vector<std::vector<MapNotation>> _map;
 
-		bool _alive = false;
+		bool _updateDirection = false;
+
+		bool _alive = true;
 
 	};
 }

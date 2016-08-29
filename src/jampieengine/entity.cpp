@@ -153,7 +153,9 @@ void Entity::update(double delta)
 		while (get<Renderer>()->shouldDraw());*/
 
 	for (size_t i = 0; i < _components.size(); i++) {
-		_components[i]->_update(delta);
+		if (_components[i]->_isActive) {
+			_components[i]->_update(delta);
+		}
 	}
 
 	if (has<Renderer>())

@@ -60,7 +60,7 @@ void Level::update(double delta)
 	if (InputHandler::keyDown("zoom_out"))
 		_renderEngine->getCamera()->transform.addScale(delta * 4);
 
-	//_world->Step(delta, 8, 2);
+	_world->Step(delta, 8, 2);
 }
 
 void Level::buyChunk(unsigned int x, unsigned int y)
@@ -103,10 +103,6 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	windowCoords.y += renderEngine->getCamera()->getTransform().position.y;
 
 	return windowCoords;
-}
-
-glm::vec2 Level::toChunkCords(Jam::RenderEngine * renderEngine, glm::vec2 windowCoords) {
-	return glm::vec2();
 }
 
 Level::~Level()

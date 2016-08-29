@@ -287,11 +287,14 @@ void Terrain::_generateChunkBody(Chunk& c)
 	bodyDef.type = b2BodyType::b2_staticBody;
 	bodyDef.position = b2Vec2(((float)CHUNK_SIZE) * (((float)c.x) + .5f), ((float)CHUNK_SIZE) * (((float)c.y) + .5f));
 
+	printf("X: %f\tY: %f\n", bodyDef.position.x, bodyDef.position.y);
+
 	b2PolygonShape shape;
 	shape.SetAsBox(((float)CHUNK_SIZE) / 2, ((float)CHUNK_SIZE) / 2);
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.filter.maskBits = 0xFFFFFF * (c.type == CHUNK_TYPE_SOLID);
 
 	c.body = _level->_world->CreateBody(&bodyDef);
 

@@ -52,6 +52,8 @@ public:
 
 	void complete();
 
+	b2World* getWorld() { return _world; }
+
 	Trap getTrap(unsigned int x, unsigned int y);
 
 	Tile getTile(unsigned int x, unsigned int y);

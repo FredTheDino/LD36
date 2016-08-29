@@ -79,7 +79,7 @@ void Jam::TestState::_initTestStuff() {
 	spikeMaterial.ssOffsetY = 0;
 	*/
 
-	trap->add(new SpikeTrap(getRenderEngine(), _world, root));
+	trap->add(new SpikeTrap(getRenderEngine(), _world, spikeMaterial));
 	trap->rotate(-0.5 * M_PI);
 	root->addNode(0, "trap", (Node*) trap);
 

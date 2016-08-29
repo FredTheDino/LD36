@@ -1,4 +1,5 @@
 #include "playstate.h"
+#include "adventurer.h"
 
 using namespace Jam;
 
@@ -26,6 +27,10 @@ void PlayState::update(double delta)
 		_initLevel();
 		_initNewLevel = false;
 	}*/
+	if (Jam::InputHandler::keyPressed("play")) {
+		((Entity*) getRoot("game")->getNode("adventurer"))->setAll(true);
+	}
+
 
 	if (Jam::InputHandler::keyPressed("switch")) {
 		//_level->complete();
@@ -55,6 +60,18 @@ void PlayState::_initLevel()
 
 	//Level
 	_level = new Level(r_level, getRenderEngine(), _difficulty++);
+
+	InputHandler::registerInput("play", InputBinding(true, -1, 0, SDLK_w));
+
+	Entity* adventurer = new Entity;
+
+	adventurer->move(4.5, -5.5);
+
+	adventurer->add(new Adventurer(getRenderEngine(), _level->getWorld(), _level));
+
+	adventurer->setAll(false);
+
+	getRoot("game")->addNode(0, "adventurer", (Node*) adventurer);
 
 }
 
