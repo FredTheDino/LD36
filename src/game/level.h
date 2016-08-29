@@ -20,7 +20,6 @@
 class Terrain;
 class Shop;
 
-enum Item;
 struct Tile;
 
 enum TrapType {

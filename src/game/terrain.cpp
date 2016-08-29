@@ -41,7 +41,13 @@ void Terrain::buyChunk(unsigned int x, unsigned int y)
 		case 7: c.tiles[i].terrainOffset = 13; break;
 		}
 
-		c.tiles[i].solid = false;
+		if(((getChunk(x - 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == 0) ||
+				(getChunk(x + 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == CHUNK_SIZE - 1)) &&
+				floor(i / CHUNK_SIZE) == CHUNK_SIZE - 1) {
+			c.tiles[i].tileType = TILE_TYPE_EXIT;
+		} else {
+			c.tiles[i].tileType = TILE_TYPE_NORMAL;
+		}
 	}
 
 	c.type = CHUNK_TYPE_NORMAL;
@@ -71,7 +77,7 @@ void Terrain::sellChunk(unsigned int x, unsigned int y)
 		case 13: c.tiles[i].terrainOffset = 7; break;
 		}
 
-		c.tiles[i].solid = true;
+		c.tiles[i].tileType = TILE_TYPE_SOLID;
 	}
 
 	c.type = CHUNK_TYPE_SOLID;
@@ -110,7 +116,7 @@ void Terrain::_generateChunks()
 
 		for (unsigned int j = 0; j < tiles.size(); j++) {
 			Tile t;
-			t.solid = true;
+			t.tileType = TILE_TYPE_SOLID;
 			
 			srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 			int r = rand() % 30;
@@ -148,7 +154,7 @@ void Terrain::_generateChunks()
 		case 3: c_spawn.tiles[i].terrainOffset = 15; break;
 		}
 
-		c_spawn.tiles[i].solid = false;
+		c_spawn.tiles[i].tileType = TILE_TYPE_NORMAL;
 	}
 
 	c_spawn.tiles[(CHUNK_SIZE - 1) * CHUNK_SIZE + floor(CHUNK_SIZE / 2)].terrainOffset = 24;
@@ -168,7 +174,7 @@ void Terrain::_generateChunks()
 		case 3: c_end.tiles[i].terrainOffset = 15; break;
 		}
 
-		c_end.tiles[i].solid = false;
+		c_end.tiles[i].tileType = TILE_TYPE_NORMAL;
 	}
 }
 

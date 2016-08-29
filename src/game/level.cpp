@@ -84,7 +84,7 @@ glm::vec2 Level::toGLSpace(RenderEngine* renderEngine, glm::vec2 windowCoords)
 	renderEngine->getWindow().getSize(&w, &h);
 
 	//X
-	/* Jag kunde inte motstå
+	/* Jag kunde inte motstï¿½
 	windowCoords.x /= w;
 	windowCoords.x *= ((float)w) / h * 2;
 	windowCoords.x -= ((float)w) / h;
@@ -130,7 +130,7 @@ void Level::buyTrap(Item item, unsigned int x, unsigned int y)
 		material.ssOffsetX = 0;
 		material.ssOffsetY = 0;
 
-		entity->transform.setPosition(x + .5f, -(int)y + .5f);
+		entity->transform.setPosition(x + .5f, -(int)y - .5f);
 		entity->add(new SpikeTrap(_renderEngine, _world, material));
 		break;
 	case TRAP_TYPE_ARROW:

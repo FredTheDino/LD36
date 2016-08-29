@@ -1,5 +1,7 @@
 #include "shop.h"
 
+#include "level.h"
+
 using namespace Jam;
 
 const unsigned int Shop::ITEM_COUNT = 3;
@@ -95,10 +97,12 @@ void Shop::_update(double delta)
 		case ITEM_ARROW:
 		case ITEM_FIRE:
 			int tx = floor(pos.x);
-			int ty = -floor(pos.y);
+			int ty = -floor(pos.y) - 1;
+			
+			std::cout << _level->getTile(tx, ty).tileType << std::endl;
 
 			if (_level->getTrap(tx, ty).x == -1) {
-				if (!_level->getTile(tx, ty).solid || _level->getTile(tx, ty - 1).solid)
+				if (_level->getTile(tx, ty + 1).tileType != TILE_TYPE_SOLID || _level->getTile(tx, ty).tileType == TILE_TYPE_SOLID)
 					break;
 
 				if (!_buy())

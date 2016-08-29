@@ -1,7 +1,5 @@
 #pragma once
 
-#include "level.h"
-
 #include "guibutton.h"
 
 #include "intcomponent.h"
