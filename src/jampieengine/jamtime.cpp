@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <iostream>
+#include <algorithm>
 
 using namespace Jam;
 
@@ -194,6 +195,11 @@ void Time::wait() {
 }
 
 double Jam::Time::getDelta() {
-	return _delta;
+	float count = (float) _desiredDelta.count();
+	if (count == 0) {
+		return std::min(_delta, 0.016); //Set it to 60FPS as lowest
+	} else {
+		return std::min(_delta, count / 1000000000.0);
+	}
 }
 

@@ -308,7 +308,7 @@ Chunk Terrain::getChunk(unsigned int x, unsigned int y)
 
 Chunk& Terrain::_getChunk(unsigned int x, unsigned int y)
 {
-	return _chunks[x + y * _level->_chunksX];
+	return _chunks.at(x + y * _level->_chunksX);
 }
 
 Tile Terrain::getTile(unsigned int x, unsigned int y)

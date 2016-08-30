@@ -7,9 +7,9 @@
 namespace Jam {
 
 	enum Direction {
-		COMPLEATED,
-		VISITED,
 		UNVISITED,
+		VISITED,
+		COMPLEATED,
 		UNAVAILABLE,
 	};
 
@@ -48,6 +48,22 @@ namespace Jam {
 					return west;
 				default:
 					return north;
+			}
+		}
+
+		void set(int i, Direction d) {
+			i %= 4;
+			switch (i) {
+				case 0:
+					north = d;
+				case 1:
+					east = d;
+				case 2:
+					south = d;
+				case 3:
+					west = d;
+				default:
+					north = d;
 			}
 		}
 
