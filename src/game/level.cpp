@@ -60,7 +60,7 @@ void Level::update(double delta)
 	if (InputHandler::keyDown("zoom_out"))
 		_renderEngine->getCamera()->transform.addScale(delta * 4);
 
-	//_world->Step(delta, 8, 2);
+	_world->Step(delta, 8, 2);
 }
 
 void Level::buyChunk(unsigned int x, unsigned int y)

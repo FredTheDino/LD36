@@ -79,7 +79,7 @@ void Jam::TestState::_initTestStuff() {
 	spikeMaterial.ssOffsetY = 0;
 	*/
 
-	trap->add(new FireTrap(getRenderEngine(), _world, root));
+	trap->add(new SpikeTrap(getRenderEngine(), _world, spikeMaterial));
 	trap->rotate(-0.5 * M_PI);
 	root->addNode(0, "trap", (Node*) trap);
 
@@ -87,12 +87,13 @@ void Jam::TestState::_initTestStuff() {
 	Entity* adventurer = new Entity();
 	adventurer->move(0, 5);
 
+	/*
 	adventurer->add(new Adventurer(getRenderEngine(), _world));
 
 	root->addNode(0, "adventurer", (Node*) adventurer);
+	*/
 
 	getRenderEngine()->getCamera()->transform.scaleT(8);
-
 	InputHandler::registerInput("fire_spike", InputBinding(3));
 	
 	addRoot("root", root);

@@ -18,7 +18,7 @@ enum ChunkType {
 	CHUNK_TYPE_SOLID,
 	CHUNK_TYPE_NORMAL,
 	CHUNK_TYPE_SPAWN,
-	CHUNK_TYPE_END
+	CHUNK_TYPE_END,
 };
 
 enum TileType {
@@ -32,6 +32,7 @@ struct Tile {
 	unsigned int x;
 	unsigned int y;
 	unsigned int terrainOffset = 0;
+
 	TileType tileType;
 };
 
@@ -82,4 +83,5 @@ private:
 	void _generateChunkBody(Chunk& c);
 
 	Chunk& _getChunk(unsigned int x, unsigned int y);
+	Tile& _getTile(unsigned int x, unsigned int y);
 };

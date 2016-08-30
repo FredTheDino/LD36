@@ -52,11 +52,16 @@ public:
 
 	void complete();
 
+	b2World* getWorld() { return _world; }
+
 	Trap getTrap(unsigned int x, unsigned int y);
 
 	Tile getTile(unsigned int x, unsigned int y);
 
 	static glm::vec2 toGLSpace(Jam::RenderEngine* renderEngine, glm::vec2 windowCoords);
+
+	int getChunksX() { return _chunksX; }
+	int getChunksY() { return _chunksY; }
 
 private:
 

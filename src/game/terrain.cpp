@@ -41,12 +41,20 @@ void Terrain::buyChunk(unsigned int x, unsigned int y)
 		case 7: c.tiles[i].terrainOffset = 13; break;
 		}
 
-		if(((getChunk(x - 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == 0) ||
-				(getChunk(x + 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == CHUNK_SIZE - 1)) &&
-				floor(i / CHUNK_SIZE) == CHUNK_SIZE - 1) {
-			c.tiles[i].tileType = TILE_TYPE_EXIT;
-		} else {
-			c.tiles[i].tileType = TILE_TYPE_NORMAL;
+		c.tiles[i].tileType = TILE_TYPE_NORMAL;
+		
+		if(floor(i / CHUNK_SIZE) == CHUNK_SIZE - 1) {
+
+			if ((getChunk(x - 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == 0)) {
+				_getTile(c.tiles[i].x - 1, c.tiles[i].y).tileType = TILE_TYPE_EXIT;
+				c.tiles[i].tileType = TILE_TYPE_EXIT;
+			}
+
+			if ((getChunk(x + 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == CHUNK_SIZE - 1)) {
+				_getTile(c.tiles[i].x + 1, c.tiles[i].y).tileType = TILE_TYPE_EXIT;
+				c.tiles[i].tileType = TILE_TYPE_EXIT;
+			}
+
 		}
 	}
 
@@ -78,6 +86,18 @@ void Terrain::sellChunk(unsigned int x, unsigned int y)
 		}
 
 		c.tiles[i].tileType = TILE_TYPE_SOLID;
+
+		if (floor(i / CHUNK_SIZE) == CHUNK_SIZE - 1) {
+
+			if ((getChunk(x - 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == 0)) {
+				_getTile(c.tiles[i].x - 1, c.tiles[i].y).tileType = TILE_TYPE_NORMAL;
+			}
+
+			if ((getChunk(x + 1, y).type != CHUNK_TYPE_SOLID && i % CHUNK_SIZE == CHUNK_SIZE - 1)) {
+				_getTile(c.tiles[i].x + 1, c.tiles[i].y).tileType = TILE_TYPE_NORMAL;
+			}
+
+		}
 	}
 
 	c.type = CHUNK_TYPE_SOLID;
@@ -267,11 +287,14 @@ void Terrain::_generateChunkBody(Chunk& c)
 	bodyDef.type = b2BodyType::b2_staticBody;
 	bodyDef.position = b2Vec2(((float)CHUNK_SIZE) * (((float)c.x) + .5f), ((float)CHUNK_SIZE) * (((float)c.y) + .5f));
 
+	printf("X: %f\tY: %f\n", bodyDef.position.x, bodyDef.position.y);
+
 	b2PolygonShape shape;
 	shape.SetAsBox(((float)CHUNK_SIZE) / 2, ((float)CHUNK_SIZE) / 2);
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.filter.maskBits = 0xFFFFFF * (c.type == CHUNK_TYPE_SOLID);
 
 	c.body = _level->_world->CreateBody(&bodyDef);
 
@@ -285,11 +308,16 @@ Chunk Terrain::getChunk(unsigned int x, unsigned int y)
 
 Chunk& Terrain::_getChunk(unsigned int x, unsigned int y)
 {
-	return _chunks[x + y * _level->_chunksX];
+	return _chunks.at(x + y * _level->_chunksX);
 }
 
 Tile Terrain::getTile(unsigned int x, unsigned int y)
 {
-	Chunk c = getChunk(floor(((float)x) / CHUNK_SIZE), floor(((float)y) / CHUNK_SIZE));
+	return _getTile(x, y);
+}
+
+Tile& Terrain::_getTile(unsigned int x, unsigned int y)
+{
+	Chunk& c = _getChunk(floor(((float)x) / CHUNK_SIZE), floor(((float)y) / CHUNK_SIZE));
 	return c.tiles[(y % CHUNK_SIZE) * CHUNK_SIZE + (x % CHUNK_SIZE)];
 }

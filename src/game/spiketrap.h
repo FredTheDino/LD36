@@ -1,3 +1,4 @@
+#pragma once
 #include "trapcomponent.h"
 
 namespace Jam {
